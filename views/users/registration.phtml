@@ -1,0 +1,28 @@
+<div class="jumbotron">
+    <div class="container">
+        <h1><?=$title?></h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+    </div>
+</div>
+<div class="container">
+<h1 class="titleA">Регистрация</h1>
+<form id='formReg' onsubmit = "return checkFormReg(this);" action="index.php?r=user&action=registration" method='post'>
+    <div class='error'><p></div>
+
+    <label>Имя:<br /><input type="text" name="name" required>*</label><br />
+
+    <label>Эл. почта:<br /><input type="email" name="login" required >*</label><br />
+    <label>Пароль:<br /><input type="password" name="password" required>*</label><br />
+    <label>Повторите пароль:<br /><input type="password" name="password2" required>*</label></label><br />
+    <hr>
+    <label>Город:<br /><input type="text" name='sity'></label><br />
+    Ваш пол:<br />
+    <label> <input type="radio" name="gender" value="мужской" checked>Мужской</label>
+    <label><input type="radio" name="gender" value="женский">Женский<br /></label>
+    <p><input type="submit" value="Зарегистрироваться">
+
+
+
+</form>
+    <div

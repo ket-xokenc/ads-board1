@@ -9,7 +9,7 @@ return [
     'db' => [
         'driver' => 'mysql',
         'host' => 'localhost',
-        'dbname' => 'frame',
+        'dbname' => 'ads_board',
         'user' => 'root',
         'password' => '',
         'charset' => 'utf8',
