@@ -69,6 +69,7 @@ class FrontController
         foreach($settings as $k => $v){
             \Registry::set($k, $v);
         }
+        \Registry::set('database', new \Database());
     }
 
     /**

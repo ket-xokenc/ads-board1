@@ -9,6 +9,17 @@ class UsersController extends BaseController
 {
     public function loginAction()
     {
-        $this->render('users/login');
+        $model = new Users();
+//        $user = $model->getById(1);
+        $user = $model->getByLoginAndPassw('alex', '123');
+        print_r($user);
+//        $this->render('users/login');
+
     }
+
+    public function registrationAction()
+    {
+        $this->render('users/registration');
+    }
+
 }

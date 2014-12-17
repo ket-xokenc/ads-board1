@@ -1,5 +1,5 @@
 <?php
-use app\core\FrontController;
+//use app\core\FrontController;
 class Database
 {
     protected $db;
@@ -32,7 +32,7 @@ class Database
      */
     private function getDb() { //Подключаемся...
         if(!$this->db){
-            $this->db = new \PDO($this->driver.':host='.$this->host.'; dbname='.$this->dbname, $this->user, $this->password);
+            $this->db = new PDO($this->driver.':host='.$this->host.'; dbname='.$this->dbname, $this->user, $this->password);
             $this->db->query('SET NAMES '.$this->charset);
         }
         return $this->db;

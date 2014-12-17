@@ -1,5 +1,5 @@
 <?php
 
-class Model {
+class Model extends Database {
 
 } 
