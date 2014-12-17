@@ -5,10 +5,10 @@
  * Date: 09.12.14
  * Time: 14:51
  */
-class UsersController extends \app\core\BaseController
+class UsersController extends BaseController
 {
-    public function loginAction($id = '', $s = '')
+    public function loginAction()
     {
-        echo 'rsgth';
+        $this->render('users/login');
     }
 }
