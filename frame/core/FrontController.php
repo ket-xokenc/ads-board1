@@ -39,7 +39,6 @@ class FrontController
     {
         $this->initConfigs($path);
         $this->initRoutes();
-
         $controllerName = $this->controller;
         $controllerObj = new $controllerName(new \Request(
                         array('params' => $this->params,

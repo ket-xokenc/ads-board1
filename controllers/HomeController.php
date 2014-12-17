@@ -4,6 +4,7 @@ class HomeController extends BaseController
 {
     public function indexAction()
     {
+        echo 'safg';exit;
         $db = new \Database();
 //        $db->update('users', ['login' => 'kvasenko', 'password' => '1234567'], ['login' => 'sasha', 'password' => '0000']);
         //$db->getById('29', 'users');

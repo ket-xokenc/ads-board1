@@ -20,7 +20,7 @@ class BaseController
             $$key = $v;
         }
         ob_start();
-        include_once '../views/site/'.$filename.'.phtml';
+        include_once '../views/'.$filename.'.phtml';
         $content = ob_get_clean();
         include_once '../views/layouts/'.$this->layout.'.phtml';
     }

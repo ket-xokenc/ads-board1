@@ -31,6 +31,10 @@ class Route
     public function getUri(){
         // Получаем URI.
         $uri = $this->parseRequest();
+        if (($pos = strpos($uri, '?'))) {
+
+            $uri = substr($uri, 0, $pos);
+        }
         // Пытаемся применить к нему правила из конфигуации.
         foreach($this->routes as $pattern => $route){
             // Если правило совпало.
@@ -39,6 +43,7 @@ class Route
                 $internalRoute = preg_replace("~^$pattern$~", $route, $uri);
                 // Разбиваем внутренний путь на сегменты.
                 $segments = explode('/', $internalRoute);
+//                print_r($segments);
                 // Первый сегмент — контроллер.
                 $this->controller = ucfirst(array_shift($segments)).'Controller';
                 // Второй — действие.
@@ -49,11 +54,11 @@ class Route
 
                 // Подключаем файл контроллера, если он имеется
                 //echo $this->controller;
-                $controllerFile = APP_PATH.'/controllers/'.$this->controller.'.php';
+                //$controllerFile = APP_PATH.'/controllers/'.$this->controller.'.php';
                 //echo $controllerFile;
-                if(file_exists($controllerFile)){
-                    include($controllerFile);
-                }
+                //if(file_exists($controllerFile)){
+                  //  include($controllerFile);
+              //  }
                 if(!is_callable(array($this->controller, $this->action))){
                     header("HTTP/1.0 404 Not Found");
                     return;
