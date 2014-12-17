@@ -12,8 +12,8 @@ class UsersController extends BaseController
         $model = new Users();
 //        $user = $model->getById(1);
         $user = $model->getByLoginAndPassw('alex', '123');
-        print_r($user);
-//        $this->render('users/login');
+        //print_r($user);
+        $this->render('users/login');
 
     }
 
