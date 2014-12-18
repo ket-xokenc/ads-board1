@@ -20,9 +20,10 @@ class Users
         $hashes = $this->passwHash($data['password']);
         $data['password'] = $hashes['hash'];
         $data['salt'] = $hashes['salt'];
+        $this->user = $data;
 
         try {
-            $this->db->insert($this->table, $data);
+            $this->db->insert($this->table, $this->user);
         }catch(PDOException $e){
             echo "Database error: ".$e->getMessage();
             die();
@@ -42,6 +43,8 @@ class Users
         $hashes = $this->passwHash($password, $salt);
         $this->user = $this->db->fetchRow($this->table, ['*'], ['login' => $login, 'password' => $hashes['hash']]);
 
+        if($this->user['status'] == 'registered')
+            die('Пользователь еще не активирован');
         if($this->user) {
             $this->user_id = $this->user['id'];
             $this->saveSession($remember);
@@ -77,13 +80,29 @@ class Users
         }
     }
 
+    public function sendMail()
+    {
+
+        $hashCode = $this->user['salt'];
+        // теперь нам нужно отправить ссылку на указанную почту, для активации пользователя
+        $from = 'kvasenko@ukr.net';
+        $subject = "Подтверждение регистрации";
+        $message = "Вы подали заявку на регистрацию на сайте . " .
+            "Подтвердите свою заявку по предложенной ссылке: " .
+            "http://dev.local/confirmation/hash/" . $hashCode;
+
+        // отправляем письмо
+        if (!mail($this->user['email'], $subject, $message, 'From: ' . $from))
+            // если письмо не отправлено то значит пользователь некорректно указал свою почту
+            return false;
+
+        return true;
+
+    }
+
     public function getById($id)
     {
         return $this->db->fetchRow('users', ['*'], ['id' => $id]);
     }
 
-    public function getByLoginAndPassw($login, $pasw)
-    {
-        return $this->db->fetchRow('users', ['*'], ['login' => $login, 'password' => $pasw]);
-    }
 }

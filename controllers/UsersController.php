@@ -41,12 +41,19 @@ class UsersController extends BaseController
                 $email = preg_match('/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/', $_POST['email']) ? $_POST['email'] : false;
                 if($user->create(['login' => $login, 'name' => $name, 'password' => $pass, 'email' => $email]))
                 {
-                    echo 'Пользователь успешно добавлен';exit;
+                    if(!$user->sendMail())
+                        die('Не удалось отправить сообщение!!!');
+                    header('Location: /info');
                 }
             }
         }
 
         $this->render('users/registration');
+    }
+
+    public function infoAction()
+    {
+        $this->render('user/info', ['messages' => 'На ваш эмэил выслана ссылка для подтверждения регистрации']);
     }
 
 }
