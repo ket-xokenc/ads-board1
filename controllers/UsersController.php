@@ -38,7 +38,7 @@ class UsersController extends BaseController
                 $login = $_POST['login'];
                 $pass = $_POST['password1'];
                 $name = $_POST['name'];
-                $email = $_POST['email'];
+                $email = preg_match('/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/', $_POST['email']) ? $_POST['email'] : false;
                 if($user->create(['login' => $login, 'name' => $name, 'password' => $pass, 'email' => $email]))
                 {
                     echo 'Пользователь успешно добавлен';exit;
