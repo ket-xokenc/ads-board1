@@ -14,7 +14,7 @@ class HomeController extends BaseController
        //print_r($db->fetchOne('users', 'login', ['login' => 'kvasenko']));exit;
        // $db->query('DELETE from users where login = :login', [':login' => 'alex'], [':login' => 'str']);
       //  $title = 'Домашняя страница';
-      //  $this->render('site/home', array('title' => $title));
+        $this->render('site/home', array('title' => $title));
         $result = mail('kvasenko@ukr.net', 'subject', 'message');
 
     }
