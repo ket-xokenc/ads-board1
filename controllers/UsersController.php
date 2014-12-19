@@ -9,17 +9,51 @@ class UsersController extends BaseController
 {
     public function loginAction()
     {
-        $model = new Users();
-//        $user = $model->getById(1);
-        $user = $model->getByLoginAndPassw('alex', '123');
-        //print_r($user);
-        $this->render('users/login');
+        $user = new Users();
+        if($this->isPost()){
+            if(!empty($_POST['login']) && !empty($_POST['password1'])) {
+                $login = preg_match('/^[a-z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
+                $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;;
 
+                $user->authorize($login, $password);
+                if($user->isAutorized())
+                {
+                    header('Location: /home');
+                }
+            }
+        }
+
+
+//        $user = $model->create(['login' => 'qqq', 'password' => 111, 'name' => 'qqqq', 'email' => 'qqq@ukr.net']);
+//       print_r($user);exit;
+        $this->render('users/login');
     }
 
     public function registrationAction()
     {
+        $user = new Users();
+        if($this->isPost()){
+            if(!empty($_POST['name'])&& !empty($_POST['login']) && !empty($_POST['password1']) &&
+                $_POST['password1'] === $_POST['password2']){
+                $login = $_POST['login'];
+                $pass = $_POST['password1'];
+                $name = $_POST['name'];
+                $email = preg_match('/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/', $_POST['email']) ? $_POST['email'] : false;
+                if($user->create(['login' => $login, 'name' => $name, 'password' => $pass, 'email' => $email]))
+                {
+                    if(!$user->sendMail())
+                        die('Не удалось отправить сообщение!!!');
+                    header('Location: /info');
+                }
+            }
+        }
+
         $this->render('users/registration');
+    }
+
+    public function infoAction()
+    {
+        $this->render('user/info', ['messages' => 'На ваш эмэил выслана ссылка для подтверждения регистрации']);
     }
 
 }
