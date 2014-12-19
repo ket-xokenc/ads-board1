@@ -15,13 +15,22 @@ class BaseController
 
     public function render($filename, $data = array())
     {
+
         $view = $this->view;
-        foreach($data as $key => $v){
-            $$key = $v;
+        $content=array();
+
+        if(is_array($filename)){
+            foreach($filename as $file){
+                ob_start();
+                include_once '../views/'.$file.'.phtml';
+                $content[explode('/',$file)[1]] = ob_get_clean();
+            }
+        }else{
+            ob_start();
+            include_once '../views/'.$filename.'.phtml';
+            $content = ob_get_clean();
         }
-        ob_start();
-        include_once '../views/'.$filename.'.phtml';
-        $content = ob_get_clean();
+
         include_once '../views/layouts/'.$this->layout.'.phtml';
     }
 

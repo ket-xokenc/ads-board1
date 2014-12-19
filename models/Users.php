@@ -9,7 +9,7 @@ class Users
     public function __construct()
     {
         $this->db = \Registry::get('database');
-//        var_dump($this->db);
+//       var_dump($this->db);
     }
     public function create($data)
     {
