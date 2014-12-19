@@ -10,6 +10,7 @@ class Users
     {
         $this->db = \Registry::get('database');
 //         var_dump($this->db);
+        //
     }
     public function create($data)
     {
