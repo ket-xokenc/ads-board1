@@ -19,6 +19,9 @@ class BaseController
         $view = $this->view;
         $content=array();
 
+        foreach($data as $k => $v){
+            $$k = $v;
+        }
         if(is_array($filename)){
             foreach($filename as $file){
                 ob_start();

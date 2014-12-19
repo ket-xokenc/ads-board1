@@ -38,12 +38,22 @@
         </div>
         </div>
 
+        <?php if(!empty($user['login'])){?>
+        <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
+            <a class="btn-link" href="/profile"><?=$user['login']?></a>
+        </div>
+        <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
+            <a href="/logout" class="btn-link">Logout</a>
+        </div>
+        <?php }else{ ?>
+
         <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
             <a class="btn btn-lg" href="/registration">Registration</a>
         </div>
         <div class="col-lg-2 text-center col-lg-height col-middle">
             <a class="btn btn-lg" href="/login">Sign in</a>
         </div>
+        <?php }?>
     </div>
 
 </div>
