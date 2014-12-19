@@ -14,6 +14,7 @@ class HomeController extends BaseController
        //print_r($db->fetchOne('users', 'login', ['login' => 'kvasenko']));exit;
        // $db->query('DELETE from users where login = :login', [':login' => 'alex'], [':login' => 'str']);
         $user = new Users();
+        $data = [];
         if($id = Session::get('user_id'))
         {
             $data = $user->getById($id);
