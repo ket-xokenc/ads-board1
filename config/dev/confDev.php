@@ -9,9 +9,9 @@ return [
     'db' => [
         'driver' => 'mysql',
         'host' => 'localhost',
-        'dbname' => 'adsboard',
+        'dbname' => 'ads_board',
         'user' => 'root',
-        'password' => '123',
+        'password' => '',
         'charset' => 'utf8',
     ],
 ];

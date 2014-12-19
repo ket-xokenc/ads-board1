@@ -45,7 +45,7 @@ class Users
         $this->user = $this->db->fetchRow($this->table, ['*'], ['login' => $login, 'password' => $hashes['hash']]);
 
         if($this->user['status'] == 'registered')
-            die('Пользователь еще не активирован');
+            //die('Пользователь еще не активирован');
         if($this->user) {
             $this->user_id = $this->user['id'];
             $this->saveSession($remember);
@@ -66,7 +66,7 @@ class Users
 
     public function saveSession($remember = false, $http_only = true, $days = 7)
     {
-        $_SESSION["user_id"] = $this->user_id;
+        $_SESSION["user_id"] = $this->user['id'];
 
         if ($remember) {
             // Save session id in cookies
@@ -104,6 +104,11 @@ class Users
     public function getById($id)
     {
         return $this->db->fetchRow('users', ['*'], ['id' => $id]);
+    }
+
+    public function getByLogin($login)
+    {
+        return $this->db->fetchRow('users', ['*'], ['login' => $login]);
     }
 
 }
