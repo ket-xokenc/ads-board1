@@ -100,7 +100,7 @@ class Database
             $stmt->bindValue(":$k", $v);
         }
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -131,7 +131,7 @@ class Database
         }
 
         $stmt->execute();
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -157,7 +157,7 @@ class Database
             $stmt->bindValue(":$key", $value);
         }
         $stmt->execute();
-        return $stmt->fetch(\PDO::FETCH_COLUMN);
+        return $stmt->fetch(PDO::FETCH_COLUMN);
 
     }
 

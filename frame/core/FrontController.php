@@ -56,7 +56,7 @@ class FrontController
 
     protected function initSession()
     {
-        session_start();
+        \Session::init();
     }
 
     /**

@@ -33,4 +33,15 @@ class BaseController
 
         include_once '../views/layouts/'.$this->layout.'.phtml';
     }
+
+    public function isPost($key = false)
+    {
+        if($key) {
+            if($_POST[$key])
+                return true;
+        }
+        if($_SERVER['REQUEST_METHOD'] == 'POST')
+            return true;
+        return false;
+    }
 }
