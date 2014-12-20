@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="page-header">
+        <h2><a class="btn-link" href="/profile">UserLogin</a> <small>Profile</small> <a href="/profile/edit" class="btn btn-default btn-xs">Edit</a></h2>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-lg-push-3">
+            <form role="form" action="/profile/edit" method="post">
+
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-control" id="name" value="name" name="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Your Phone</label>
+                    <input type="tel" class="form-control disabled" id="phone" value="UserPhone" name="phone">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+
+            </form>
+        </div>
+    </div>
+</div>
