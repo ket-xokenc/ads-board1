@@ -15,7 +15,6 @@ class BaseController
 
     public function render($filename, $data = array())
     {
-
         $view = $this->view;
         $content=array();
 
