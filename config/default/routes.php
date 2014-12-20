@@ -11,5 +11,6 @@ return [
         'registration' => 'users/registration',
         'search' => 'home/index',
         'logout' => 'users/logout',
+        'admin' => 'admin/panel',
     ]
 ];

@@ -2,7 +2,7 @@
 
 return [
         'siteName' => 'Blog',
-        'defaultController' => 'HomeController',
-        'defaultAction' => 'indexAction',
+        'defaultController' => 'AdminController',
+        'defaultAction' => 'panelAction',
 
 ];

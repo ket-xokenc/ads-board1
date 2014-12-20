@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexandr
- * Date: 09.12.14
- * Time: 14:51
- */
 class UsersController extends BaseController
 {
     public function loginAction()
@@ -20,11 +14,7 @@ class UsersController extends BaseController
                 if ($user->isAutorized()) {
                     //header('Location: /home');
                     $data = $user->getByLogin($login);
-                    $this->render('site/home', ['user' => $data]);
-                }
-            }
-        }
-
+                    $this->render('site/home', ['user' => $data]);}}}
 //        $user = $model->create(['login' => 'qqq', 'password' => 111, 'name' => 'qqqq', 'email' => 'qqq@ukr.net']);
 //       print_r($user);exit;
         $this->render('users/login');

@@ -1,7 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ed
- * Date: 20.12.14
- * Time: 14:47
- */ 
+class AdminController extends BaseController
+{
+    function __construct(){}
+    function panelAction()
+    {echo 'admin';
+        $text = 'Тело сайта';
+        $this->render('admin/panel', ['text'=>$text]);
+    }
+}
