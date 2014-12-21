@@ -7,17 +7,27 @@
  */
 class UsersController extends BaseController
 {
+    public function __construct($request)
+    {
+        parent::__construct($request);
+    }
+
     public function loginAction()
     {
         $user = new Users();
-        if ($this->isPost()) {
+        if ($this->getRequest()->isPost()) {
             if (!empty($_POST['login']) && !empty($_POST['password'])) {
+
                 $login = preg_match('/^[a-z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
-                $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;;
+                $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;
+
                 if (!$login or !$password)
-                    $errorInfo = 'Не правильно введена логин или пароль';
+                    $errorInfo = 'Не правильно введен логин или пароль';
+                if(!$password)
+                    $errorInfo = 'Не правильный пароль';
+
                 $user->authorize($login, $password);
-                if ($user->isAutorized()) {
+                if (Users::isAuthorized()) {
                     //header('Location: /home');
                     $data = $user->getByLogin($login);
                     $this->render('site/home', ['user' => $data]);
@@ -33,19 +43,26 @@ class UsersController extends BaseController
     public function registrationAction()
     {
         $user = new Users();
-        if($this->isPost()){
+        if($this->getRequest()->isPost()){
             if(!empty($_POST['name'])&& !empty($_POST['login']) && !empty($_POST['password1']) &&
                 $_POST['password1'] === $_POST['password2']){
                 $login = preg_match('/^[a-z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
+                if(!$login){
+
+                }
                 $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;
                 $name = preg_match('/^[a-zA-ZА-Яа-я0-9_-]{3,18}$/', $_POST['name']) ? $_POST['name'] : false;
-                $email = preg_match('/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/', $_POST['email']) ? $_POST['email'] : false;
+                $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+
+                $user->getByLogin($login);
                 if($user->create(['login' => $login, 'name' => $name, 'password' => $password, 'email' => $email]))
                 {
                     if(!$user->sendMail())
                         die('Не удалось отправить сообщение!!!');
                     header('Location: /info');
                 }
+            }else{
+
             }
         }
         if ($id = Session::get('user_id')) {
