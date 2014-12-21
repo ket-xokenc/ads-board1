@@ -142,4 +142,11 @@ class UsersController extends BaseController
         header('Location: /login');
     }
 
+    public function paymentPlanAction()
+    {
+        $user = new Users();
+        $dataInfo = $user->get();
+        $this->render('users/payment-plan', ['user' => $dataInfo]);
+    }
+
 }
