@@ -50,15 +50,10 @@ class Route
                 $this->action = array_shift($segments).'Action';
                 // Остальные сегменты — параметры.
                 //print_r(count($segments));
+
                 $this->params = $segments;
 
-                // Подключаем файл контроллера, если он имеется
-                //echo $this->controller;
-                //$controllerFile = APP_PATH.'/controllers/'.$this->controller.'.php';
-                //echo $controllerFile;
-                //if(file_exists($controllerFile)){
-                  //  include($controllerFile);
-              //  }
+
                 if(!is_callable(array($this->controller, $this->action))){
                     header("HTTP/1.0 404 Not Found");
                     return;
