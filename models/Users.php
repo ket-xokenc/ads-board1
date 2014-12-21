@@ -51,11 +51,19 @@ class Users
             $this->saveSession($remember);
             $this->is_authorized = true;
         }
+        else return;
+
     }
 
-    public function isAutorized(){
-        return $this->is_authorized;
+
+    public static function isAuthorized()
+    {
+        if (!empty($_SESSION["user_id"])) {
+            return (bool) $_SESSION["user_id"];
+        }
+        return false;
     }
+
 
     public function passwHash($password, $salt = false)
     {
