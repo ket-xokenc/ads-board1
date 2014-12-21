@@ -7,63 +7,146 @@
  */
 class UsersController extends BaseController
 {
+    public function __construct($request)
+    {
+        parent::__construct($request);
+    }
+
     public function loginAction()
     {
         $user = new Users();
-        if ($this->isPost()) {
-            if (!empty($_POST['login']) && !empty($_POST['password'])) {
-                $login = preg_match('/^[a-z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
-                $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;;
-                if (!$login or !$password)
-                    $errorInfo = 'Не правильно введена логин или пароль';
-                $user->authorize($login, $password);
-                if ($user->isAutorized()) {
-                    //header('Location: /home');
-                    $data = $user->getByLogin($login);
-                    $this->render('site/home', ['user' => $data]);
-                }
-            }
+        $userInfo = $user->get();
+        if($userInfo){
+            header('Location: /home');
         }
 
-//        $user = $model->create(['login' => 'qqq', 'password' => 111, 'name' => 'qqqq', 'email' => 'qqq@ukr.net']);
-//       print_r($user);exit;
+        if ($this->getRequest()->isPost()) {
+            $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
+            $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;
+
+            if (!$login) {
+                $this->errors .= 'Логин может состоять только из букв английского алфавита и цифр';
+            }
+            if(!$password) {
+                $this->errors .= 'Пароль не соответствует правилам составления';
+            }
+            if(!$login || !$password){
+                $this->render('users/login');
+                die;
+            }
+
+            $user->authorize($login, $password);
+            if (Users::isAuthorized()) {
+                $data = $user->getByLogin($login);
+                $this->render('site/home', ['user' => $data]);
+            }
+        }
+        $this->errors .= $user->getError();
         $this->render('users/login');
     }
 
     public function registrationAction()
     {
         $user = new Users();
-        if($this->isPost()){
-            if(!empty($_POST['name'])&& !empty($_POST['login']) && !empty($_POST['password1']) &&
-                $_POST['password1'] === $_POST['password2']){
-                $login = preg_match('/^[a-z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
-                $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;
-                $name = preg_match('/^[a-zA-ZА-Яа-я0-9_-]{3,18}$/', $_POST['name']) ? $_POST['name'] : false;
-                $email = preg_match('/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/', $_POST['email']) ? $_POST['email'] : false;
-                if($user->create(['login' => $login, 'name' => $name, 'password' => $password, 'email' => $email]))
-                {
-                    if(!$user->sendMail())
-                        die('Не удалось отправить сообщение!!!');
-                    header('Location: /info');
-                }
-            }
-        }
-        if ($id = Session::get('user_id')) {
-            $data = $user->getById($id);
+        $data = $user->get();
+        if($data){
+            $this->render('site/home', ['user' => $data]);
         }
 
+        if($this->getRequest()->isPost()) {
+            if (!empty($_POST['name']) && !empty($_POST['login']) && !empty($_POST['password1']) && !empty($_POST['email'])) {
+                if ($_POST['password1'] == $_POST['password2']) {
+
+                    $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
+                    $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;
+                    $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', $_POST['name']) ? $_POST['name'] : false;
+                    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+                    $phone = preg_match('/^\+7\d{10}$/', $_POST['phone']) ? $_POST['phone'] : false;
+                    if(!$login)
+                        $this->errors .= "Не правильный логин!<br />";
+                    if(!$password)
+                        $this->errors .= "Пароль не соответствует правилам заполнения!<br />";
+                    if(!$email)
+                        $this->errors .= "Не правильный email!<br />";
+
+                    if ($user->create(['login' => $login, 'name' => $name, 'password' => $password, 'email' => $email, 'phone' => $phone])) {
+                        if (!$user->sendMail()) {
+                            die('Не удалось отправить сообщение!!!');
+                        }
+                        else {
+                            $messages = "На ваш почтовый адрес отправлено сообщение со ссылкой для активации аккаунта.";
+                            $this->render('users/info', ['messages' => $messages]);
+                            return;
+                        }
+                    }else {
+                        $this->render('users/registration');
+                        return;
+                    }
+                }else{
+                    $this->errors .= "Пароли не совпадают<br />";
+                    $this->errors .= $user->getError();
+                    $this->render('users/registration');
+                    return;
+                }
+
+            } else {
+                $this->errors .= "Не все обязательные поля заполнены!<br />";
+                $this->render('users/registration');
+                return;
+
+            }
+        }
+        $this->errors .= $user->getError();
         $this->render('users/registration');
     }
 
     public function logoutAction()
     {
-        Session::destroy('user_id');
+        Session::destroy();
         $this->render('site/home');
 
     }
-    public function infoAction()
+
+    public function restorePasswordAction()
     {
-        $this->render('user/info', ['messages' => 'На ваш эмэил выслана ссылка для подтверждения регистрации']);
+        $user = new Users();
+        if($this->getRequest()->isPost()){
+            $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+            if(!$email) {
+                $this->errors .= "Не правильно введен email!";
+                $this->render('users/restore-password');
+                return;
+            }
+            $userData = $user->getByEmail($email);
+            if(!$userData){
+                $this->errors .= "Данный email не зарегистрирован на сайте!";
+            }else{
+                $dataForRestore = $user->savePasswordForRestore($email);
+                $dataForRestore['email'] = $email;
+                $user->sendMailForRestore($dataForRestore);
+                $message = "На ваш email отправлен новый пароль для входа. После авторизации не забудьте изменить его!";
+                $this->render('users/info', ['messages' => $message]);
+            }
+
+        }
+
+        $this->render('users/restore-password');
+    }
+
+    public function confirmationAction()
+    {
+        $user = new Users();
+        $params = $this->getRequest()->getParams();
+        $hash = array_shift($params);
+        $user->confirm($hash);
+        header('Location: /login');
+    }
+
+    public function paymentPlanAction()
+    {
+        $user = new Users();
+        $dataInfo = $user->get();
+        $this->render('users/payment-plan', ['user' => $dataInfo]);
     }
 
 }

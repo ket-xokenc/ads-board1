@@ -35,3 +35,7 @@ table#bdr_w td {
        border-radius: 7px;
        display: none;
    }
+
+.error-valid{
+    color: red;
+}
