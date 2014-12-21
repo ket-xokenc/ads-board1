@@ -11,5 +11,7 @@ return [
         'registration' => 'users/registration',
         'search' => 'home/index',
         'logout' => 'users/logout',
+        'restore-password' =>'users/restorePassword',
+        'confirmation/hash/([a-zA-Z0-9]+)' => 'users/confirmation/$1',
     ]
 ];

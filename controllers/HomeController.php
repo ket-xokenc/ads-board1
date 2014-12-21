@@ -15,10 +15,7 @@ class HomeController extends BaseController
        // $db->query('DELETE from users where login = :login', [':login' => 'alex'], [':login' => 'str']);
         $data = [];
         $user = new Users();
-        if($id = Session::get('user_id'))
-        {
-            $data = $user->getById($id);
-        }
+        $data = $user->get();
         $title = 'Домашняя страница';
         $this->render('site/home', array('title' => $title, 'user' => $data));
      //   $result = mail('kvasenko@ukr.net', 'subject', 'message');

@@ -7,6 +7,7 @@ class BaseController
     protected $view;
     protected $app;
     private $request;
+    protected $errors = '';
 
     public function __construct($request)
     {
@@ -17,7 +18,7 @@ class BaseController
 
     public function render($filename, $data = array())
     {
-
+        $error = $this->errors;
         $view = $this->view;
         $content=array();
 
