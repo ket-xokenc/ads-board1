@@ -8,15 +8,12 @@ class UsersController extends BaseController
             if (!empty($_POST['login']) && !empty($_POST['password'])) {
                 $login = preg_match('/^[a-z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
                 $password = preg_match('/^[a-z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;;
-                if (!$login or !$password)
-                    $errorInfo = 'Не правильно введена логин или пароль';
+                if (!($login && $password))
+                    echo '<h1>Проверте правильность ввода</h1><br /hps>';
                 $user->authorize($login, $password);
                 if ($user->isAutorized()) {
-                    //header('Location: /home');
                     $data = $user->getByLogin($login);
                     $this->render('site/home', ['user' => $data]);}}}
-//        $user = $model->create(['login' => 'qqq', 'password' => 111, 'name' => 'qqqq', 'email' => 'qqq@ukr.net']);
-//       print_r($user);exit;
         $this->render('users/login');
     }
 

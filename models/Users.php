@@ -9,8 +9,6 @@ class Users
     public function __construct()
     {
         $this->db = \Registry::get('database');
-//         var_dump($this->db);
-        //
     }
     public function create($data)
     {
@@ -25,11 +23,19 @@ class Users
 
         try {
             $this->db->insert($this->table, $this->user);
-        }catch(PDOException $e){
+        }catch(PDOException $e)
+        {
             echo "Database error: ".$e->getMessage();
             die();
         }
         return true;
+    }
+
+    public function passwHash($password, $salt = false)
+    {
+        $salt || $salt = uniqid();
+        $hash = md5(md5($password . md5(sha1($salt))));
+        return ['hash' => $hash, 'salt' => $salt];
     }
 
     public function getSalt($login) {
@@ -45,26 +51,20 @@ class Users
         $this->user = $this->db->fetchRow($this->table, ['*'], ['login' => $login, 'password' => $hashes['hash']]);
 
         if($this->user['status'] == 'registered')
-            //die('Пользователь еще не активирован');
-        if($this->user) {
+        if($this->user)
+        {
             $this->user_id = $this->user['id'];
             $this->saveSession($remember);
             $this->is_authorized = true;
         }
+
     }
 
     public function isAutorized(){
         return $this->is_authorized;
     }
 
-    public function passwHash($password, $salt = false)
-    {
-        $salt || $salt = uniqid();
-        $hash = md5(md5($password . md5(sha1($salt))));
-        return ['hash' => $hash, 'salt' => $salt];
-    }
-
-    public function saveSession($remember = false, $http_only = true, $days = 7)
+        public function saveSession($remember = false, $http_only = true, $days = 7)
     {
         $_SESSION["user_id"] = $this->user['id'];
 

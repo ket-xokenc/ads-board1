@@ -15,7 +15,6 @@ class BaseController
 
     public function render($filename, $data = array())
     {
-        $view = $this->view;
         $content=array();
 
         foreach($data as $k => $v){
@@ -28,9 +27,9 @@ class BaseController
                 $content[explode('/',$file)[1]] = ob_get_clean();
             }
         }else{
-            ob_start();
+           // ob_start();
             include_once '../views/'.$filename.'.phtml';
-            $content = ob_get_clean();
+          //  $content = ob_get_clean();
         }
 
         include_once '../views/layouts/'.$this->layout.'.phtml';

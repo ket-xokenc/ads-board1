@@ -1,10 +1,11 @@
 <?php
 class AdminController extends BaseController
-{
+{private $par = array();
     function __construct(){}
     function panelAction()
-    {echo 'admin';
-        $text = 'Тело сайта';
-        $this->render('admin/panel', ['text'=>$text]);
+    {
+        $admin = new Database();
+        $this->par = $admin->isAdmin();
+            $this->render('admin/panel', ['row'=>$this->par]);
     }
 }

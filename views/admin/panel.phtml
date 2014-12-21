@@ -1,3 +1,27 @@
-<h1>
-    asdasdasdasd
-</h1>
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Логин</th>
+            <th>Роль</th>
+            <th>Статус</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($row as $tt): ?>
+            <tr>
+                <td><?php echo $tt["id"]; ?></td>
+                <td><?php echo $tt["login"]; ?></td>
+                <td><?php echo $tt["role"]; ?></td>
+                <td><?php echo $tt["status"]; ?></td>
+                <td>
+                    <a href="/admin/show/<?php echo $tt["id"]; ?>">Псмотреть</a>
+                    <a href="/admin/ban/<?php echo $tt["id"]; ?>">Заблокировать</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
