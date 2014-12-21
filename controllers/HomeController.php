@@ -25,4 +25,12 @@ class HomeController extends BaseController
     {
         echo 'kjhsfd';
     }
+
+    public function staticPageAction()
+    {
+
+        $page = current($this->getRequest()->getParams());
+        $this->render("site/$page");
+
+    }
 }

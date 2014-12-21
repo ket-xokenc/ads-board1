@@ -13,5 +13,7 @@ return [
         'logout' => 'users/logout',
         'restore-password' =>'users/restorePassword',
         'confirmation/hash/([a-zA-Z0-9]+)' => 'users/confirmation/$1',
+        'about' => 'home/staticPage/about',
+        'payment-plan' => 'users/paymentPlan',
     ]
 ];
