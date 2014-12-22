@@ -1,4 +1,5 @@
 <?php
+namespace application\classes;
 define('ACONF', APP_PATH. 'config/');
 
 /**

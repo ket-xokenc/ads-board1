@@ -1,4 +1,5 @@
 <?php
+namespace application\core;
 class View
 {
     public function url($controllerName, $arr = array())
