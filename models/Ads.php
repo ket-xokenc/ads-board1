@@ -1,5 +1,6 @@
 <?php
 
+use application\classes\Registry as Registry;
 
 class Ads {
 
@@ -8,7 +9,7 @@ class Ads {
 
     public function __construct()
     {
-        $this->db = \Registry::get('database');
+        $this->db = Registry::get('database');
     }
 
     public function create($data){
