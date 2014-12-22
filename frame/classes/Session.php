@@ -1,5 +1,5 @@
 <?php
-
+namespace application\classes;
 class Session {
 
     private static $_sessionStarted = false;
