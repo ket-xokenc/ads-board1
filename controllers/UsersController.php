@@ -1,4 +1,6 @@
 <?php
+use application\core\BaseController;
+use application\classes\Session;
 /**
  * Created by PhpStorm.
  * User: alexandr
