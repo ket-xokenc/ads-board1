@@ -16,5 +16,6 @@ return [
         'about' => 'home/staticPage/about',
         'payment-plan' => 'users/paymentPlan',
         'profile' => 'users/profile',
+        'profile/edit' => 'users/edit',
     ]
 ];
