@@ -1,5 +1,11 @@
 <?php
-namespace app\core;
+namespace application\core;
+use application\classes\Registry;
+use application\classes\Request;
+use application\classes\Database;
+use application\classes\Route;
+use application\classes\Config;
+use application\classes\Session;
 class FrontController
 {
     /**
@@ -40,7 +46,7 @@ class FrontController
         $this->initConfigs($path);
         $this->initRoutes();
         $controllerName = $this->controller;
-        $controllerObj = new $controllerName(new \Request(
+        $controllerObj = new $controllerName(new Request(
                         array('params' => $this->params,
                             'controller' => $this->controller,
                               'action' => $this->action)
@@ -56,7 +62,7 @@ class FrontController
 
     protected function initSession()
     {
-        \Session::init();
+        Session::init();
     }
 
     /**
@@ -64,12 +70,12 @@ class FrontController
      */
     protected function initConfigs($path)
     {
-        $settings = \Config::init($path);
+        $settings = Config::init($path);
 
         foreach($settings as $k => $v){
-            \Registry::set($k, $v);
+            Registry::set($k, $v);
         }
-        \Registry::set('database', new \Database());
+        Registry::set('database', new Database());
     }
 
     /**
@@ -77,7 +83,7 @@ class FrontController
      */
     protected function initRoutes()
     {
-        $route = new \Route($this);
+        $route = new Route($this);
         $routes = $route->getUri();
 
         $this->controller = $routes['controller'];
