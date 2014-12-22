@@ -17,7 +17,7 @@ class HomeController extends BaseController
         $user = new Users();
         $data = $user->get();
         $title = 'Домашняя страница';
-        $this->render('site/home', array('title' => $title, 'user' => $data));
+        $this->render('site/home', array('title' => $title));
      //   $result = mail('kvasenko@ukr.net', 'subject', 'message');
 
     }

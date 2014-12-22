@@ -11,7 +11,6 @@ class UsersController extends BaseController
     {
         parent::__construct($request);
     }
-
     public function loginAction()
     {
         $user = new Users();
@@ -19,11 +18,9 @@ class UsersController extends BaseController
         if($userInfo){
             header('Location: /home');
         }
-
         if ($this->getRequest()->isPost()) {
             $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
             $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;
-
             if (!$login) {
                 $this->errors .= 'Логин может состоять только из букв английского алфавита и цифр';
             }
@@ -34,7 +31,6 @@ class UsersController extends BaseController
                 $this->render('users/login');
                 die;
             }
-
             $user->authorize($login, $password);
             if (Users::isAuthorized()) {
                 $data = $user->getByLogin($login);
@@ -44,7 +40,6 @@ class UsersController extends BaseController
         $this->errors .= $user->getError();
         $this->render('users/login');
     }
-
     public function registrationAction()
     {
         $user = new Users();
@@ -52,11 +47,9 @@ class UsersController extends BaseController
         if($data){
             $this->render('site/home', ['user' => $data]);
         }
-
         if($this->getRequest()->isPost()) {
             if (!empty($_POST['name']) && !empty($_POST['login']) && !empty($_POST['password1']) && !empty($_POST['email'])) {
                 if ($_POST['password1'] == $_POST['password2']) {
-
                     $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
                     $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;
                     $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', $_POST['name']) ? $_POST['name'] : false;
@@ -68,7 +61,6 @@ class UsersController extends BaseController
                         $this->errors .= "Пароль не соответствует правилам заполнения!<br />";
                     if(!$email)
                         $this->errors .= "Не правильный email!<br />";
-
                     if ($user->create(['login' => $login, 'name' => $name, 'password' => $password, 'email' => $email, 'phone' => $phone])) {
                         if (!$user->sendMail()) {
                             die('Не удалось отправить сообщение!!!');
@@ -88,25 +80,20 @@ class UsersController extends BaseController
                     $this->render('users/registration');
                     return;
                 }
-
             } else {
                 $this->errors .= "Не все обязательные поля заполнены!<br />";
                 $this->render('users/registration');
                 return;
-
             }
         }
         $this->errors .= $user->getError();
         $this->render('users/registration');
     }
-
     public function logoutAction()
     {
         Session::destroy();
         $this->render('site/home');
-
     }
-
     public function restorePasswordAction()
     {
         $user = new Users();
@@ -127,12 +114,9 @@ class UsersController extends BaseController
                 $message = "На ваш email отправлен новый пароль для входа. После авторизации не забудьте изменить его!";
                 $this->render('users/info', ['messages' => $message]);
             }
-
         }
-
         $this->render('users/restore-password');
     }
-
     public function confirmationAction()
     {
         $user = new Users();
@@ -141,12 +125,10 @@ class UsersController extends BaseController
         $user->confirm($hash);
         header('Location: /login');
     }
-
     public function paymentPlanAction()
     {
         $user = new Users();
         $dataInfo = $user->get();
         $this->render('users/payment-plan', ['user' => $dataInfo]);
     }
-
 }

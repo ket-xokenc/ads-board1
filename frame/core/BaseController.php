@@ -1,6 +1,5 @@
 <?php
 use app\core\FrontController;
-
 class BaseController
 {
     protected $layout = 'layout';
@@ -8,20 +7,17 @@ class BaseController
     protected $app;
     private $request;
     protected $errors = '';
-
     public function __construct($request)
     {
         $this->app = FrontController::getInstance();
         $this->view = new View();
         $this->request = $request;
     }
-
     public function render($filename, $data = array())
     {
         $error = $this->errors;
         $view = $this->view;
         $content=array();
-
         foreach($data as $k => $v){
             $$k = $v;
         }
@@ -36,10 +32,8 @@ class BaseController
             include_once '../views/'.$filename.'.phtml';
             $content = ob_get_clean();
         }
-
         include_once '../views/layouts/'.$this->layout.'.phtml';
     }
-
     public function getRequest()
     {
         return $this->request;

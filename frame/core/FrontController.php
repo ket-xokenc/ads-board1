@@ -2,27 +2,14 @@
 namespace app\core;
 class FrontController
 {
-    /**
-     * @var null
-     */
     static $instance = null;
-
-    /**
-     *
-     */
-    private function __construct()
-    {
-        $this->initSession();
-    }
+    private function __construct(){$this->initSession();}
 
     public function __clone()
     {
         trigger_error('Cloning the FrontController is not permitted', E_USER_ERROR);
     }
 
-    /**
-     * @return FrontController|null
-     */
     static function getInstance()
     {
         if(self::$instance == null) {
@@ -31,37 +18,25 @@ class FrontController
         return self::$instance;
     }
 
-    /**
-     * @param null $path
-     * @throws \Exception
-     */
     public function run($path = null)
     {
         $this->initConfigs($path);
         $this->initRoutes();
         $controllerName = $this->controller;
         $controllerObj = new $controllerName(new \Request(
-                        array('params' => $this->params,
-                            'controller' => $this->controller,
-                              'action' => $this->action)
+                            array('params' => $this->params,
+                                'controller' => $this->controller,
+                                'action' => $this->action)
             )
         );
         $methodName = $this->action;
         if (method_exists($controllerObj, $methodName)) {
             $controllerObj->$methodName();
-        } else {
-            throw new \Exception('action not found');
-        }
+        } else { throw new \Exception('action not found'); }
     }
 
-    protected function initSession()
-    {
-        \Session::init();
-    }
+    protected function initSession(){ \Session::init();}
 
-    /**
-     * @param $path
-     */
     protected function initConfigs($path)
     {
         $settings = \Config::init($path);
@@ -72,9 +47,6 @@ class FrontController
         \Registry::set('database', new \Database());
     }
 
-    /**
-     *
-     */
     protected function initRoutes()
     {
         $route = new \Route($this);

@@ -1,9 +1,7 @@
 <?php
-//use app\core\FrontController;
 class Database
 {
-    protected $db;
-
+        protected $db;
     private $host;
     private $driver;
     private $dbname;
@@ -11,40 +9,26 @@ class Database
     private $password;
     private $charset;
 
-    /**
-     * @param array $newConf
-     */
-    public function __construct($newConf = []){
-        $config = Registry::get('db');
-        $config = array_merge($config, $newConf);
-
-
+    public function __construct($newConf = [])
+    {
+    $config = Registry::get('db');
+    $config = array_merge($config, $newConf);
         $this->host = $config['host'];
         $this->driver = $config['driver'];
         $this->dbname = $config['dbname'];
         $this->user = $config['user'];
         $this->password = $config['password'];
         $this->charset = $config['charset'];
-
     }
-    /**
-     * @return \PDO
-     */
-    private function getDb() { //Подключаемся...
+
+    private function getDb()
+    {
         if(!$this->db){
             $this->db = new PDO($this->driver.':host='.$this->host.'; dbname='.$this->dbname, $this->user, $this->password);
             $this->db->query('SET NAMES '.$this->charset);
-        }
-        return $this->db;
-
+        }return $this->db;
     }
 
-    /**
-     * @param $sql
-     * @param array $params
-     * @param array $types
-     * @return mixed
-     */
     public function query($sql, $params = [], $types = [])
     {
         $db = $this->getDb();
@@ -52,7 +36,6 @@ class Database
         foreach ($params as $key => $value) {
             if (!empty($types)) {
 
-                //exit;
                 if (preg_match("~int~", $types[$key])) {
                     $types[$key] = \PDO::PARAM_INT;
                 }
@@ -73,12 +56,15 @@ class Database
         return $stmt->fetchAll();
     }
 
-    /**
-     * @param $table
-     * @param array $data
-     * @param array $where
-     * @return array
-     */
+    public function isAdmin()
+    {
+        $db = $this->getDb();
+        $res = $db->prepare("SELECT id, login, status, role FROM users");
+        $res->execute();
+        $result = $res->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     public function fetchAll($table, $data = [], $where = [])
     {
         $db = $this->getDb();
@@ -103,12 +89,6 @@ class Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param $table
-     * @param array $data
-     * @param array $where
-     * @return mixed
-     */
     public function fetchRow($table, $data = [], $where = [])
     {
         $db = $this->getDb();
@@ -134,12 +114,6 @@ class Database
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param $table
-     * @param $field
-     * @param array $where
-     * @return mixed
-     */
     public function fetchOne($table, $field, $where = [])
     {
         $db = $this->getDb();
@@ -161,11 +135,6 @@ class Database
 
     }
 
-    /**
-     * @param $table
-     * @param array $data
-     * @param array $where
-     */
     public function update($table, $data = [], $where = [])
     {
         $db = $this->getDb();
@@ -199,10 +168,6 @@ class Database
         $stmt->execute();
     }
 
-    /**
-     * @param $table
-     * @param array $data
-     */
     public function insert($table, $data = [])
     {
         $db = $this->getDb();
@@ -219,11 +184,6 @@ class Database
         $stmt->execute();
     }
 
-    /**
-     * @param $table
-     * @param array $where
-     * @param int $limit
-     */
     public function delete($table, $where = [], $limit = 1)
     {
         $db = $this->getDb();
