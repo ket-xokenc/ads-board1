@@ -1,4 +1,5 @@
 <?php
+namespace application\classes;
 class Route
 {
     private $routes;
@@ -52,8 +53,7 @@ class Route
                 //print_r(count($segments));
 
                 $this->params = $segments;
-
-
+                //echo $this->controller;
                 if(!is_callable(array($this->controller, $this->action))){
                     header("HTTP/1.0 404 Not Found");
                     return;

@@ -1,6 +1,7 @@
 <?php
-use app\core\FrontController;
-
+namespace application\core;
+use application\core\FrontController;
+use application\core\View;
 class BaseController
 {
     protected $layout = 'layout';

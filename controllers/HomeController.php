@@ -1,5 +1,6 @@
 <?php
-use app\core\Database;
+use application\core\Database;
+use application\core\BaseController;
 class HomeController extends BaseController
 {
     public function indexAction()
@@ -28,9 +29,10 @@ class HomeController extends BaseController
 
     public function staticPageAction()
     {
-
+        $user = new Users();
+        $data = $user->get();
         $page = current($this->getRequest()->getParams());
-        $this->render("site/$page");
+        $this->render("site/$page", ['user' => $data]);
 
     }
 }
