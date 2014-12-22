@@ -149,4 +149,18 @@ class UsersController extends BaseController
         $this->render('users/payment-plan', ['user' => $dataInfo]);
     }
 
+    public function profileAction()
+    {
+        $users = new Users();
+        $data = $users->get();
+        $this->render('users/profile', ['user' => $data]);
+    }
+
+    public function editAction()
+    {
+        $users = new Users();
+        $data = $users->get();
+        $this->render('users/edit-profile', ['user' => $data]);
+    }
+
 }
