@@ -1,5 +1,6 @@
 <?php
-
+use application\classes\Registry;
+use application\classes\Session;
 class Users
 {
     protected $table = 'users';
@@ -11,7 +12,7 @@ class Users
 
     public function __construct()
     {
-        $this->db = \Registry::get('database');
+        $this->db = Registry::get('database');
 //         var_dump($this->db);
         //
     }

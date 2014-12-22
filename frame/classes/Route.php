@@ -1,4 +1,5 @@
 <?php
+namespace application\classes;
 class Route
 {
     private $routes;

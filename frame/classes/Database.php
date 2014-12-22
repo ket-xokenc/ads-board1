@@ -1,5 +1,5 @@
 <?php
-//use app\core\FrontController;
+namespace application\classes;
 class Database
 {
     protected $db;
@@ -32,8 +32,9 @@ class Database
      */
     private function getDb() { //Подключаемся...
         if(!$this->db){
-            $this->db = new PDO($this->driver.':host='.$this->host.'; dbname='.$this->dbname, $this->user, $this->password);
+            $this->db = new \PDO($this->driver.':host='.$this->host.'; dbname='.$this->dbname, $this->user, $this->password);
             $this->db->query('SET NAMES '.$this->charset);
+            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
         return $this->db;
 
@@ -100,7 +101,7 @@ class Database
             $stmt->bindValue(":$k", $v);
         }
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -131,7 +132,7 @@ class Database
         }
 
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -157,7 +158,7 @@ class Database
             $stmt->bindValue(":$key", $value);
         }
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_COLUMN);
+        return $stmt->fetch(\PDO::FETCH_COLUMN);
 
     }
 
