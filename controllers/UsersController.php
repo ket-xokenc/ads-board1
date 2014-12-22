@@ -1,4 +1,6 @@
 <?php
+use application\core\BaseController;
+use application\classes\Session;
 /**
  * Created by PhpStorm.
  * User: alexandr
@@ -147,6 +149,20 @@ class UsersController extends BaseController
         $user = new Users();
         $dataInfo = $user->get();
         $this->render('users/payment-plan', ['user' => $dataInfo]);
+    }
+
+    public function profileAction()
+    {
+        $users = new Users();
+        $data = $users->get();
+        $this->render('users/profile', ['user' => $data]);
+    }
+
+    public function editAction()
+    {
+        $users = new Users();
+        $data = $users->get();
+        $this->render('users/edit-profile', ['user' => $data]);
     }
 
 }
