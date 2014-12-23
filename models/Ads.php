@@ -15,31 +15,107 @@ class Ads {
         $this->db = Registry::get('database');
     }
 
-    public function create($data){
+    public function create(){
         $table=Ads::TABLE;
+        $data=array();
+        $errorLog=array();
+        $category=new Category();
+        $user=new Users();
 
-        if(!empty($errors=$this->checkData($data))){
-            return $errors;
+        $data['id_user']=$user->get()['id'];
+
+        $data['date_create']=date('Y-m-d');
+
+
+        if(empty(trim($_POST['title']))){
+            $errorLog['title']='Empty title field';
+        }else{
+            if(strlen($_POST['title'])<10){
+                $errorLog['title']='Too short title';
+            }elseif(strlen($_POST['title'])>30){
+                $errorLog['title']='Too long title';
+            }else{
+                $data['title']= $_POST['title'];
+            }
         }
 
-        $this->db->insert($table,$data);
-    }
-
-    public function edit($data,$where){
-        $table=Ads::TABLE;
-
-        if(!empty($errors=$this->checkData($data))){
-            return $errors;
+        if(empty(trim($_POST['text']))){
+            $errorLog['text']='Empty description field';
+        }else{
+            if(strlen($_POST['text'])<20){
+                $errorLog['text']='Too short description';
+            }elseif(strlen($_POST['text'])>100){
+                $errorLog['text']='Too long description';
+            }else{
+                $data['text']= $_POST['text'];
+            }
         }
 
-        $this->db->update($table,$data,$where);
+        if(empty($category->getCategoryByName($_POST['category']))){
+            $errorLog['category']="Category {$_POST['category']} don't exist";
+        }else{
+            $data['category_id']=$category->getCategoryByName($_POST['category'])['category_id'];
+        }
+
+        if(empty($errorLog)){
+            $this->db->insert($table,$data);
+        }else{
+            return $errorLog;
+        }
+    }
+
+    public function edit($ads_id){
+        $table=Ads::TABLE;
+        $data=array();
+        $errorLog=array();
+        $category=new Category();
+        $user=new Users();
+
+        $data['id_user']=$user->get()['id'];
+
+        $data['date_create']=date('Y-m-d');
+
+        if(empty($this->getAdsById($ads_id))){
+            $errorLog['id_ad']="Ads don't exist";
+        }
+
+
+        if(!empty(trim($_POST['title']))){
+
+            if(strlen($_POST['title'])<10){
+                $errorLog['title']='Too short title';
+            }elseif(strlen($_POST['title'])>30){
+                $errorLog['title']='Too long title';
+            }else{
+                $data['title']= $_POST['title'];
+            }
+        }
+
+        if(!empty(trim($_POST['text']))){
+
+            if(strlen($_POST['text'])<20){
+                $errorLog['text']='Too short description';
+            }elseif(strlen($_POST['text'])>100){
+                $errorLog['text']='Too long description';
+            }else{
+                $data['text']= $_POST['text'];
+            }
+        }
+
+
+        if(empty($errorLog)){
+            $this->db->update($table,$data,['id_ad'=>$ads_id]);
+        }else{
+            return $errorLog;
+        }
+
     }
 
 
-    public function delete($where){
+    public function delete($ads_id){
         $table=Ads::TABLE;
 
-        $this->db->delete($table,$where);
+        $this->db->delete($table,['id_ad'=>$ads_id]);
     }
 
 
@@ -105,38 +181,5 @@ class Ads {
         return $this->db->query("SELECT * FROM $table WHERE text REGEXP :date",array(':date'=>$date));
     }
 
-    private function checkData($data){
 
-        $errorLog=array();
-
-        if(empty($data['date_create'])){
-            $data['date_create']=date('Y-m-d');
-        }
-
-        if(strlen($data['title'])<10){
-            $errorLog['title']='Too short title';
-        }
-
-        if(strlen($data['title'])>30){
-            $errorLog['title']='Too long title';
-        }
-
-        if(strlen($data['text'])<20){
-            $errorLog['text']='Too short description';
-        }
-
-        if(strlen($data['text'])>100){
-            $errorLog['text']='Too long description';
-        }
-
-        if(empty($this->db->fetchRow('categories',['*'],$data['category_id']))){
-            $errorLog['category_id']="Category with id {$data['category_id']} don't exist";
-        }
-
-        if(empty($this->db->fetchRow('users',['*'],$data['id_user']))){
-            $errorLog['id_user']="User with id {$data['id_user']} don't exist";
-        }
-
-        return $errorLog;
-    }
 } 
