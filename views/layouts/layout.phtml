@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,39 +30,36 @@
 
 <body>
 <div id="wrap">
-<div class="container container-lg-height">
-    <div class="row">
-        <div class="col-lg-2   text-center col-lg-height col-middle">
-            <h1>ADSboard</h1>
+    <div class="container container-lg-height">
+        <div class="row">
+            <div class="col-lg-2   text-center col-lg-height col-middle">
+                <h1>ADSboard</h1>
+            </div>
+
+            <div class="col-lg-4  text-left col-lg-height col-middle">
+                <div class="btn-group-lg">
+                    <a class="btn btn-default button" href="/">Home</a>
+                    <a class="btn btn-default button" href="/about">About</a>
+                    <a class="btn btn-default " href="/payment-plan">Payment Plan</a>
+                </div>
+            </div>
+
+            <?php if(!empty($user['login'])){?>
+                <div class="col-lg-5 col-lg-push-1 text-center col-lg-height col-middle">
+                    <a class="btn-link" href="/profile"><?=$user['login']?></a>
+                    <a href="/logout" class="btn-link">Logout</a>
+                </div>
+            <?php }else{ ?>
+
+                <div class="col-lg-5 col-lg-push-1 text-center col-lg-height col-middle">
+                    <a class="btn btn-lg" href="/registration">Registration</a>
+                    <a class="btn btn-lg" href="/login">Sign in</a>
+                </div>
+
+            <?php }?>
         </div>
-
-        <div class="col-lg-4  text-left col-lg-height col-middle">
-            <div class="btn-group-lg">
-                <a class="btn btn-default button" href="/">Home</a>
-                <a class="btn btn-default button" href="/about">About</a>
-                <a class="btn btn-default " href="/payment-plan">Payment Plan</a>
-            </div>
-        </div>
-
-        <?php if(!empty($user['login'])){?>
-            <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
-                <a class="btn-link" href="/profile"><?=$user['login']?></a>
-            </div>
-            <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
-                <a href="/logout" class="btn-link">Logout</a>
-            </div>
-        <?php }else{ ?>
-
-            <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
-                <a class="btn btn-lg" href="/registration">Registration</a>
-            </div>
-            <div class="col-lg-2 text-center col-lg-height col-middle">
-                <a class="btn btn-lg" href="/login">Sign in</a>
-            </div>
-        <?php }?>
     </div>
-</div>
-<?=$content?>
+    <?=$content?>
 
 
 </div>
