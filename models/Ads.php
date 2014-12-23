@@ -125,7 +125,7 @@ class Ads {
             $errorLog['text']='Too short description';
         }
 
-        if(strlen($data['title'])>100){
+        if(strlen($data['text'])>100){
             $errorLog['text']='Too long description';
         }
 
@@ -134,7 +134,7 @@ class Ads {
         }
 
         if(empty($this->db->fetchRow('users',['*'],$data['id_user']))){
-            $errorLog['category_id']="User with id {$data['id_user']} don't exist";
+            $errorLog['id_user']="User with id {$data['id_user']} don't exist";
         }
 
         return $errorLog;
