@@ -1,0 +1,23 @@
+<ul class="breadcrumb">
+    <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a> <span class="divider">/</span></li>
+    <li class="active">Профиль юзера</li>
+</ul>
+<div>
+    <table class="table table-bordered" >
+        <thead>
+        <tr>
+            <th>Заголовок</th>
+            <th>Текст</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($row as $tt): ?>
+            <tr>
+                <td><?php echo $tt['title']; ?></td>
+                <td><?php echo $tt['text']; ?></td>
+
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
