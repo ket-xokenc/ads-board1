@@ -1,5 +1,5 @@
 <div>
-    <table class="table">
+    <table class="table" >
         <thead>
         <tr>
             <th>#</th>
@@ -18,7 +18,11 @@
                 <td><?php echo $tt["status"]; ?></td>
                 <td>
                     <a href="/admin/show/<?php echo $tt["id"]; ?>">Псмотреть</a>
-                    <a href="/admin/ban/<?php echo $tt["id"]; ?>">Заблокировать</a>
+                    <?php if($tt['status']=='banned'):?>
+                        <a href="/admin/unban/<?php echo $tt["id"]; ?>">Разблокировать</a>
+                    <?php else:?>
+                        <a href="/admin/ban/<?php echo $tt["id"]; ?>">Заблокировать</a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>

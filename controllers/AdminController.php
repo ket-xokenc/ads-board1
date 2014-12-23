@@ -1,11 +1,47 @@
 <?php
+use application\core\BaseController;
+use application\classes\Session;
+
 class AdminController extends BaseController
-{private $par = array();
-    function __construct(){}
+{
+    public function __construct($request)
+    {
+        parent::__construct($request);
+    }
     function panelAction()
     {
-        $admin = new Database();
-        $this->par = $admin->isAdmin();
-            $this->render('admin/panel', ['row'=>$this->par]);
+        $admin = new Admin();
+        $this->render('admin/panel', ['row'=>$admin->showUsers()]);
+    }
+    function banAction()
+    {
+        $admin = new Admin();
+        $par = $this->getRequest()->getParams();
+        foreach ($par as $k) {
+            $k = (int)$k;
+            $admin->ban($k);
+            header("Location: http://".$_SERVER['SERVER_NAME']."/admin");
+        }
+    }
+    function unbanAction()
+    {
+        $admin = new Admin();
+        $par = $this->getRequest()->getParams();
+        foreach ($par as $k) {
+            $k = (int)$k;
+            $admin->unban($k);
+            header("Location: http://".$_SERVER['SERVER_NAME']."/admin");
+        }
+    }
+    function showAction()
+    {
+        $admin = new Admin();
+        $par = $this->getRequest()->getParams();
+        foreach ($par as $k) {
+            $k = (int)$k;
+            $row = $admin->showAds($k);
+            //var_dump($row); exit;
+            $this->render('admin/show', ['row'=>$row]);
+        }
     }
 }

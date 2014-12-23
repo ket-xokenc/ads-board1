@@ -105,6 +105,7 @@ class Database
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+
     /**
      * @param $table
      * @param array $data
@@ -219,6 +220,14 @@ class Database
             $stmt->bindValue(":$key", $value);
         }
         $stmt->execute();
+    }
+    public function isAdmin($table)
+    {
+        $db = $this->getDb();
+        $res = $db->prepare("SELECT id, login, status, role FROM $table");
+        $res->execute();
+        $result = $res->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**
