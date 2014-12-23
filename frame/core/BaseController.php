@@ -8,9 +8,9 @@ class BaseController
     protected $view;
     protected $app;
     private $request;
-    protected $errors = '';
+    private $data = array();
 
-    public function __construct($request)
+    public function __construct($request = null)
     {
         $this->app = FrontController::getInstance();
         $this->view = new View();
@@ -19,9 +19,10 @@ class BaseController
 
     public function render($filename, $data = array())
     {
-        $error = $this->errors;
+        $error = '';
         $view = $this->view;
         $content=array();
+        extract($this->data);
 
         foreach($data as $k => $v){
             $$k = $v;
@@ -44,5 +45,10 @@ class BaseController
     public function getRequest()
     {
         return $this->request;
+    }
+
+    public function assign($key, $value)
+    {
+        $this->data[$key]= $value;
     }
 }

@@ -16,6 +16,7 @@ class UsersController extends BaseController
 
     public function loginAction()
     {
+        $res = null;
         $user = new Users();
         $userInfo = $user->get();
         if($userInfo){
@@ -23,28 +24,13 @@ class UsersController extends BaseController
         }
 
         if ($this->getRequest()->isPost()) {
-            $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
-            $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;
-
-            if (!$login) {
-                $this->errors .= 'Логин может состоять только из букв английского алфавита и цифр';
-            }
-            if(!$password) {
-                $this->errors .= 'Пароль не соответствует правилам составления';
-            }
-            if(!$login || !$password){
-                $this->render('users/login');
-                die;
-            }
-
-            $user->authorize($login, $password);
+            $res = $user->authorize(isset($_POST['rememberMe']));
             if (Users::isAuthorized()) {
-                $data = $user->getByLogin($login);
+                $data = $user->get();
                 $this->render('site/home', ['user' => $data]);
             }
         }
-        $this->errors .= $user->getError();
-        $this->render('users/login');
+        $this->render('users/login', ['error' => $res]);
     }
 
     public function registrationAction()
@@ -56,49 +42,21 @@ class UsersController extends BaseController
         }
 
         if($this->getRequest()->isPost()) {
-            if (!empty($_POST['name']) && !empty($_POST['login']) && !empty($_POST['password1']) && !empty($_POST['email'])) {
-                if ($_POST['password1'] == $_POST['password2']) {
-
-                    $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
-                    $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;
-                    $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', $_POST['name']) ? $_POST['name'] : false;
-                    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-                    $phone = preg_match('/^\+7\d{10}$/', $_POST['phone']) ? $_POST['phone'] : false;
-                    if(!$login)
-                        $this->errors .= "Не правильный логин!<br />";
-                    if(!$password)
-                        $this->errors .= "Пароль не соответствует правилам заполнения!<br />";
-                    if(!$email)
-                        $this->errors .= "Не правильный email!<br />";
-
-                    if ($user->create(['login' => $login, 'name' => $name, 'password' => $password, 'email' => $email, 'phone' => $phone])) {
-                        if (!$user->sendMail()) {
-                            die('Не удалось отправить сообщение!!!');
-                        }
-                        else {
-                            $messages = "На ваш почтовый адрес отправлено сообщение со ссылкой для активации аккаунта.";
-                            $this->render('users/info', ['messages' => $messages]);
-                            return;
-                        }
-                    }else {
-                        $this->render('users/registration');
+            $res = $user->create();
+                if ($res === true){
+                    if (!$user->sendMail()) {
+                        die('Не удалось отправить сообщение!!!');
+                    }
+                    else {
+                        $messages = "На ваш почтовый адрес отправлено сообщение со ссылкой для активации аккаунта.";
+                        $this->render('users/info', ['messages' => $messages]);
                         return;
                     }
-                }else{
-                    $this->errors .= "Пароли не совпадают<br />";
-                    $this->errors .= $user->getError();
-                    $this->render('users/registration');
+                }else {
+                    $this->render('users/registration', ['error' => $res]);
                     return;
                 }
-
-            } else {
-                $this->errors .= "Не все обязательные поля заполнены!<br />";
-                $this->render('users/registration');
-                return;
-
-            }
         }
-        $this->errors .= $user->getError();
         $this->render('users/registration');
     }
 
