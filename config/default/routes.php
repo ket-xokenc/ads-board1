@@ -1,6 +1,8 @@
 <?php
+
 return [
     'routes' => [
+
         'home' => 'home/index',
         'users/([-_a-z0-9]+)' => 'users/$1',
         'users/([-_a-z0-9]+)/([-_a-z0-9]+)' => 'users/$1/$2',
@@ -13,6 +15,8 @@ return [
         'confirmation/hash/([a-zA-Z0-9]+)' => 'users/confirmation/$1',
         'about' => 'home/staticPage/about',
         'payment-plan' => 'users/paymentPlan',
+        'profile' => 'users/profile',
+        'profile/edit' => 'users/edit',
         'admin' => 'admin/panel',
         'admin/show/([0-9]+)' => 'admin/show/$1',
         'admin/ban/([0-9]+)' => 'admin/ban/$1',
