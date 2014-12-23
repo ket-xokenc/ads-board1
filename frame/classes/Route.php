@@ -1,5 +1,7 @@
 <?php
 namespace application\classes;
+use application\core\Error;
+
 class Route
 {
     private $routes;
@@ -53,8 +55,6 @@ class Route
                 //print_r(count($segments));
 
                 $this->params = $segments;
-
-
                 if(!is_callable(array($this->controller, $this->action))){
                     header("HTTP/1.0 404 Not Found");
                     return;
@@ -79,10 +79,11 @@ class Route
                 'action' => $this->action,
                 'params' => $this->params);
         }
-
         // Ничего не применилось. 404.
         header("HTTP/1.0 404 Not Found");
-        return;
+        $error = new Error('Page not found');
+        $error->index();
+        die;
     }
 
 }
