@@ -1,23 +1,29 @@
 <?php
-use app\core\FrontController;
+namespace application\core;
+use application\core\FrontController;
+use application\core\View;
 class BaseController
 {
     protected $layout = 'layout';
     protected $view;
     protected $app;
     private $request;
-    protected $errors = '';
-    public function __construct($request)
+    private $data = array();
+
+    public function __construct($request = null)
     {
         $this->app = FrontController::getInstance();
         $this->view = new View();
         $this->request = $request;
     }
+
     public function render($filename, $data = array())
     {
-        $error = $this->errors;
+        $error = '';
         $view = $this->view;
         $content=array();
+        extract($this->data);
+
         foreach($data as $k => $v){
             $$k = $v;
         }
@@ -32,10 +38,17 @@ class BaseController
             include_once '../views/'.$filename.'.phtml';
             $content = ob_get_clean();
         }
+
         include_once '../views/layouts/'.$this->layout.'.phtml';
     }
+
     public function getRequest()
     {
         return $this->request;
+    }
+
+    public function assign($key, $value)
+    {
+        $this->data[$key]= $value;
     }
 }

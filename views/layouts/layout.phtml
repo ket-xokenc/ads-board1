@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <title><?=$title?></title>
+    <title><?php echo 'Ads'?></title>
 
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -28,6 +28,7 @@
 </head>
 
 <body>
+<div id="wrap">
 <div class="container container-lg-height">
     <div class="row">
         <div class="col-lg-2   text-center col-lg-height col-middle">
@@ -63,9 +64,11 @@
 <?=$content?>
 
 
+</div>
 
 
-<footer class="container navbar-bottom">
+
+<footer id="footer" class="container">
     <hr>
     <p>&copy; Company 2014 <a class="btn-link" href="/contact-us">Contact us</a></p>
 
