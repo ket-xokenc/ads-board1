@@ -59,11 +59,11 @@ class Category {
         $errorLog=array();
 
         if(strlen($data['name'])<5){
-            $errorLog['title']='Too short name';
+            $errorLog['name']='Too short name';
         }
 
         if(strlen($data['name'])>15){
-            $errorLog['title']='Too long name';
+            $errorLog['name']='Too long name';
         }
 
         return $errorLog;
