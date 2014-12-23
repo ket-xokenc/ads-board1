@@ -40,8 +40,14 @@ class AdminController extends BaseController
         foreach ($par as $k) {
             $k = (int)$k;
             $row = $admin->showAds($k);
-            //var_dump($row); exit;
             $this->render('admin/show', ['row'=>$row]);
         }
+    }
+    function searchAction()
+    {
+        $admin = new Admin();
+        $search = $_POST['search'];
+        $finder = $admin->searchUser($search);
+        var_dump($finder);
     }
 }

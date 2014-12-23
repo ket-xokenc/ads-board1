@@ -29,4 +29,8 @@ class Admin
     {
        return $this->db->fetchAll('ad', ['title', 'text'], ['id_user'=>$id]);
     }
+    function searchUser($find)
+    {
+        return $this->db->search($find);
+    }
 }

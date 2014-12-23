@@ -1,7 +1,11 @@
 <div>
-    <table class="table" >
+    <form class="form-search" action="/admin/search" method="post">
+        <input type="text" name="search" class="input-medium search-query">
+        <button type="submit" style="background-color: aqua" class="btn">search</button>
+    </form>
+    <table class="table table-bordered">
         <thead>
-        <tr>
+        <tr bgcolor="aqua">
             <th>#</th>
             <th>Логин</th>
             <th>Роль</th>
