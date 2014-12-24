@@ -220,21 +220,8 @@ class Database
         }
         $stmt->execute();
     }
-    public function isAdmin($table)
-    {
-        $db = $this->getDb();
-        $res = $db->prepare("SELECT id, login, status, role FROM $table");
-        $res->execute();
-        $result = $res->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
-    }
-    public function search($find)
-    {
-        $db = $this->getDb();
-        $sth = $db->prepare("SELECT id, login, role, status FROM users WHERE login LIKE ?");
-        $sth->execute(array('%'.$find.'%'));
-        return $sth-> fetchAll(\PDO::FETCH_ASSOC);
-    }
+
+
     /**
      * @param $table
      * @param array $where
