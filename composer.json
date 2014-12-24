@@ -7,7 +7,9 @@
         }
     ],
 
-    "require": {},
+    "require": {
+        "monolog/monolog": "1.2.*"
+    },
     "autoload": {
       "psr-4":{
         "application\\core\\": "frame/core/",
