@@ -13,7 +13,7 @@ class AdminController extends BaseController
     }
     function panelAction()
     {
-        $admin = $this->db->isAdmin('users');
+        $admin = $this->db->fetchAll('users', ['id', 'login', 'status', 'role']);
         $this->render('admin/panel', ['row'=>$admin]);
     }
     function banAction()
@@ -45,9 +45,8 @@ class AdminController extends BaseController
     }
     function searchAction()
     {
-        $admin = new Admin();
         $search = $_POST['search'];
-        $finder = $this->db->search($search);
+        $finder = $this->db->query("SELECT * FROM users WHERE login LIKE '%$search%'", array('login'=>$search));
         $this->render('admin/search', ['row'=>$finder]);
     }
 }
