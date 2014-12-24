@@ -4,6 +4,7 @@
     </div>
 </div>
 
+
 <div class="container text-right">
     <div class="col-lg-5 text-left">
         <h3>Your Ads:</h3>
@@ -26,34 +27,34 @@
     <div class="row">
 
 
-
+    <?php foreach($dbinfo as $vals):?>
         <div class="col-lg-12">
             <div class="panel panel-primary ">
                 <div class="ads-style panel-heading">
-                    <h2>Title</h2>
+                    <h2><?=$vals['ad_title']?></h2>
                 </div>
                 <div class="panel-body">
-                    Description
+                    <?=$vals['ad_text']?>
                 </div>
                 <div class="ads-style panel-footer">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-8" style="padding-left:0px">
-                                <span class="ads-font">Category: </span>category_name
-                                <span class="ads-font">Name: </span>user_name
-                                <span class="ads-font">Phone: </span>user_phone
-                                <span class="ads-font">Date: </span>publication_date
+                                <span class="ads-font">Category: </span><?=$vals['categories_name']?>
+                                <span class="ads-font">Name: </span><?=$vals['user_name']?>
+                                <span class="ads-font">Phone: </span><?=$vals['user_phone']?>
+                                <span class="ads-font">Date: </span><?=$vals['ad_date_create']?>
                             </div>
                             <div class="col-lg-4 text-right" style="padding-right:0px">
-                                <a href="/profile/ads-edit/(ads_number)" class="btn btn-default btn-xs">Edit</a>
-                                <a id="ads-delete" href="/profile/ads-delete/(ads_number)" class="btn btn-danger btn-xs">Delete</a>
+                                <a href="/profile/ads-edit/<?=$vals['ad_id_ad']?>" class="btn btn-default btn-xs">Edit</a>
+                                <a id="ads-delete" href="/profile/ads-delete/<?=$vals['ad_id_ad']?>" class="btn btn-danger btn-xs">Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+    <?php endforeach;?>
 
 
 
@@ -73,11 +74,18 @@
         $("#ads-delete").click(function(e) {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result){
-                    window.location.href = $(e.srcElement).attr('href');
+                    window.location.href = $('#ads-delete').attr('href');
                 }
             });
             e.preventDefault();
         })
+
+
+            $("html").notify(
+                'Hello',
+                { position:"top right" }
+            );
+            //$('#info').hide('fast');
 
     });
 </script>

@@ -113,7 +113,14 @@ class UsersController extends BaseController
     {
         $users = new Users();
         $data = $users->get();
-        $this->render('users/profile', ['user' => $data]);
+
+        $category=new Category();
+        $ads=new Ads($category,$users);
+
+
+        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid())]);
+
+        //$this->render('users/profile', ['user' => $data]);
     }
 
     public function editAction()

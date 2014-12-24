@@ -8,21 +8,29 @@ class Ads {
     private $db;
 
     const TABLE='ad';
+    private $category;
+    private $users;
 
-
-    public function __construct()
+    public function __construct(Category $category,Users $users)
     {
         $this->db = Registry::get('database');
+        $this->category=$category;
+        $this->users=$users;
     }
 
     public function create(){
         $table=Ads::TABLE;
         $data=array();
         $errorLog=array();
-        $category=new Category();
-        $user=new Users();
+        $category=$this->category;
+        $user=$this->users;
 
-        $data['id_user']=$user->get()['id'];
+        if(!empty($user->getUid())){
+            $data['id_user']=$user->getUid();
+        }else{
+            $errorLog['redirect']='site/home';
+            return $errorLog;
+        }
 
         $data['date_create']=date('Y-m-d');
 
@@ -68,10 +76,7 @@ class Ads {
         $table=Ads::TABLE;
         $data=array();
         $errorLog=array();
-        $category=new Category();
-        $user=new Users();
 
-        $data['id_user']=$user->get()['id'];
 
         $data['date_create']=date('Y-m-d');
 
@@ -115,6 +120,7 @@ class Ads {
     public function delete($ads_id){
         $table=Ads::TABLE;
 
+
         $this->db->delete($table,['id_ad'=>$ads_id]);
     }
 
@@ -128,7 +134,13 @@ class Ads {
     public function getAdsByUserId($id){
         $table=Ads::TABLE;
 
-        return $this->db->fetchAll($table, ['*'], ['id_user' => $id]);
+        return $this->db->query("Select users.name user_name,users.phone users_phone,categories.name categories_name,
+                                    $table.title {$table}_title, $table.text {$table}_text, $table.date_create {$table}_date_create,
+                                    $table.id_ad {$table}_id_ad
+                                    from $table inner join categories on
+                                    $table.category_id=categories.category_id
+                                    inner join users on users.id=$table.id_user
+                                    where users.id=:id",array(':id'=>$id));
     }
 
     public function getAdsByCategoryId($id){

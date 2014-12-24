@@ -13,26 +13,27 @@
                         <h1>Edit Ads</h1>
                     </div>
 
-                    <div class="col-lg-6 text-right">
-
-                        <select class="selectpicker btn btn-default" name="category">
-                            <!--Добавить с помощью цикла php категории с бд и указать категорию Ads-->
-                            <option value="1">1</option>
-                        </select>
-
-                    </div>
-
                 </div>
-                <form role="form" action="/profile/edit-ads" method="post">
+
+                <form role="form" class="text-left" action="/profile/ads-edit/<?=$dbinfo['id_ad']?>" method="post">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="InputName" placeholder="Ads Title" name="title" value="(download from db)">
+                        <label for="InputName">Ads Title</label>
+                        <input type="text" class="form-control" id="InputName" placeholder="Ads Title" name="title" value="<?=$dbinfo['title']?>">
+                        <div class="text-right">
+                            <span class="text-danger"><?php echo !empty($errors['title'])?$errors['title']:''?></span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" id="descField" rows="15" placeholder="Your Comments" name="text" >(download from db)</textarea>
+                        <label for="descField">Description</label>
+                        <textarea class="form-control" id="descField" rows="15" placeholder="Your Comments" name="text" ><?=$dbinfo['text']?></textarea>
+                        <div class="text-right">
+                            <span class="text-danger"><?php echo !empty($errors['text'])?$errors['text']:''?></span>
+                        </div>
                     </div>
 
-
-                    <button type="submit" class="btn btn-default">Save changes</button>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-default">Save changes</button>
+                    </div>
                 </form>
             </div>
         </div>
