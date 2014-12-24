@@ -15,7 +15,7 @@ class Category {
     }
 
     public function create(){
-        $table=Ads::TABLE;
+        $table=Category::TABLE;
         $data=array();
         $errorLog=array();
 
@@ -51,7 +51,7 @@ class Category {
     }
 
     public function edit($category_id){
-        $table=Ads::TABLE;
+        $table=Category::TABLE;
         $data=array();
         $errorLog=array();
 
@@ -92,21 +92,26 @@ class Category {
 
 
     public function delete($category_id){
-        $table=Ads::TABLE;
+        $table=Category::TABLE;
 
         $this->db->delete($table,['category_id'=>$category_id]);
     }
 
     public function getCategoryById($id){
-        $table=Ads::TABLE;
+        $table=Category::TABLE;
 
         return $this->db->fetchRow($table, ['*'], ['category_id' => $id]);
     }
 
     public function getCategoryByName($name){
-        $table=Ads::TABLE;
+        $table=Category::TABLE;
 
         return $this->db->fetchRow($table, ['*'], ['name' => $name]);
     }
 
+    public function getAllCategories(){
+        $table=Category::TABLE;
+
+        return $this->db->fetchAll($table,['*']);
+    }
 } 

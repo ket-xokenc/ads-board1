@@ -17,7 +17,7 @@ class BaseController
         $this->request = $request;
     }
 
-    public function render($filename, $data = array())
+    public function render($filename, $data = array(),array $errors=null)
     {
         $error = '';
         $view = $this->view;

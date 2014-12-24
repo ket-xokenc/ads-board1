@@ -138,7 +138,7 @@ class Users
     {
         $min = date('Y-m-d H:i:s', time() - 60 * 10);
         $where = [':minn' => $min];
-        $this->db->query("DELETE FROM users WHERE create_time > :minn AND status = 'registered'", $where);
+        //$this->db->query("DELETE FROM users WHERE create_time > :minn AND status = 'registered'", $where);
     }
 
     public function get($userId = null)
