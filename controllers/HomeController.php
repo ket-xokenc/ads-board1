@@ -1,6 +1,4 @@
 <?php
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use application\core\BaseController;
 use application\classes\Database;
 class HomeController extends BaseController
@@ -16,32 +14,7 @@ class HomeController extends BaseController
 //        print_r($db->fetchRow('users', ['id', 'login', 'name'], ['id' => 32]));exit;
         //print_r($db->fetchOne('users', 'login', ['login' => 'kvasenko']));exit;
         // $db->query('DELETE from users where login = :login', [':login' => 'alex'], [':login' => 'str']);
-
-
-
-
-        $logger = new Logger('my_logger');
-        $logger->pushHandler(new StreamHandler('../logs/debug.log', Logger::DEBUG, false));
-        $logger->pushHandler(new StreamHandler('../logs/info.log', Logger::INFO, false));
-        $logger->pushHandler(new StreamHandler('../logs/error.log', Logger::WARNING, false));
-        $logger->debug('debug');
-        $logger->info('info');
-        $logger->err('warn');
-        $logger->err('error');
-echo "----------------------ERROR:\n";
-print_r(file_get_contents('../logs/error.log'));
-echo "---------------------INFO:\n";
-print_r(file_get_contents('../logs/info.log'));
-echo "----------------------DEBUG:\n";
-print_r(file_get_contents('../logs/debug.log'));
-        exit;
-
-
-
-
-
         $data = [];
-
         $user = new Users();
         $data = $user->get();
         $title = 'Домашняя страница';
