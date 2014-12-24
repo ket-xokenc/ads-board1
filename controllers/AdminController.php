@@ -1,45 +1,45 @@
 <?php
 use application\core\BaseController;
 use application\classes\Session;
+use application\classes\Registry;
 
 class AdminController extends BaseController
 {
+    private $db;
     public function __construct($request)
     {
+        $this->db = Registry::get('database');
         parent::__construct($request);
     }
     function panelAction()
     {
-        $admin = new Admin();
-        $this->render('admin/panel', ['row'=>$admin->showUsers()]);
+        $admin = $this->db->isAdmin('users');
+        $this->render('admin/panel', ['row'=>$admin]);
     }
     function banAction()
     {
-        $admin = new Admin();
         $par = $this->getRequest()->getParams();
         foreach ($par as $k) {
             $k = (int)$k;
-            $admin->ban($k);
+            $this->db->update('users', ['status' => 'banned'], ['id' => $k]);
             header("Location: http://".$_SERVER['SERVER_NAME']."/admin");
         }
     }
     function unbanAction()
     {
-        $admin = new Admin();
         $par = $this->getRequest()->getParams();
         foreach ($par as $k) {
             $k = (int)$k;
-            $admin->unban($k);
+            $this->db->update('users', ['status' => 'registered'], ['id' => $k]);
             header("Location: http://".$_SERVER['SERVER_NAME']."/admin");
         }
     }
     function showAction()
     {
-        $admin = new Admin();
         $par = $this->getRequest()->getParams();
         foreach ($par as $k) {
             $k = (int)$k;
-            $row = $admin->showAds($k);
+            $row = $this->db->fetchAll('ad', ['title', 'text'], ['id_user'=>$k]);
             $this->render('admin/show', ['row'=>$row]);
         }
     }
@@ -47,7 +47,7 @@ class AdminController extends BaseController
     {
         $admin = new Admin();
         $search = $_POST['search'];
-        $finder = $admin->searchUser($search);
-        var_dump($finder);
+        $finder = $this->db->search($search);
+        $this->render('admin/search', ['row'=>$finder]);
     }
 }
