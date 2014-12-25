@@ -1,22 +1,46 @@
 <div class="container">
     <div class="page-header">
-        <h2><a class="btn-link" href="/profile">UserLogin</a> <small>Profile</small> <a href="/profile/edit" class="btn btn-default btn-xs">Edit</a></h2>
+        <h2><a class="btn-link" href="/profile"><?=$user['login']?></a> <small>Profile</small> <a href="/profile/edit" class="btn btn-default btn-xs">Edit</a></h2>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-lg-push-3">
+            <?php if(isset($message)):?>
+            <div><?=$message?></div>
+            <?php endif;?>
+
+            <div class="error-valid"><?=$error?></div>
             <form role="form" action="/profile/edit" method="post">
 
                 <div class="form-group">
                     <label for="name">Your Name</label>
-                    <input type="text" class="form-control" id="name" value="name" name="username">
+                    <input type="text" class="form-control" id="name" value="<?=$user['name']?>" name="name">
                 </div>
-
                 <div class="form-group">
-                    <label for="phone">Your Phone</label>
-                    <input type="tel" class="form-control disabled" id="phone" value="UserPhone" name="phone">
+                    <label for="login">Login</label>
+                    <input type="text" class="form-control" id="login" value="<?=$user['login']?>" name="login">
+                </div>
+                <div class="form-group">
+                    <label for="InputEmail">Email</label>
+                    <input type="email" class="form-control" id="InputEmail" value="<?=$user['email']?>" placeholder="Email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="InputPassword">Old password</label>
+                    <input type="password" class="form-control" id="InputPassword" placeholder="Password" name="old_password">
+                </div>
+                <div class="form-group">
+                    <label for="InputPassword">New password</label>
+                    <input type="password" class="form-control" id="InputPassword" placeholder="Password" name="password1">
+                </div>
+                <div class="form-group">
+                    <label for="InputConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="InputConfirmPassword" placeholder="Confirm Password" name="password2">
+                </div>
+                <div class="form-group">
+                    <label for="InputPhone">Phone</label>
+                    <input type="tel" class="form-control" id="InputPhone" value="<?=$user['phone']?>" placeholder="Input your phone" name="phone">
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save Changes</button>

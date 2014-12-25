@@ -257,4 +257,60 @@ class Users
         return $this->db->fetchRow('users', ['*'], ['email' => $email]);
     }
 
+    public function edit()
+    {
+        $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', trim($_POST['name'])) ? $_POST['name'] : false;
+        $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', trim($_POST['login'])) ? $_POST['login'] : false;
+        $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+        $phone = preg_match('/^\+38\d{10}$/', trim($_POST['phone'])) ? $_POST['phone'] : false;
+
+        if(!empty($_POST['old_password'])) {
+            $passwordOld = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['old_password'])) ? $_POST['old_password'] : false;
+            $passwordNew = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['password1'])) ? $_POST['password1'] : false;
+            $passwordConfirm = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['password2'])) ? $_POST['password2'] : false;
+            if(!$passwordOld)
+                $this->errorValid .= "Старий пароль введен не правильно<br />";
+            if (!$passwordNew || !$passwordConfirm)
+                $this->errorValid .= "Ошибка при вводе нового пароля<br />";
+            if($passwordNew !== $passwordConfirm)
+                $this->errorValid .= "Пароли не совпадают<br />";
+            if(!empty($this->errorValid)) return $this->errorValid;
+        }
+
+        if(!$name) {
+            $this->errorValid .= "Не правильно введено имя!<br />";
+        }
+        if(!$login) {
+            $this->errorValid .= "Не правильно введен логин!<br />";
+        }
+        if(!$email){
+            $this->errorValid .= "Введите правильный email!<br />";
+        }
+        if(isset($passwordOld) && isset($passwordNew)) {
+            $hashes = $this->passwHash($passwordOld, $this->user['salt']);
+           // print_r($this->passwHash('123', $this->user['salt']));exit;
+            if($this->user['password'] !== $hashes['hash']){
+                $this->errorValid .= "Введен не правильный старый пароль!<br />";
+            }
+            else {
+                $hashes = $this->passwHash($passwordNew);;
+
+            }
+        }
+
+        if(!empty($this->errorValid)){
+            return $this->errorValid;
+        }
+
+        $this->db->update($this->table, ['login' => $login, 'name' => $name, 'email' => $email,
+            'password' => $passw = !empty($hashes['hash']) ? $hashes['hash'] : $this->user['password'] ,
+            'salt' => $salt = !empty($hashes['salt']) ? $hashes['salt'] : $this->user['salt'],
+            'phone' => $phone
+        ], ['id' => $this->user_id]);
+
+
+
+
+    }
+
 }
