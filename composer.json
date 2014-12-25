@@ -12,8 +12,8 @@
     },
     "autoload": {
       "psr-4":{
-        "application\\core\\": "frame/core/",
-        "application\\classes\\": "frame/classes/",
+        "application\\core\\": "framework/core/",
+        "application\\classes\\": "framework/classes/",
         "":["controllers/","models/"]
       }
     }

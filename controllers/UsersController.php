@@ -62,6 +62,9 @@ class UsersController extends BaseController
 
     public function logoutAction()
     {
+        $user = new Users();
+        $userInfo = $user->get();
+        setcookie('sid', '', time() - 3600);
         Session::destroy();
         $this->render('site/home');
 
@@ -112,22 +115,32 @@ class UsersController extends BaseController
     public function profileAction()
     {
         $users = new Users();
-        $data = $users->get();
+        $dataUser = $users->get();
 
         $category=new Category();
         $ads=new Ads($category,$users);
 
 
-        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid())]);
+        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($dataUser['id']), 'user' => $dataUser]);
 
         //$this->render('users/profile', ['user' => $data]);
     }
 
     public function editAction()
     {
+        $message = null;
         $users = new Users();
         $data = $users->get();
-        $this->render('users/edit-profile', ['user' => $data]);
+        if($this->getRequest()->isPost()){
+            $error = $users->edit();
+            if(!empty($error)) {
+                $this->render('users/edit-profile', ['error' => $error, 'user' => $data]);
+            }
+            $message = "Информация успешно обновлена!";
+            $users= new Users();
+            $data = $users->get();
+        }
+        $this->render('users/edit-profile', ['user' => $data, 'message' => $message]);
     }
 
 }
