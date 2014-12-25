@@ -28,7 +28,7 @@ class Ads {
         if(!empty($user->getUid())){
             $data['id_user']=$user->getUid();
         }else{
-            $errorLog['redirect']='site/home';
+            $errorLog['redirect']='/';
             return $errorLog;
         }
 
@@ -76,12 +76,22 @@ class Ads {
         $table=Ads::TABLE;
         $data=array();
         $errorLog=array();
-
+        $user=$this->users;
 
         $data['date_create']=date('Y-m-d');
 
-        if(empty($this->getAdsById($ads_id))){
-            $errorLog['id_ad']="Ads don't exist";
+        if(!empty($user->getUid())){
+            $user_id=$user->getUid();
+        }else{
+            $errorLog['redirect']='/';
+            return $errorLog;
+        }
+
+        $res=$this->db->query("select * from ad inner join users on users.id=ad.id_user where ad.id_ad=$ads_id and users.id=$user_id");
+
+        if(empty($res)){
+            $errorLog['redirect']="/";
+            return $errorLog;
         }
 
 
@@ -119,7 +129,22 @@ class Ads {
 
     public function delete($ads_id){
         $table=Ads::TABLE;
+        $errorLog=array();
+        $user=$this->users;
 
+        if(!empty($user->getUid())){
+            $user_id=$user->getUid();
+        }else{
+            $errorLog['redirect']='/';
+            return $errorLog;
+        }
+
+        $res=$this->db->query("select * from ad inner join users on users.id=ad.id_user where ad.id_ad=$ads_id and users.id=$user_id");
+
+        if(empty($res)){
+            $errorLog['redirect']="/";
+            return $errorLog;
+        }
 
         $this->db->delete($table,['id_ad'=>$ads_id]);
     }

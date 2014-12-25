@@ -41,6 +41,9 @@ class AdsController extends BaseController{
 
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->edit($params[0]))){
+                if(!empty($errors['redirect'])){
+                    header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
+                }
                 $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0])],$errors);
             }else{
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
@@ -64,8 +67,13 @@ class AdsController extends BaseController{
             return;
         }
 
+        if(!empty($errors=$ads->delete($params[0]))){
+            if(!empty($errors['redirect'])){
+                header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
+                return;
+            }
+        }
 
-        $ads->delete($params[0]);
 
         header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
         $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly deleted']);
