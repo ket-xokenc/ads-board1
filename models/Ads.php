@@ -156,7 +156,7 @@ class Ads {
         return $this->db->fetchRow($table, ['*'], ['id_ad' => $id]);
     }
 
-    public function getAdsByUserId($id){
+    public function getAdsByUserId($id,$escape=0,$number=PHP_INT_MAX){
         $table=Ads::TABLE;
 
         return $this->db->query("Select users.name user_name,users.phone users_phone,categories.name categories_name,
@@ -165,7 +165,7 @@ class Ads {
                                     from $table inner join categories on
                                     $table.category_id=categories.category_id
                                     inner join users on users.id=$table.id_user
-                                    where users.id=:id",array(':id'=>$id));
+                                    where users.id=:id  limit $escape,$number ",array(':id'=>$id));
     }
 
     public function getAdsByCategoryId($id){
@@ -218,5 +218,14 @@ class Ads {
         return $this->db->query("SELECT * FROM $table WHERE text REGEXP :date",array(':date'=>$date));
     }
 
+    public function getNumberOfAds($user_id){
+        $table=Ads::TABLE;
+
+        if(empty($user_id)){
+            return $this->db->query("SELECT count(*) FROM $table")[0][0];
+        }else{
+            return $this->db->query("SELECT count(*) FROM $table where $table.id_user=$user_id")[0][0];
+        }
+    }
 
 } 

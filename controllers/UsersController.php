@@ -120,10 +120,33 @@ class UsersController extends BaseController
         $category=new Category();
         $ads=new Ads($category,$users);
 
+        $ads_per_page=3;
 
-        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($dataUser['id']), 'user' => $dataUser]);
+        if(empty($users->getUid())){
+            header("Location: http://{$_SERVER['HTTP_HOST']}/");
+            return;
+        }
 
-        //$this->render('users/profile', ['user' => $data]);
+        $page=isset($_GET['page'])?$_GET['page']:1;
+
+
+        $number=$ads->getNumberOfAds($users->getUid());
+        $escape=($page==1)?0:(($page-1)*$ads_per_page);
+        $pages=ceil($number/$ads_per_page);
+
+
+        if($pages==$page){
+            $escape=$number-$ads_per_page;
+            $ads_per_page=$number;
+        }
+
+        $this->render('users/profile',[
+            'dbinfo'=>$ads->getAdsByUserId($users->getUid(),$escape,$ads_per_page),
+            'ads_per_page'=>$ads_per_page,'pages'=>$pages,'number'=>$number,'selectedPage'=>$page,'user' => $dataUser]);
+
+
+        //$this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($dataUser['id']), 'user' => $dataUser]);
+
     }
 
     public function editAction()

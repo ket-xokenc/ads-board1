@@ -43,6 +43,7 @@ class AdsController extends BaseController{
             if(!empty($errors=$ads->edit($params[0]))){
                 if(!empty($errors['redirect'])){
                     header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
+                    return;
                 }
                 $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0])],$errors);
             }else{
@@ -79,5 +80,6 @@ class AdsController extends BaseController{
         $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly deleted']);
 
     }
+
 
 } 
