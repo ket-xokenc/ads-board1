@@ -1,8 +1,9 @@
 <div class="container">
     <div class="page-header">
-        <h2><a class="btn-link" href="/profile">UserLogin</a> <small>Profile</small> <a href="/profile/edit" class="btn btn-default btn-xs">Edit</a></h2>
+        <h2><a class="btn-link" href="/profile"><?=$user['login']?></a> <small>Profile</small> <a href="/profile/edit" class="btn btn-default btn-xs">Edit</a></h2>
     </div>
 </div>
+
 
 <div class="container text-right">
     <div class="col-lg-5 text-left">
@@ -26,44 +27,97 @@
     <div class="row">
 
 
-
+    <?php foreach($dbinfo as $vals):?>
         <div class="col-lg-12">
             <div class="panel panel-primary ">
                 <div class="ads-style panel-heading">
-                    <h2>Title</h2>
+                    <h2><?=$vals['ad_title']?></h2>
                 </div>
                 <div class="panel-body">
-                    Description
+                    <?=$vals['ad_text']?>
                 </div>
                 <div class="ads-style panel-footer">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-8" style="padding-left:0px">
-                                <span class="ads-font">Category: </span>category_name
-                                <span class="ads-font">Name: </span>user_name
-                                <span class="ads-font">Phone: </span>user_phone
-                                <span class="ads-font">Date: </span>publication_date
+                                <span class="ads-font">Category: </span><?=$vals['categories_name']?>
+                                <span class="ads-font">Name: </span><?=$vals['user_name']?>
+                                <span class="ads-font">Phone: </span><?=$vals['users_phone']?>
+                                <span class="ads-font">Date: </span><?=$vals['ad_date_create']?>
                             </div>
                             <div class="col-lg-4 text-right" style="padding-right:0px">
-                                <a href="/profile/ads-edit/(ads_number)" class="btn btn-default btn-xs">Edit</a>
-                                <a id="ads-delete" href="/profile/ads-delete/(ads_number)" class="btn btn-danger btn-xs">Delete</a>
+                                <a href="/profile/ads-edit/<?=$vals['ad_id_ad']?>" class="btn btn-default btn-xs">Edit</a>
+                                <a id="ads-delete" href="/profile/ads-delete/<?=$vals['ad_id_ad']?>" class="btn btn-danger btn-xs">Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    <?php endforeach;?>
+
+    </div>
 
 
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 text-center">
 
-
-        <div class="col-lg-2 col-lg-push-5">
             <nav>
+                <?php if($pages>1):?>
+
+                <ul class="pagination">
+
+
+
+
+
+                            <li class="<?=($selectedPage==1)?'disabled':''?>">
+                                <a href="/profile?page=<?=($selectedPage-1)?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                    <?php for($i=1;$i<=$pages;$i++):?>
+
+                        <?php if($i<=3){ ?>
+
+                            <li class="<?=($selectedPage==$i)?'disabled':''?>">
+                                <a href="/profile?page=<?=$i?>"><?=$i?></a>
+                            </li>
+
+
+                        <?php }else{ ?>
+                            <li class="disabled">
+                                <span aria-hidden="true">...</span>
+                            </li>
+
+                            <li>
+                                <a href="/profile?page=<?=$pages?>"><?=$pages?></a>
+                            </li>
+                        <?php } ?>
+
+                    <?php endfor;?>
+
+
+
+                            <li class="<?=($selectedPage==$pages)?'disabled':''?>">
+                                <a href="/profile?page=<?=($selectedPage+1)?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+
+
+
+                </ul>
+                <?php endif;?>
+            </nav>
+
+            <!-- <nav>
                 <ul class="pager">
                     <li class="previous"><a href="/profile/page/(page_number)"><span aria-hidden="true">&larr;</span> Prev</a></li>
                     <li class="next"><a href="/profile/page/(page_number)">Next <span aria-hidden="true">&rarr;</span></a></li>
                 </ul>
-            </nav>
+            </nav>-->
         </div>
     </div>
 </div>
@@ -73,11 +127,15 @@
         $("#ads-delete").click(function(e) {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result){
-                    window.location.href = $(e.srcElement).attr('href');
+                    window.location.href = $('#ads-delete').attr('href');
                 }
             });
             e.preventDefault();
-        })
+        });
+
+        $("ul.pagination li.disabled a").click(function(e){
+            e.preventDefault();
+        });
 
     });
 </script>

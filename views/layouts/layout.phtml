@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <title><?=$title?></title>
+    <title><?php echo 'Ads'?></title>
 
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
-
+    <script src="/js/notify.js"></script>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -29,48 +29,48 @@
 </head>
 
 <body>
-<div class="container container-lg-height">
-    <div class="row">
-        <div class="col-lg-2   text-center col-lg-height col-middle">
-            <h1>ADSboar</h1>
-        </div>
+<div id="wrap">
+    <div class="container container-lg-height">
+        <div class="row">
+            <div class="col-lg-2   text-center col-lg-height col-middle">
+                <h1>ADSboard</h1>
+            </div>
 
-        <div class="col-lg-4  text-left col-lg-height col-middle">
-        <div class="btn-group-lg">
-            <a class="btn btn-default button" href="/">Home</a>
-            <a class="btn btn-default button" href="/about">About</a>
-            <a class="btn btn-default " href="/payment-plan">Payment Plan</a>
-        </div>
-        </div>
+            <div class="col-lg-6  text-left col-lg-height col-middle">
+                <div class="btn-group-lg">
+                    <a class="btn btn-default button" href="/">Home</a>
+                    <a class="btn btn-default button" href="/about">About</a>
+                    <a class="btn btn-default button" href="/payment-plan">Payment Plan</a>
+                </div>
+            </div>
 
-        <?php if(!empty($user['login'])){?>
-        <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
-            <a class="btn-link" href="/profile"><?=$user['login']?></a>
-        </div>
-        <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
-            <a href="/logout" class="btn-link">Logout</a>
-        </div>
-        <?php }else{ ?>
+            <?php if(!empty($user['login'])){?>
+                <div class="col-lg-5  text-right col-lg-height col-middle" style="padding-right: 0px">
+                    <a class="btn btn-lg" href="/profile"><?=$user['login']?></a>
+                    <a href="/logout" class="btn btn-lg">Logout</a>
+                </div>
+            <?php }else{ ?>
 
-        <div class="col-lg-2 col-lg-push-1 text-center col-lg-height col-middle">
-            <a class="btn btn-lg" href="/registration">Registration</a>
+                <div class="col-lg-5  text-right col-lg-height col-middle" style="padding-right: 0px">
+                    <a class="btn btn-lg" href="/registration">Registration</a>
+                    <a class="btn btn-lg" href="/login">Sign in</a>
+                </div>
+
+            <?php }?>
         </div>
-        <div class="col-lg-2 text-center col-lg-height col-middle">
-            <a class="btn btn-lg" href="/login">Sign in</a>
-        </div>
-        <?php }?>
     </div>
+    <?=$content?>
+
+
 </div>
-<?=$content?>
 
 
 
-
-<footer class="container navbar-bottom">
+<footer id="footer" class="container">
     <hr>
-        <p>&copy; Company 2014 <a class="btn-link" href="/contact-us">Contact us</a></p>
+    <p>&copy; Company 2014 <a class="btn-link" href="/contact-us">Contact us</a></p>
 
-    </footer>
+</footer>
 
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>

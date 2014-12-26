@@ -1,5 +1,5 @@
 <?php
-
+namespace application\classes;
 class Session {
 
     private static $_sessionStarted = false;
@@ -36,7 +36,6 @@ class Session {
             }
 
         } else {
-
             if(isset($_SESSION[$key])){
                 return $_SESSION[$key];
             }

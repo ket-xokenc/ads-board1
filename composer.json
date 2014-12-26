@@ -1,9 +1,20 @@
 {
-  "autoload": {
-    "psr-4": {
-      "frame\\": "framework/",
-      "frame\\classes\\": "framework/parsers/",
-      "":["application/controllers/","application/models/","application/views/"]
+    "name": "alexandr/ads-board1",
+    "authors": [
+        {
+            "name": "alexandr",
+            "email": "kvasenko@ukr.net"
+        }
+    ],
+
+    "require": {
+        "monolog/monolog": "1.2.*"
+    },
+    "autoload": {
+      "psr-4":{
+        "application\\core\\": "framework/core/",
+        "application\\classes\\": "framework/classes/",
+        "":["controllers/","models/"]
+      }
     }
-  }
 }

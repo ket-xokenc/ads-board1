@@ -1,5 +1,6 @@
 <?php
-
+use application\classes\Registry;
+use application\classes\Session;
 class Users
 {
     protected $table = 'users';
@@ -11,24 +12,46 @@ class Users
 
     public function __construct()
     {
-        $this->db = \Registry::get('database');
-//         var_dump($this->db);
-        //
+        $this->db = Registry::get('database');
     }
-    public function create($data)
+    public function create()
     {
-        $user_exists = $this->getSalt($data['login']);
+        $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
+        $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password1']) ? $_POST['password1'] : false;
+        $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', $_POST['name']) ? $_POST['name'] : false;
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        $phone = preg_match('/^\+38\d{10}$/', $_POST['phone']) ? $_POST['phone'] : false;
 
-        if($user_exists) {
-            $this->errorValid .= "Пользователь с таким логином уже существует";
-            return false;
+        if(!$name) {
+            return $this->errorValid = "Не правильно введено имя!<br />";
         }
-        if(!$data['password'])
-            return false;
-        $hashes = $this->passwHash($data['password']);
+        if(!$login) {
+            return $this->errorValid = "Не правильно введен логин!<br />";
+        }
+
+        if(!$email){
+            return $this->errorValid = "Введите правильный email!<br />";
+        }
+        if(!$password){
+            return $this->errorValid = "Пароль не соответствует правилам заполнения<br />";
+        }
+        if($password !== $_POST['password2']) {
+            return $this->errorValid = "Пароли не совпадают<br />";
+        }
+
+        $user_exists = $this->getSalt($login);
+        if($user_exists) {
+            return $this->errorValid .= "Пользователь с таким логином уже существует<br />";
+        }
+
+        $hashes = $this->passwHash($password);
+        $data['login'] = $login;
+        $data['name'] = $name;
+        $data['email'] = $email;
         $data['password'] = $hashes['hash'];
         $data['salt'] = $hashes['salt'];
-        $data['create_time'] = date('Y-m-d H:i:s');;
+        $data['phone'] = $phone;
+        $data['create_time'] = date('Y-m-d H:i:s');
 
         $this->user = $data;
 
@@ -41,30 +64,33 @@ class Users
         return true;
     }
 
-    public function getError(){
-        return $this->errorValid;
-    }
-
     public function getSalt($login) {
         return $this->db->fetchOne($this->table, 'salt', ['login' => $login]);
     }
 
-    public function authorize($login, $password, $remember = false)
+    public function authorize($remember = false)
     {
+        $this->clearUsers();
+        $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', $_POST['login']) ? $_POST['login'] : false;
+        $password = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', $_POST['password']) ? $_POST['password'] : false;
+        if (!$login) {
+            return $this->errorValid = 'Логин должен состоять только из букв английского алфавита и цифр';
+        }
+        if(!$password) {
+            return $this->errorValid = 'Пароль не соответствует правилам составления';
+        }
+
         $salt = $this->getSalt($login);
         if(!$salt) {
-            $this->errorValid .= "Пользователь с таким логином не существует!<br />";
-            return false;
+            return $this->errorValid = "Пользователь с таким логином не существует!<br />";
         }
         $hashes = $this->passwHash($password, $salt);
         $this->user = $this->db->fetchRow($this->table, ['*'], ['login' => $login, 'password' => $hashes['hash']]);
         if(!$this->user) {
-            $this->errorValid .= "Не правильно введен пароль!<br />";
-            return false;
+            return $this->errorValid = "Не правильно введен пароль!<br />";
         }
         if($this->user['status'] == 'registered') {
-            $this->errorValid .= "Пользователь еще не активирован.<br />";
-            return false;
+            return $this->errorValid = "Пользователь еще не активирован.<br />";
         }
         if($this->user) {
             $this->user_id = $this->user['id'];
@@ -112,7 +138,7 @@ class Users
     {
         $min = date('Y-m-d H:i:s', time() - 60 * 10);
         $where = [':minn' => $min];
-        $this->db->query("DELETE FROM users WHERE create_time < :minn AND status = 'registered'", $where);
+        //$this->db->query("DELETE FROM users WHERE create_time > :minn AND status = 'registered'", $where);
     }
 
     public function get($userId = null)
@@ -147,7 +173,7 @@ class Users
     {
         // Проверка кеша.
         if ($this->user_id != null)
-            return $this->uid;
+            return $this->user_id;
 
         // Берем по текущей сессии.
 
@@ -229,6 +255,62 @@ class Users
     public function getByEmail($email)
     {
         return $this->db->fetchRow('users', ['*'], ['email' => $email]);
+    }
+
+    public function edit()
+    {
+        $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', trim($_POST['name'])) ? $_POST['name'] : false;
+        $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', trim($_POST['login'])) ? $_POST['login'] : false;
+        $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+        $phone = preg_match('/^\+38\d{10}$/', trim($_POST['phone'])) ? $_POST['phone'] : false;
+
+        if(!empty($_POST['old_password'])) {
+            $passwordOld = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['old_password'])) ? $_POST['old_password'] : false;
+            $passwordNew = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['password1'])) ? $_POST['password1'] : false;
+            $passwordConfirm = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['password2'])) ? $_POST['password2'] : false;
+            if(!$passwordOld)
+                $this->errorValid .= "Старий пароль введен не правильно<br />";
+            if (!$passwordNew || !$passwordConfirm)
+                $this->errorValid .= "Ошибка при вводе нового пароля<br />";
+            if($passwordNew !== $passwordConfirm)
+                $this->errorValid .= "Пароли не совпадают<br />";
+            if(!empty($this->errorValid)) return $this->errorValid;
+        }
+
+        if(!$name) {
+            $this->errorValid .= "Не правильно введено имя!<br />";
+        }
+        if(!$login) {
+            $this->errorValid .= "Не правильно введен логин!<br />";
+        }
+        if(!$email){
+            $this->errorValid .= "Введите правильный email!<br />";
+        }
+        if(isset($passwordOld) && isset($passwordNew)) {
+            $hashes = $this->passwHash($passwordOld, $this->user['salt']);
+           // print_r($this->passwHash('123', $this->user['salt']));exit;
+            if($this->user['password'] !== $hashes['hash']){
+                $this->errorValid .= "Введен не правильный старый пароль!<br />";
+            }
+            else {
+                $hashes = $this->passwHash($passwordNew);;
+
+            }
+        }
+
+        if(!empty($this->errorValid)){
+            return $this->errorValid;
+        }
+
+        $this->db->update($this->table, ['login' => $login, 'name' => $name, 'email' => $email,
+            'password' => $passw = !empty($hashes['hash']) ? $hashes['hash'] : $this->user['password'] ,
+            'salt' => $salt = !empty($hashes['salt']) ? $hashes['salt'] : $this->user['salt'],
+            'phone' => $phone
+        ], ['id' => $this->user_id]);
+
+
+
+
     }
 
 }
