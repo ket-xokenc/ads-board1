@@ -260,7 +260,6 @@ class Users
     public function edit()
     {
         $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', trim($_POST['name'])) ? $_POST['name'] : false;
-        $login = preg_match('/^[a-zA-Z0-9_-]{3,16}$/', trim($_POST['login'])) ? $_POST['login'] : false;
         $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
         $phone = preg_match('/^\+38\d{10}$/', trim($_POST['phone'])) ? $_POST['phone'] : false;
 
@@ -279,9 +278,6 @@ class Users
 
         if(!$name) {
             $this->errorValid .= "Не правильно введено имя!<br />";
-        }
-        if(!$login) {
-            $this->errorValid .= "Не правильно введен логин!<br />";
         }
         if(!$email){
             $this->errorValid .= "Введите правильный email!<br />";
@@ -302,7 +298,7 @@ class Users
             return $this->errorValid;
         }
 
-        $this->db->update($this->table, ['login' => $login, 'name' => $name, 'email' => $email,
+        $this->db->update($this->table, ['name' => $name, 'email' => $email,
             'password' => $passw = !empty($hashes['hash']) ? $hashes['hash'] : $this->user['password'] ,
             'salt' => $salt = !empty($hashes['salt']) ? $hashes['salt'] : $this->user['salt'],
             'phone' => $phone
