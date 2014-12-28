@@ -7,13 +7,8 @@ class AdsController extends BaseController{
     public function createAction(){
         $users=new Users();
         $category=new Category();
-        $ads=new Ads($category,$users);
+        $ads=new Ads($category);
         $errors=array();
-
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
 
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->create())){
@@ -33,11 +28,6 @@ class AdsController extends BaseController{
         $ads=new Ads($category,$users);
         $params=$this->getRequest()->getParams();
         $errors=array();
-
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
 
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->edit($params[0]))){
@@ -61,12 +51,6 @@ class AdsController extends BaseController{
         $ads=new Ads($category,$users);
         $params=$this->getRequest()->getParams();
         $errors=array();
-
-
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
 
         if(!empty($errors=$ads->delete($params[0]))){
             if(!empty($errors['redirect'])){

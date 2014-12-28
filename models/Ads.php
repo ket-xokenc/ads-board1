@@ -1,93 +1,93 @@
 <?php
 
-use application\classes\Registry as Registry;
+use application\classes\Registry;
+use application\core\Model;
+use application\classes\Session;
+
+class Ads extends Model{
 
 
-class Ads {
-
-    private $db;
-
-    const TABLE='ad';
+    const TABLE='ads';
     private $category;
-    private $users;
 
-    public function __construct(Category $category,Users $users)
+    public function __construct(Category $category)
     {
-        $this->db = Registry::get('database');
+        parent::__construct();
         $this->category=$category;
-        $this->users=$users;
+        $this->validator->setRules($this->validRules());
+        $this->validator->setMessages($this->validMessages());
+    }
+
+    private function validRules(){
+        return ['title'=>[
+            'type'=>'text',
+            'maxlength'=>'40',
+            'minlength'=>'20'
+        ],
+            'text'=>[
+                'type'=>'text',
+                'maxlength'=>'200',
+                'minlength'=>'20'
+            ],
+            'category'=>[
+                'type'=>'select',
+                'match_collection'=>$this->category->getAllCategoriesName()
+            ]
+        ];
+    }
+
+    private function validMessages(){
+        return ['title'=>[
+            'maxlength'=>'Too long title',
+            'minlength'=>'Too short title'
+        ],
+            'text'=>[
+                'maxlength'=>'Too long description',
+                'minlength'=>'Too short description',
+            ],
+            'category'=>[
+                'match_collection'=>'Invalid category',
+                'validation'=>'Invalid category'
+            ]
+        ];
     }
 
     public function create(){
         $table=Ads::TABLE;
         $data=array();
         $errorLog=array();
-        $category=$this->category;
-        $user=$this->users;
 
-        if(!empty($user->getUid())){
-            $data['id_user']=$user->getUid();
-        }else{
-            $errorLog['redirect']='/';
+
+        if(($errorLog=$this->validator->validate($_POST))!==true){
             return $errorLog;
         }
 
-        $data['date_create']=date('Y-m-d');
+        $data['category_id']=$this->category->getCategoryByName($_POST['category'])['id'];
+        $data['user_id']=Session::get('user_id');
+        $data['date_create']=date('Y-m-d H:i:s');
+        $data['title']=$_POST['title'];
+        $data['text']=$_POST['text'];
 
+        $this->db->insert($table,$data);
 
-        if(empty(trim($_POST['title']))){
-            $errorLog['title']='Empty title field';
-        }else{
-            if(strlen($_POST['title'])<10){
-                $errorLog['title']='Too short title';
-            }elseif(strlen($_POST['title'])>30){
-                $errorLog['title']='Too long title';
-            }else{
-                $data['title']= $_POST['title'];
-            }
-        }
-
-        if(empty(trim($_POST['text']))){
-            $errorLog['text']='Empty description field';
-        }else{
-            if(strlen($_POST['text'])<20){
-                $errorLog['text']='Too short description';
-            }elseif(strlen($_POST['text'])>100){
-                $errorLog['text']='Too long description';
-            }else{
-                $data['text']= $_POST['text'];
-            }
-        }
-
-        if(empty($category->getCategoryByName($_POST['category']))){
-            $errorLog['category']="Category {$_POST['category']} don't exist";
-        }else{
-            $data['category_id']=$category->getCategoryByName($_POST['category'])['category_id'];
-        }
-
-        if(empty($errorLog)){
-            $this->db->insert($table,$data);
-        }else{
-            return $errorLog;
-        }
     }
 
     public function edit($ads_id){
         $table=Ads::TABLE;
         $data=array();
         $errorLog=array();
-        $user=$this->users;
 
-        $data['date_create']=date('Y-m-d');
-
-        if(!empty($user->getUid())){
-            $user_id=$user->getUid();
-        }else{
-            $errorLog['redirect']='/';
+        if(($errorLog=$this->validator->validate($_POST))!==true){
             return $errorLog;
         }
 
-        $res=$this->db->query("select * from ad inner join users on users.id=ad.id_user where ad.id_ad=$ads_id and users.id=$user_id");
+        $data['user_id']=Session::get('user_id');
+        $data['date_create']=date('Y-m-d H:i:s');
+        $data['title']=$_POST['title'];
+        $data['text']=$_POST['text'];
+
+
+        $res=$this->db->query("select ads.id from ads inner join users on users.id=ads.user_id where ads.id=$ads_id and users.id={$data['user_id']}");
 
         if(empty($res)){
             $errorLog['redirect']="/";
@@ -95,34 +95,8 @@ class Ads {
         }
 
 
-        if(!empty(trim($_POST['title']))){
+        $this->db->update($table,$data,['id'=>$ads_id]);
 
-            if(strlen($_POST['title'])<10){
-                $errorLog['title']='Too short title';
-            }elseif(strlen($_POST['title'])>30){
-                $errorLog['title']='Too long title';
-            }else{
-                $data['title']= $_POST['title'];
-            }
-        }
-
-        if(!empty(trim($_POST['text']))){
-
-            if(strlen($_POST['text'])<20){
-                $errorLog['text']='Too short description';
-            }elseif(strlen($_POST['text'])>100){
-                $errorLog['text']='Too long description';
-            }else{
-                $data['text']= $_POST['text'];
-            }
-        }
-
-
-        if(empty($errorLog)){
-            $this->db->update($table,$data,['id_ad'=>$ads_id]);
-        }else{
-            return $errorLog;
-        }
 
     }
 
@@ -130,30 +104,25 @@ class Ads {
     public function delete($ads_id){
         $table=Ads::TABLE;
         $errorLog=array();
-        $user=$this->users;
 
-        if(!empty($user->getUid())){
-            $user_id=$user->getUid();
-        }else{
-            $errorLog['redirect']='/';
-            return $errorLog;
-        }
+        $user_id=Session::get('user_id');
 
-        $res=$this->db->query("select * from ad inner join users on users.id=ad.id_user where ad.id_ad=$ads_id and users.id=$user_id");
+        $res=$this->db->query("select ads.id from ads inner join users on users.id=ads.user_id where ads.id=$ads_id and users.id=$user_id");
 
         if(empty($res)){
             $errorLog['redirect']="/";
             return $errorLog;
         }
 
-        $this->db->delete($table,['id_ad'=>$ads_id]);
+        $this->db->delete($table,['id'=>$ads_id]);
     }
+
 
 
     public function getAdsById($id){
         $table=Ads::TABLE;
 
-        return $this->db->fetchRow($table, ['*'], ['id_ad' => $id]);
+        return $this->db->fetchRow($table, ['*'], ['id' => $id]);
     }
 
     public function getAdsByUserId($id,$escape=0,$number=PHP_INT_MAX){
@@ -161,10 +130,10 @@ class Ads {
 
         return $this->db->query("Select users.name user_name,users.phone users_phone,categories.name categories_name,
                                     $table.title {$table}_title, $table.text {$table}_text, $table.date_create {$table}_date_create,
-                                    $table.id_ad {$table}_id_ad
+                                    $table.id {$table}_id
                                     from $table inner join categories on
-                                    $table.category_id=categories.category_id
-                                    inner join users on users.id=$table.id_user
+                                    $table.category_id=categories.id
+                                    inner join users on users.id=$table.user_id
                                     where users.id=:id  limit $escape,$number ",array(':id'=>$id));
     }
 
@@ -178,14 +147,14 @@ class Ads {
         $table=Ads::TABLE;
 
         return $this->db->query("Select * from $table inner join categories on
-                                    $table.category_id=categories.category_id where categories.name=:name",array(':name'=>$name));
+                                    $table.category_id=categories.id where categories.name=:name",array(':name'=>$name));
     }
 
     public function getAdsByUserName($name){
         $table=Ads::TABLE;
 
         return $this->db->query("Select * from users inner join $table on
-                                    $table.id_user=users.id where users.name=:name",array(':name'=>$name));
+                                    $table.user_id=users.id where users.name=:name",array(':name'=>$name));
     }
 
     public function getAdsByTitle($title,$is_regex=false){
@@ -224,7 +193,7 @@ class Ads {
         if(empty($user_id)){
             return $this->db->query("SELECT count(*) FROM $table")[0][0];
         }else{
-            return $this->db->query("SELECT count(*) FROM $table where $table.id_user=$user_id")[0][0];
+            return $this->db->query("SELECT count(*) FROM $table where $table.user_id=$user_id")[0][0];
         }
     }
 
