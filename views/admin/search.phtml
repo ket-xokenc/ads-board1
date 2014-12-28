@@ -9,9 +9,11 @@
     <tr bgcolor="aqua">
         <th>#</th>
         <th>Логин</th>
-        <th>Роль</th>
         <th>Статус</th>
-        <th>Действия</th>
+        <th>Имя</th>
+        <th>Почта</th>
+        <th>Роль</th>
+        <th>Дата регистрации</th>
     </tr>
     </thead>
     <tbody>
@@ -19,8 +21,11 @@
         <tr>
             <td><?php echo $tt["id"]; ?></td>
             <td><?php echo $tt["login"]; ?></td>
-            <td><?php echo $tt["role"]; ?></td>
             <td><?php echo $tt["status"]; ?></td>
+            <td><?php echo $tt["name"]; ?></td>
+            <td><?php echo $tt["email"]; ?></td>
+            <td><?php echo $tt["role"]; ?></td>
+            <td><?php echo $tt["create_time"]; ?></td>
             <td>
                 <a href="/admin/show/<?php echo $tt["id"]; ?>">Псмотреть</a>
                 <?php if($tt['status']=='banned'):?>
