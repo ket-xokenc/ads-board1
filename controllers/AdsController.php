@@ -7,57 +7,47 @@ class AdsController extends BaseController{
     public function createAction(){
         $users=new Users();
         $category=new Category();
-        $ads=new Ads($category,$users);
+        $ads=new Ads($category);
         $errors=array();
-        $userInfo = $users->get();
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
 
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->create())){
-               $this->render('users/newAds',['dbinfo'=>$category->getAllCategories(), 'user' => $userInfo],$errors);
+                $this->render('users/newAds',['dbinfo'=>$category->getAllCategories(),'user'=>$users->get()],$errors);
             }else{
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly created','user' => $userInfo]);
+                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'user'=>$users->get(),'info'=>'Ads successfuly created']);
             }
         }else{
-            $this->render('users/newAds',['dbinfo'=>$category->getAllCategories(), 'user' => $userInfo]);
+            $this->render('users/newAds',['dbinfo'=>$category->getAllCategories(),'user'=>$users->get()]);
         }
     }
 
     public function editAction(){
         $users=new Users();
-        $userInfo = $users->get();
         $category=new Category();
         $ads=new Ads($category,$users);
         $params=$this->getRequest()->getParams();
         $errors=array();
 
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
-
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->edit($params[0]))){
                 if(!empty($errors['redirect'])){
                     header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
+                    return;
                 }
-                $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0]), 'user' => $userInfo],$errors);
+                $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0]),'user'=>$users->get()],$errors);
             }else{
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly edited', 'user' => $userInfo]);
+                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'user'=>$users->get(),'info'=>'Ads successfuly edited']);
             }
         }else{
-            $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0]), 'user' => $userInfo]);
+            $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0]),'user'=>$users->get()]);
+
         }
     }
 
     public function deleteAction(){
         $users=new Users();
-        $userInfo = $users->get();
         $category=new Category();
         $ads=new Ads($category,$users);
         $params=$this->getRequest()->getParams();
@@ -78,8 +68,11 @@ class AdsController extends BaseController{
 
 
         header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly deleted', 'user' => $userInfo]);
+
+        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'user'=>$users->get(),'info'=>'Ads successfuly deleted']);
+
 
     }
+
 
 } 

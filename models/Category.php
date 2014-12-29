@@ -109,6 +109,17 @@ class Category {
         return $this->db->fetchRow($table, ['*'], ['name' => $name]);
     }
 
+    public function getAllCategoriesName(){
+        $table=Category::TABLE;
+        $cat=$this->db->fetchAll($table,['name']);
+        $arr=[];
+
+        foreach($cat as $val){
+            $arr[]=$val['name'];
+        }
+
+        return $arr;
+    }
     public function getAllCategories(){
         $table=Category::TABLE;
 
