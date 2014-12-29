@@ -53,6 +53,12 @@ class AdsController extends BaseController{
         $params=$this->getRequest()->getParams();
         $errors=array();
 
+
+        if(empty($users->getUid())){
+            header("Location: http://{$_SERVER['HTTP_HOST']}/");
+            return;
+        }
+
         if(!empty($errors=$ads->delete($params[0]))){
             if(!empty($errors['redirect'])){
                 header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
