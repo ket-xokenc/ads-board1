@@ -13,9 +13,18 @@ class AdminController extends BaseController
     }
     function panelAction()
     {
-        $admin = $this->db->fetchAll('users', ['id', 'login', 'status', 'role']);
-        $this->render('admin/panel', ['row'=>$admin]);
-    }
+        $user = new Users();
+        $id = $user->get();
+
+        if($id['role'] !== 'admin')
+            {
+            header("Location: http://{$_SERVER['SERVER_NAME']}");
+            }
+        else {
+            $finder = $this->db->query("SELECT * FROM users ORDER BY create_time", array());
+            $this->render('admin/panel', ['row'=>$finder]);
+            }}
+
     function banAction()
     {
         $par = $this->getRequest()->getParams();
