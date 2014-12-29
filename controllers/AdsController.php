@@ -7,23 +7,18 @@ class AdsController extends BaseController{
     public function createAction(){
         $users=new Users();
         $category=new Category();
-        $ads=new Ads($category,$users);
+        $ads=new Ads($category);
         $errors=array();
-
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
 
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->create())){
-               $this->render('users/newAds',['dbinfo'=>$category->getAllCategories()],$errors);
+                $this->render('users/newAds',['dbinfo'=>$category->getAllCategories(),'user'=>$users->get()],$errors);
             }else{
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly created']);
+                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'user'=>$users->get(),'info'=>'Ads successfuly created']);
             }
         }else{
-            $this->render('users/newAds',['dbinfo'=>$category->getAllCategories()]);
+            $this->render('users/newAds',['dbinfo'=>$category->getAllCategories(),'user'=>$users->get()]);
         }
     }
 
@@ -34,24 +29,20 @@ class AdsController extends BaseController{
         $params=$this->getRequest()->getParams();
         $errors=array();
 
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
-
         if($this->getRequest()->isPost()){
             if(!empty($errors=$ads->edit($params[0]))){
                 if(!empty($errors['redirect'])){
                     header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
                     return;
                 }
-                $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0])],$errors);
+                $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0]),'user'=>$users->get()],$errors);
             }else{
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly edited']);
+                $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'user'=>$users->get(),'info'=>'Ads successfuly edited']);
             }
         }else{
-            $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0])]);
+            $this->render('users/edit-ads',['dbinfo'=>$ads->getAdsById($params[0]),'user'=>$users->get()]);
+
         }
     }
 
@@ -62,12 +53,6 @@ class AdsController extends BaseController{
         $params=$this->getRequest()->getParams();
         $errors=array();
 
-
-        if(empty($users->getUid())){
-            header("Location: http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }
-
         if(!empty($errors=$ads->delete($params[0]))){
             if(!empty($errors['redirect'])){
                 header("Location: http://{$_SERVER['HTTP_HOST']}{$errors['redirect']}");
@@ -77,7 +62,9 @@ class AdsController extends BaseController{
 
 
         header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'info'=>'Ads successfuly deleted']);
+
+        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($users->getUid()),'user'=>$users->get(),'info'=>'Ads successfuly deleted']);
+
 
     }
 
