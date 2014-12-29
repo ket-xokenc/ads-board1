@@ -51,7 +51,7 @@ class Users
         $data['password'] = $hashes['hash'];
         $data['salt'] = $hashes['salt'];
         $data['phone'] = $phone;
-        $data['create_time'] = date('Y-m-d H:i:s');
+        $data['date_create'] = date('Y-m-d H:i:s');
 
         $this->user = $data;
 
@@ -139,12 +139,12 @@ class Users
     {
         $min = date('Y-m-d H:i:s', time() - 24 * 6 * 60 * 10);
         $where = [':minn' => $min];
-        //$this->db->query("DELETE FROM users WHERE create_time > :minn AND status = 'registered'", $where);
+        //$this->db->query("DELETE FROM users WHERE date_create > :minn AND status = 'registered'", $where);
     }
 
     public function get($userId = null)
     {
-       // $this->clearUsers();
+        //$this->clearUsers();
 
         if($userId === null)
             $this->user_id = $this->getUid();
