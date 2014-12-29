@@ -57,14 +57,15 @@ class Users
 
         try {
             $this->db->insert($this->table, $this->user);
-        }catch(PDOException $e){
+        } catch(PDOException $e) {
             echo "Database error: ".$e->getMessage();
             die();
         }
         return true;
     }
 
-    public function getSalt($login) {
+    public function getSalt($login)
+    {
         return $this->db->fetchOne($this->table, 'salt', ['login' => $login]);
     }
 
@@ -136,7 +137,7 @@ class Users
 
     public function clearUsers()
     {
-        $min = date('Y-m-d H:i:s', time() - 60 * 10);
+        $min = date('Y-m-d H:i:s', time() - 24 * 6 * 60 * 10);
         $where = [':minn' => $min];
         //$this->db->query("DELETE FROM users WHERE create_time > :minn AND status = 'registered'", $where);
     }
