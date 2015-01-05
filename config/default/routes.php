@@ -25,5 +25,8 @@ return [
         'admin/ban/([0-9]+)' => 'admin/ban/$1',
         'admin/unban/([0-9]+)' => 'admin/unban/$1',
         'admin/search' => 'admin/search/$1',
+        'admin/add-cat' => 'admin/addCat/$1',
+        'categories' => 'admin/categories/$1',
+        'categories/show/([0-9]+)' => 'admin/show/$1',
     ]
 ];

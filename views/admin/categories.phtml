@@ -1,0 +1,38 @@
+
+<table class="table table-bordered">
+    <thead>
+    <tr bgcolor="aqua">
+        <th>Id</th>
+        <th>Name category</th>
+        <th>Count</th>
+        <th>Show</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($row as $tt): ?>
+        <tr>
+            <td><?php echo $tt["id"]; ?></td>
+            <td><?php echo $tt["name"]; ?></td>
+            <td><?php echo $tt['count1']; ?></td>
+            <?php if($tt['count1']==0):?>
+                <td>Ноль</td>
+            <?php else: ?>
+                <td><a href="categories/show/<?php echo $tt['id']; ?>">Show this category</a></td>
+            <?php endif; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table><button id="mybut">hide</button>
+<div id="mydiv"><form action="/admin/add-cat" method="post" class="form-search">
+        <input type="text" name="name" placeholder="Name" required size="27"> <br />
+        <input type="text" name="desc" placeholder="Description" size="27" required> <br />
+        <input type="submit" value="create new category" ><br />
+    </form></div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#mybut').click(function() {
+            $("div#mydiv").toggle();
+        });
+        $('#mydiv').hide();
+    });
+</script>

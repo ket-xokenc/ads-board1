@@ -1,24 +1,22 @@
-<ul class="breadcrumb">
-    <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a> <span class="divider">/</span></li>
-    <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Панель администратора</a> <span class="divider">/</span></li>
-    <li class="active">Профиль юзера</li>
-</ul>
-<div>
-    <table class="table table-bordered" >
-        <thead>
+<table class="table table-bordered">
+    <thead>
+    <tr bgcolor="aqua">
+        <th>Title</th>
+        <th>Text</th>
+        <th>login</th>
+        <th>Status</th>
+        <th>Date_create</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($row as $tt): ?>
         <tr>
-            <th>Заголовок</th>
-            <th>Текст</th>
+            <td><?php echo $tt["title"]; ?></td>
+            <td><?php echo $tt["text"]; ?></td>
+            <td><a href="#"><?php echo $tt['login']; ?></a> </td>
+            <td><?php echo $tt['status']; ?></td>
+            <td><?php echo $tt['date_create']; ?></td>
         </tr>
-        </thead>
-        <tbody>
-        <?php foreach($row as $tt): ?>
-            <tr>
-                <td><?php echo $tt['title']; ?></td>
-                <td><?php echo $tt['text']; ?></td>
-
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+    <?php endforeach; ?>
+    </tbody>
+</table>
