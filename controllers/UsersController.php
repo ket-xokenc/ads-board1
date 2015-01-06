@@ -145,7 +145,7 @@ class UsersController extends BaseController
         $this->render('users/edit-profile', ['user' => $data, 'message' => $message]);
     }
 
-    public function subscribePaymentPlanAction()
+    public function subscribeToPaymentPlanAction()
     {
         $users = new Users();
         $params = $this->getRequest()->getParams();
@@ -153,30 +153,29 @@ class UsersController extends BaseController
 
         // Параметры нашего запроса
         $requestParams = array(
-            'RETURNURL' => 'http://'.$siteUrl.'/payment/success',
-            'CANCELURL' => 'http://'.$siteUrl.'/payment/cancelled'
+            'RETURNURL' => 'http://' . $siteUrl . '/payment/success',
+            'CANCELURL' => 'http://' . $siteUrl . '/payment/cancelled'
         );
 
         $orderParams = array(
-            'PAYMENTREQUEST_0_AMT' => '500',
-            'PAYMENTREQUEST_0_SHIPPINGAMT' => '4',
-            'PAYMENTREQUEST_0_CURRENCYCODE' => 'RUB',
-            'PAYMENTREQUEST_0_ITEMAMT' => '496'
+            'PAYMENTREQUEST_0_AMT' => '99.99',
+            'PAYMENTREQUEST_0_CURRENCYCODE' => 'USD',
+            'PAYMENTREQUEST_0_ITEMAMT' => '99.99'
         );
 
         $item = array(
-            'L_PAYMENTREQUEST_0_NAME0' => 'iPhone',
-            'L_PAYMENTREQUEST_0_DESC0' => 'White iPhone, 16GB',
-            'L_PAYMENTREQUEST_0_AMT0' => '496',
+            'L_PAYMENTREQUEST_0_NAME0' => 'pro plan',
+            'L_PAYMENTREQUEST_0_DESC0' => 'Subcribe for PRO-plan on ads-board1.local',
+            'L_PAYMENTREQUEST_0_AMT0' => '99.99',
             'L_PAYMENTREQUEST_0_QTY0' => '1'
         );
 
         $paypal = new Paypal();
-        $response = $paypal -> request('SetExpressCheckout',$requestParams + $orderParams + $item);
+        $response = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $item);
 
-        if(is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
+        if (is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
             $token = $response['TOKEN'];
-            header( 'Location: https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token= ' . urlencode($token) );
+            header('Location: https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=' . urlencode($token));//отправляем юзер на пейпал для проведения оплаты
         }
     }
 
@@ -186,15 +185,16 @@ class UsersController extends BaseController
             // Получаем детали оплаты, включая информацию о покупателе.
             // Эти данные могут пригодиться в будущем для создания, к примеру, базы постоянных покупателей
             $paypal = new Paypal();
-            $checkoutDetails = $paypal -> request('GetExpressCheckoutDetails', array('TOKEN' => $_GET['token']));
-
+            $checkoutDetails = $paypal->request('GetExpressCheckoutDetails', array('TOKEN' => $_GET['token']));
             // Завершаем транзакцию
             $requestParams = array(
                 'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
                 'PAYERID' => $_GET['PayerID']
             );
 
-            $response = $paypal -> request('DoExpressCheckoutPayment',$requestParams);
+            $response = $paypal->request('DoExpressCheckoutPayment', $requestParams);
+
+            print_r($response);exit;
             if( is_array($response) && $response['ACK'] == 'Success') { // Оплата успешно проведена
                 // Здесь мы сохраняем ID транзакции, может пригодиться во внутреннем учете
                 $transactionId = $response['PAYMENTINFO_0_TRANSACTIONID'];

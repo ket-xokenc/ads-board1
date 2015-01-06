@@ -189,7 +189,7 @@ class Users extends Model
         $_SESSION["user_id"] = $this->user['id'];
         $guid = $this->generateStr();
         $this->db->update($this->table, ['guid' => $guid], ['id' => $this->user_id]);
-
+        $_SESSION['role'] = $this->user['role'];
         if ($remember) {
             $expire = time() + $days * 24 * 3600;
             $domain = ""; // default domain
