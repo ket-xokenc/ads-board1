@@ -1,84 +1,64 @@
 <?php
 namespace application\classes;
+use application\classes\Registry;
+use application\core\Error;
+
 class Paypal {
-    /**
-     * Последние сообщения об ошибках
-     * @var array
-     */
-    protected $_errors = array();
 
-    /**
-     * Данные API
-     *
-     * @var array
-     */
-    protected $_credentials = array(
-        'USER' => 'kvasenko_api1.ukr.net',
-        'PWD' => 'KPQZ8AKFQ37JGL7M',
-        'SIGNATURE' => 'AiPC9BjkCyDFQXbSkoZcgqH3hpacAYVO3IWumgyEm.FYjnrkDu3u7u4Q',
-    );
-    /**
-     * @var string
-     */
-    protected $_endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
+    function PPHttpPost($methodName_, $nvpStr_, $PayPalMode) {
+        // Set up your API credentials, PayPal end point, and API version.
+        $API_UserName = Registry::get('paypal', 'apiUserName');
+        $API_Password = Registry::get('paypal', 'apiPassword');
+        $API_Signature = Registry::get('paypal', 'apiSignature');
 
-    /**
-     * Версия API
-     * @var string
-     */
-    protected $_version = '109.0';
+        $paypalmode = ($PayPalMode=='sandbox') ? '.sandbox' : '';
 
-    /**
-     * Сформировываем запрос
-     *
-     * @param string $method Данные о вызываемом методе перевода
-     * @param array $params Дополнительные параметры
-     * @return array / boolean Response array / boolean false on failure
-     */
-    public function request($method,$params = array()) {
-        $this -> _errors = array();
-        if( empty($method) ) { // Проверяем, указан ли способ платежа
-            $this -> _errors = array('Не указан метод перевода средств');
-            return false;
-        }
+        $API_Endpoint = "https://api-3t".$paypalmode.".paypal.com/nvp";
+        $version = urlencode('109.0');
 
-        // Параметры нашего запроса
-        $requestParams = array(
-                'METHOD' => $method,
-                'VERSION' => $this -> _version
-            ) + $this -> _credentials;
-
-        // Сформировываем данные для NVP
-        $request = http_build_query($requestParams + $params);
-
-        // Настраиваем cURL
-        $curlOptions = array (
-            CURLOPT_URL => $this -> _endPoint,
-            CURLOPT_VERBOSE => 1,
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_CAINFO => dirname(__FILE__) . '/../../cacert.pem', // Файл сертификата
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => $request
-        );
-
+        // Set the curl parameters.
         $ch = curl_init();
-        curl_setopt_array($ch,$curlOptions);
+        curl_setopt($ch, CURLOPT_URL, $API_Endpoint);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
 
-        // Отправляем наш запрос, $response будет содержать ответ от API
-        $response = curl_exec($ch);
+        // Turn off the server and peer verification (TrustManager Concept).
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 
-        // Проверяем, нету ли ошибок в инициализации cURL
-        if (curl_errno($ch)) {
-            $this -> _errors = curl_error($ch);
-            curl_close($ch);
-            return false;
-        } else  {
-            curl_close($ch);
-            $responseArray = array();
-            parse_str($response,$responseArray); // Разбиваем данные, полученные от NVP в массив
-            return $responseArray;
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        // Set the API operation, version, and API signature in the request.
+        $nvpreq = "METHOD=$methodName_&VERSION=$version&PWD=$API_Password&USER=$API_UserName&SIGNATURE=$API_Signature$nvpStr_";
+
+        // Set the request as a POST FIELD for curl.
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
+
+        // Get response from the server.
+        $httpResponse = curl_exec($ch);
+
+        if(!$httpResponse) {
+            exit("$methodName_ failed: ".curl_error($ch).'('.curl_errno($ch).')');
         }
+
+        // Extract the response details.
+        $httpResponseAr = explode("&", $httpResponse);
+
+        $httpParsedResponseAr = array();
+        foreach ($httpResponseAr as $i => $value) {
+            $tmpAr = explode("=", $value);
+            if(sizeof($tmpAr) > 1) {
+                $httpParsedResponseAr[$tmpAr[0]] = $tmpAr[1];
+            }
+        }
+
+        if((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
+            $error = new Error("Invalid HTTP Response for POST request($nvpreq) to $API_Endpoint.");
+            $error->showMessages();
+            die;
+        }
+
+        return $httpParsedResponseAr;
     }
+
 }
