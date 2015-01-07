@@ -148,28 +148,22 @@ class UsersController extends BaseController
     public function subscribePaymentPlanAction()
     {
         $users = new Users();
+        $plans = new Plans();
         $params = $this->getRequest()->getParams();
+
         $siteUrl = Registry::get('siteUrl');
         $paypalMode = Registry::get('paypal', 'mode');
         $paypalCurrencyCode = Registry::get('paypal', 'currencyCode');
-        $paypalReturnURL = 'http://www.'.$siteUrl.'/payment/success';
-        $paypalCancelURL = 'http://www.'.$siteUrl.'/payment/cancelled';
+        $paypalReturnURL = 'http://'.$siteUrl.'/payment/success';
+        $paypalCancelURL = 'http://'.$siteUrl.'/payment/cancelled';
 
         $paypalmode = ($paypalMode == 'sandbox') ? '.sandbox' : '';
 
         if ($_POST) //Post Data received from product list page.
         {
-            //Mainly we need 4 variables from product page Item Name, Item Price, Item Number and Item Quantity.
-
-            //Please Note : People can manipulate hidden field amounts in form,
-            //In practical world you must fetch actual price from database using item id. Eg:
-            //$ItemPrice = $mysqli->query("SELECT item_price FROM products WHERE id = Product_Number");
-
-
-
+            $ItemPrice = $plans->getPriceByName($_POST["itemname"]);
             $ItemName = $_POST["itemname"]; //Item Name
-            $ItemPrice = $_POST["itemprice"]; //Item Price
-            $ItemDesc = $_POST["itemdesc"]; //Item Number
+            $ItemDesc = $_POST["itemdesc"]; //Item Description
             $ItemQty = $_POST["itemqty"];
 
             //Parameters for SetExpressCheckout, which will be sent to PayPal
@@ -180,7 +174,7 @@ class UsersController extends BaseController
 
                 '&L_PAYMENTREQUEST_0_NAME0=' . urlencode($ItemName) .
                 '&L_PAYMENTREQUEST_0_DESC0=' . urlencode($ItemDesc) .
-                '&L_PAYMENTREQUEST_0_AMT0=' . urlencode($ItemPrice) .
+                '&L_PAYMENTREQUEST_0_AMT0=' .$ItemPrice .
                 '&L_PAYMENTREQUEST_0_QTY0=' . urlencode($ItemQty) .
 
                 '&NOSHIPPING=0' . //set 1 to hide buyer's shipping address, in-case products that does not require shipping
@@ -302,7 +296,7 @@ class UsersController extends BaseController
                     }
 
                     */
-
+                    echo 'Ура!!!';
                     echo '<pre>';
                     print_r($httpParsedResponseAr);
                     echo '</pre>';
