@@ -1,6 +1,7 @@
 <?php
 use application\core\BaseController;
 use application\classes\Database;
+
 class HomeController extends BaseController
 {
     public function indexAction()
@@ -21,10 +22,12 @@ class HomeController extends BaseController
         $this->render('site/home', array('title' => $title, 'user' => $data));
         //   $result = mail('kvasenko@ukr.net', 'subject', 'message');
     }
+
     public function addAction()
     {
         echo 'kjhsfd';
     }
+
     public function staticPageAction()
     {
         $user = new Users();

@@ -26,7 +26,7 @@ return [
         'admin/unban/([0-9]+)' => 'admin/unban/$1',
         'admin/search' => 'admin/search/$1',
         'subsccribe-payment-plane/([a-zA-Z]+)' => 'users/subscribePaymentPlan/$1',
-        'payment/success' => 'users/paymentSuccess',
+        'payment/success' => 'users/subscribePaymentPlan',
         'payment/cancelled' => 'users/paymentCancelled',
     ]
 ];

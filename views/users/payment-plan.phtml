@@ -11,20 +11,30 @@
                     <div class="panel-body">
                         <h2>$<?=$plan['price']?>/month</h2>
                         <hr>
-                        <h2><?=$plan['count_ads']?> ads</h2>
+                        <h2><?php if ($plan['count_ads'] == -1) echo 'Ulimited'; else echo $plan['count_ads']?> ads</h2>
                     </div>
+                    <input type="hidden" name="itemname" value="<?=$plan['name']?>" />
+                    <input type="hidden" name="itemdesc" value="aaaaa" />
+                    <input type="hidden" name="itemprice" value="10.00" />
+                    <input type="hidden" name="itemqty" value="1" />
+
                     <div class="panel-footer panel-style">
                         <!--Если не вошел-->
+                        <button type="submit"  class="btn btn-primary btn-lg" name="buy" value="buy">Buy</button>
                         <button type="submit"  class="btn btn-primary btn-lg" name="signup" value="signup">Sign up</button>
                         <!--Если вошел и PRO или Business-->
                         <button type="submit"  class="btn btn-primary btn-lg" name="downgrade" value="downgrade">Downgrade</button>
                         <!--Если вошел и  FREE-->
-                        <h3>Current</h3>
                     </div>
                 </div>
             </form>
+            <?php if($user['plan_id'] === $plan['id']):?>
+                <h3>Current</h3>
+            <?php endif;?>
         </div>
         <?php endforeach;?>
+
+
 <!--        <div class="col-lg-4">-->
 <!--            <form role="form" action="/subsccribe-payment-plane/pro" method="post">-->
 <!---->
@@ -39,13 +49,13 @@
 <!--                    </div>-->
 <!---->
 <!--                    <div class="panel-footer panel-style">-->
-<!--                        <!--Если не вошел-->-->
+<!--                        <!--Если не вошел-->
 <!--                        <button type="submit"  class="btn btn-primary btn-lg" name="buy" value="buy">Buy</button>-->
-<!--                        <!--Если вошел и не куплено PRO но куплен Business-->-->
+<!--                        <!--Если вошел и не куплено PRO но куплен Business-->
 <!--                        <button type="submit"  class="btn btn-primary btn-lg" name="downgrade" value="downgrade">Downgrade</button>-->
-<!--                        <!--Если вошел и FREE-->-->
+<!--                        <!--Если вошел и FREE-->
 <!--                        <button type="submit"  class="btn btn-primary btn-lg" name="upgrade" value="upgrade">Upgrade</button>-->
-<!--                        <!--Если вошел и  куплено PRO-->-->
+<!--                        <!--Если вошел и  куплено PRO-->
 <!--                        <h3>Current</h3>-->
 <!--                    </div>-->
 <!--                </div>-->
@@ -66,17 +76,17 @@
 <!--                        <h2>Ulimited ads</h2>-->
 <!--                    </div>-->
 <!--                    <div class="panel-footer panel-style">-->
-<!--                        <!--Если не вошел-->-->
+<!--                        <!--Если не вошел-->
 <!--                        <button type="submit"  class="btn btn-primary btn-lg" name="buy" value="buy">Buy</button>-->
-<!--                        <!--Если вошел и  куплено PRO или является FREE-->-->
+<!--                        <!--Если вошел и  куплено PRO или является FREE-->
 <!--                        <button type="submit"  class="btn btn-primary btn-lg" name="upgrade" value="upgrade">Upgrade</button>-->
-<!--                        <!--Если вошел и  куплено Business-->-->
+<!--                        <!--Если вошел и  куплено Business-->
 <!--                        <h3>Current</h3>-->
 <!--                    </div>-->
 <!--                </div>-->
 <!---->
 <!--            </form>-->
 <!--        </div>-->
-    </div>
+<!--    </div>-->
 
 </div>
