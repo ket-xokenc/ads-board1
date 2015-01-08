@@ -19,14 +19,15 @@ class Payments extends Model
     public function saveTransaction($transactionId, $planName)
     {
         $userId = Session::get('user_id');
-        $users = new Plans();
-        $planId = $users->getPlanIdByName($planName);
+        $plans = new Plans();
+        $planId = $plans->getPlanIdByName($planName);
         $startDate = date('Y-m-d H:i:s');
         $endDate = date('Y-m-d H:i:s', strtotime("+30 days"));
         $this->db->insert($this->table, ['user_id' => $userId, 'plan_id' => $planId, 'transaction_id' => $transactionId,
             'start_date' => $startDate,
             'end_date' => $endDate
         ]);
+        $this->db->update('users', ['plan_id' => $planId], ['id' => $userId]);
 
     }
 }

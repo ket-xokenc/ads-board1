@@ -148,11 +148,15 @@ class UsersController extends BaseController
 
     public function subscribePaymentPlanAction()
     {
+        $siteUrl = Registry::get('siteUrl');
+        if(isset($_POST['signup']) || isset($_POST['buy'])) {
+            header('Location: http://' . $_SERVER['SERVER_NAME'] . '/login');
+            die;
+        }
         $users = new Users();
         $plans = new Plans();
         $params = $this->getRequest()->getParams();
 
-        $siteUrl = Registry::get('siteUrl');
         $paypalMode = Registry::get('paypal', 'mode');
         $paypalCurrencyCode = Registry::get('paypal', 'currencyCode');
         $paypalReturnURL = 'http://'.$siteUrl.'/payment/success';
@@ -160,12 +164,19 @@ class UsersController extends BaseController
 
         $paypalmode = ($paypalMode == 'sandbox') ? '.sandbox' : '';
 
-        if ($_POST) //Post Data received from product list page.
-        {
+        //Post Data received from product list page.
+        if ($_POST) {
             $ItemPrice = $plans->getPriceByName($_POST["itemname"]);
             $ItemName = $_POST["itemname"]; //Item Name
             $ItemDesc = $_POST["itemdesc"]; //Item Description
             $ItemQty = $_POST["itemqty"];
+
+            if($ItemName == 'free') {
+                $payments = new Payments();
+                $payments->saveTransaction(0, $ItemName);
+                $this->render('users/info', ['messages' => 'Success!']);
+                exit;
+            }
 
             //Parameters for SetExpressCheckout, which will be sent to PayPal
             $padata = '&METHOD=SetExpressCheckout' .
@@ -308,10 +319,7 @@ class UsersController extends BaseController
 
     public function paymentCancelledAction()
     {
-        ob_start();
-        echo '<div style="color:red">Payment has been canceled';
-        $message = ob_get_clean();
-        $this->render('users/info', ['messages' => $message]);
+        $this->render('users/info', ['messages' => 'Payment has been canceled']);
     }
 
 }
