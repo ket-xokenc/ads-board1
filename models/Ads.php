@@ -23,12 +23,12 @@ class Ads extends Model
     {
         return ['title' => [
             'type' => 'text',
-            'maxlength' => '40',
-            'minlength' => '20'
+            'maxlength' => '250',
+            'minlength' => '10'
         ],
             'text' => [
                 'type' => 'text',
-                'maxlength' => '200',
+                'maxlength' => '1024',
                 'minlength' => '20'
             ],
             'category' => [
@@ -186,6 +186,23 @@ class Ads extends Model
         }
 
         return $this->db->query("SELECT * FROM $table WHERE text REGEXP :text", array(':text' => $text));
+    }
+
+    public function getAllAds()
+    {
+        $table = Ads::TABLE;
+
+        return $this->db->query("Select users.name as user_name,
+              users.phone as users_phone,
+              ads.date_create as ads_date_create,
+              categories.name as categories_name,
+              ads.title as ads_title,
+              ads.text as ads_text
+             from users inner join $table on
+                                    $table.user_id=users.id
+                        inner join categories ON
+                                    categories.id = ads.category_id
+                        ORDER BY $table.date_create DESC");
     }
 
     public function getAdsByDate($date, $is_regex = false)
