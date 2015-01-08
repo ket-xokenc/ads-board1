@@ -3,6 +3,7 @@ use application\core\BaseController;
 use application\classes\Session;
 use application\classes\Registry;
 use application\classes\Paypal;
+use application\core\Error;
 
 /**
  * Created by PhpStorm.
@@ -148,28 +149,22 @@ class UsersController extends BaseController
     public function subscribePaymentPlanAction()
     {
         $users = new Users();
+        $plans = new Plans();
         $params = $this->getRequest()->getParams();
+
         $siteUrl = Registry::get('siteUrl');
         $paypalMode = Registry::get('paypal', 'mode');
         $paypalCurrencyCode = Registry::get('paypal', 'currencyCode');
-        $paypalReturnURL = 'http://www.'.$siteUrl.'/payment/success';
-        $paypalCancelURL = 'http://www.'.$siteUrl.'/payment/cancelled';
+        $paypalReturnURL = 'http://'.$siteUrl.'/payment/success';
+        $paypalCancelURL = 'http://'.$siteUrl.'/payment/cancelled';
 
         $paypalmode = ($paypalMode == 'sandbox') ? '.sandbox' : '';
 
         if ($_POST) //Post Data received from product list page.
         {
-            //Mainly we need 4 variables from product page Item Name, Item Price, Item Number and Item Quantity.
-
-            //Please Note : People can manipulate hidden field amounts in form,
-            //In practical world you must fetch actual price from database using item id. Eg:
-            //$ItemPrice = $mysqli->query("SELECT item_price FROM products WHERE id = Product_Number");
-
-
-
+            $ItemPrice = $plans->getPriceByName($_POST["itemname"]);
             $ItemName = $_POST["itemname"]; //Item Name
-            $ItemPrice = $_POST["itemprice"]; //Item Price
-            $ItemDesc = $_POST["itemdesc"]; //Item Number
+            $ItemDesc = $_POST["itemdesc"]; //Item Description
             $ItemQty = $_POST["itemqty"];
 
             //Parameters for SetExpressCheckout, which will be sent to PayPal
@@ -180,7 +175,7 @@ class UsersController extends BaseController
 
                 '&L_PAYMENTREQUEST_0_NAME0=' . urlencode($ItemName) .
                 '&L_PAYMENTREQUEST_0_DESC0=' . urlencode($ItemDesc) .
-                '&L_PAYMENTREQUEST_0_AMT0=' . urlencode($ItemPrice) .
+                '&L_PAYMENTREQUEST_0_AMT0=' . $ItemPrice .
                 '&L_PAYMENTREQUEST_0_QTY0=' . urlencode($ItemQty) .
 
                 '&NOSHIPPING=0' . //set 1 to hide buyer's shipping address, in-case products that does not require shipping
@@ -191,10 +186,10 @@ class UsersController extends BaseController
                 '&PAYMENTREQUEST_0_CURRENCYCODE=' . urlencode($paypalCurrencyCode);
 
             ############# set session variable we need later for "DoExpressCheckoutPayment" #######
-            $_SESSION['ItemName'] = $ItemName; //Item Name
-            $_SESSION['ItemPrice'] = $ItemPrice; //Item Price
-            $_SESSION['ItemDesc'] = $ItemDesc; //Item Number
-            $_SESSION['ItemQty'] = $ItemQty; // Item Quantity
+            Session::set('ItemName', $ItemName);
+            Session::set('ItemPrice', $ItemPrice);
+            Session::set('ItemDesc', $ItemDesc);
+            Session::set('ItemQty', $ItemQty);
 
             //execute the "SetExpressCheckOut" method to obtain paypal token
             $paypal = new Paypal();
@@ -209,10 +204,14 @@ class UsersController extends BaseController
 
             } else {
                 //Show error message
+                ob_start();
                 echo '<div style="color:red"><b>Error : </b>' . urldecode($httpParsedResponseAr["L_LONGMESSAGE0"]) . '</div>';
                 echo '<pre>';
                 print_r($httpParsedResponseAr);
                 echo '</pre>';
+                $message = ob_get_clean();
+                $error = new Error($message);
+                $error->showMessages();
             }
         }
 
@@ -225,6 +224,7 @@ class UsersController extends BaseController
             $payer_id = $_GET["PayerID"];
 
             //get session variables
+
             $ItemName = $_SESSION['ItemName']; //Item Name
             $ItemPrice = $_SESSION['ItemPrice']; //Item Price
             $ItemDesc = $_SESSION['ItemDesc']; //Item Description
@@ -251,9 +251,10 @@ class UsersController extends BaseController
 
             //Check if everything went ok..
             if ("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
-
+                ob_start();
                 echo '<h2>Success</h2>';
                 echo 'Your Transaction ID : ' . urldecode($httpParsedResponseAr["PAYMENTINFO_0_TRANSACTIONID"]);
+                $transactionId = $httpParsedResponseAr["PAYMENTINFO_0_TRANSACTIONID"];
 
                 /*
                 //Sometimes Payment are kept pending even when transaction is complete.
@@ -261,7 +262,7 @@ class UsersController extends BaseController
                 */
 
                 if ('Completed' == $httpParsedResponseAr["PAYMENTINFO_0_PAYMENTSTATUS"]) {
-                    echo '<div style="color:green">Payment Received! Your product will be sent to you very soon!</div>';
+                    echo '<div style="color:green">Payment Received!</div>';
                 } elseif ('Pending' == $httpParsedResponseAr["PAYMENTINFO_0_PAYMENTSTATUS"]) {
                     echo '<div style="color:red">Transaction Complete, but payment is still pending! ' .
                         'You need to manually authorize this payment in your <a target="_new" href="http://www.paypal.com">Paypal Account</a></div>';
@@ -275,50 +276,30 @@ class UsersController extends BaseController
 
                 if ("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
 
-                    echo '<br /><b>Stuff to store in database :</b><br /><pre>';
-                    /*
-                    #### SAVE BUYER INFORMATION IN DATABASE ###
-                    //see (http://www.sanwebe.com/2013/03/basic-php-mysqli-usage) for mysqli usage
+                    $payments = new Payments();
+                    $payments->saveTransaction($transactionId, $httpParsedResponseAr['L_NAME0']);
 
-                    $buyerName = $httpParsedResponseAr["FIRSTNAME"].' '.$httpParsedResponseAr["LASTNAME"];
-                    $buyerEmail = $httpParsedResponseAr["EMAIL"];
-
-                    //Open a new connection to the MySQL server
-                    $mysqli = new mysqli('host','username','password','database_name');
-
-                    //Output any connection error
-                    if ($mysqli->connect_error) {
-                        die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
-                    }
-
-                    $insert_row = $mysqli->query("INSERT INTO BuyerTable
-                    (BuyerName,BuyerEmail,TransactionID,ItemName,ItemNumber, ItemAmount,ItemQTY)
-                    VALUES ('$buyerName','$buyerEmail','$transactionID','$ItemName',$ItemNumber, $ItemTotalPrice,$ItemQTY)");
-
-                    if($insert_row){
-                        print 'Success! ID of last inserted record is : ' .$mysqli->insert_id .'<br />';
-                    }else{
-                        die('Error : ('. $mysqli->errno .') '. $mysqli->error);
-                    }
-
-                    */
-
-                    echo '<pre>';
-                    print_r($httpParsedResponseAr);
-                    echo '</pre>';
+                    $message = ob_get_clean();
+                    $this->render('users/info', ['messages' => $message]);
                 } else {
                     echo '<div style="color:red"><b>GetTransactionDetails failed:</b>' . urldecode($httpParsedResponseAr["L_LONGMESSAGE0"]) . '</div>';
                     echo '<pre>';
                     print_r($httpParsedResponseAr);
                     echo '</pre>';
+                    $message = ob_get_clean();
+                    $this->render('users/info', ['messages' => $message]);
 
                 }
 
             } else {
+                ob_start();
                 echo '<div style="color:red"><b>Error : </b>' . urldecode($httpParsedResponseAr["L_LONGMESSAGE0"]) . '</div>';
                 echo '<pre>';
                 print_r($httpParsedResponseAr);
                 echo '</pre>';
+                $message = ob_get_clean();
+                $this->render('users/info', ['messages' => $message]);
+
             }
         }
 
@@ -327,7 +308,10 @@ class UsersController extends BaseController
 
     public function paymentCancelledAction()
     {
-
+        ob_start();
+        echo '<div style="color:red">Payment has been canceled';
+        $message = ob_get_clean();
+        $this->render('users/info', ['messages' => $message]);
     }
 
 }
