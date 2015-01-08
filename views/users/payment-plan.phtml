@@ -1,82 +1,50 @@
 <div class="container text-center standart-space">
     <div class="row">
+        <?php foreach($plans as $plan): ?>
         <div class="col-lg-4">
-            <form role="form" action="/subsccribe-payment-plane/free" method="post">
+            <form role="form" action="/subsccribe-payment-plane/<?=$plan['name']?>" method="post">
 
                 <div class="panel panel-primary">
                     <div class="panel-heading  panel-style">
-                        <h1>FREE</h1>
+                        <h1><?=$plan['name']?></h1>
                     </div>
                     <div class="panel-body">
-                        <h2>$0/month</h2>
+                        <h2>$<?=$plan['price']?>/month</h2>
                         <hr>
-                        <h2>1 ads</h2>
+                        <h2><?php if ($plan['count_ads'] == -1) echo 'Ulimited'; else echo $plan['count_ads']?> ads</h2>
                     </div>
+                    <input type="hidden" name="itemname" value="<?=$plan['name']?>" />
+                    <input type="hidden" name="itemdesc" value="aaaaa" />
+                    <input type="hidden" name="itemqty" value="1" />
+
                     <div class="panel-footer panel-style">
                         <!--Если не вошел-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="signup" value="signup">Sign up</button>
-                        <!--Если вошел и PRO или Business-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="downgrade" value="downgrade">Downgrade</button>
+                        <?php if(!isset($_SESSION['login']) && $plan['id'] == 1) {?>
+                            <button type="submit"  class="btn btn-primary btn-lg" name="signup" value="signup">Sign up</button>
+                        <?php }else if (!isset($_SESSION['login']) && $plan['id'] != 1 ){?>
+                            <button type="submit"  class="btn btn-primary btn-lg" name="buy" value="buy">Buy</button>
+                        <?php }?>
+                        <?php if (isset($_SESSION['login']) && $plan['id'] ==  $user['plan_id']){?>
+                            <h3 style="font-size: 18px; margin-top: 16px">Current</h3>
+                        <?php }else if(isset($_SESSION['login']) && $user['plan_id'] == '1'){?>
+
+                            <button type="submit"  class="btn btn-primary btn-lg" name="upgrade" value="upgrade">Upgrade</button>
+                        <?php }  if (isset($_SESSION['login']) && $user['plan_id'] == '3' && $user['plan_id'] != $plan['id']) {?>
+                            <button type="submit"  class="btn btn-primary btn-lg" name="downgrade" value="downgrade">Downgrade</button>
+                        <?php }else {?>
+                                <?php if($user['plan_id'] == '2' && $plan['name'] == 'business'){?>
+                                    <button type="submit"  class="btn btn-primary btn-lg" name="upgrade" value="upgrade">Upgrade</button>
+                            <?php }?>
+
+                            <?php if($user['plan_id'] == '2' && $plan['name'] == 'free'){?>
+                                <button type="submit"  class="btn btn-primary btn-lg" name="downgrade" value="downgrade">Downgrade</button>
+                            <?php }?>
+
+                        <?php }?>
                         <!--Если вошел и  FREE-->
-                        <h3>Current</h3>
                     </div>
                 </div>
-
-
             </form>
         </div>
-        <div class="col-lg-4">
-            <form role="form" action="/subsccribe-payment-plane/pro" method="post">
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading text-center panel-style">
-                        <h1>PRO</h1>
-                    </div>
-                    <div class="panel-body">
-                        <h2>$99/month</h2>
-                        <hr>
-                        <h2>1000 ads</h2>
-                    </div>
-
-                    <div class="panel-footer panel-style">
-                        <!--Если не вошел-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="buy" value="buy">Buy</button>
-                        <!--Если вошел и не куплено PRO но куплен Business-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="downgrade" value="downgrade">Downgrade</button>
-                        <!--Если вошел и FREE-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="upgrade" value="upgrade">Upgrade</button>
-                        <!--Если вошел и  куплено PRO-->
-                        <h3>Current</h3>
-                    </div>
-                </div>
-
-
-            </form>
-        </div>
-        <div class="col-lg-4">
-            <form role="form" action="/subsccribe-payment-plane/bisiness" method="post">
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading text-center panel-style">
-                        <h1>BUSINESS</h1>
-                    </div>
-                    <div class="panel-body">
-                        <h2>$199/month</h2>
-                        <hr>
-                        <h2>Ulimited ads</h2>
-                    </div>
-                    <div class="panel-footer panel-style">
-                        <!--Если не вошел-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="buy" value="buy">Buy</button>
-                        <!--Если вошел и  куплено PRO или является FREE-->
-                        <button type="submit"  class="btn btn-primary btn-lg" name="upgrade" value="upgrade">Upgrade</button>
-                        <!--Если вошел и  куплено Business-->
-                        <h3>Current</h3>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </div>
-
+        <?php endforeach;?>
 </div>

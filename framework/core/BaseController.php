@@ -19,7 +19,7 @@ class BaseController
 
     public function render($filename, $data = array(),array $errors=null)
     {
-        $error = '';
+        $error = array();
         $view = $this->view;
         $content=array();
         extract($this->data);
