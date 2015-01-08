@@ -62,16 +62,12 @@
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3 text-center">
 
+            <?=$paginator->render()?>
 
-             <nav>
-                <ul class="pager">
-                    <li class="previous"><a href="/profile/page/(page_number)"><span aria-hidden="true">&larr;</span> Prev</a></li>
-                    <li class="next"><a href="/profile/page/(page_number)">Next <span aria-hidden="true">&rarr;</span></a></li>
-                </ul>
-            </nav>
         </div>
     </div>
 </div>
+
 
 <script>
     $(function() {
@@ -83,7 +79,6 @@
             });
             e.preventDefault();
         });
-
 
     });
 </script>

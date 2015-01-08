@@ -1,6 +1,7 @@
 <?php
 use application\core\BaseController;
 use application\classes\Session;
+use application\classes\Paginator;
 /**
  * Created by PhpStorm.
  * User: alexandr
@@ -120,7 +121,10 @@ class UsersController extends BaseController
         $category=new Category();
         $ads=new Ads($category);
 
-        $this->render('users/profile',['dbinfo'=>$ads->getAdsByUserId($dataUser['id']), 'user' => $dataUser]);
+        $paginator=new Paginator(['ads'=>$ads,'users'=>$users],2,3);
+
+
+        $this->render('users/profile',['dbinfo'=>$paginator->getData(),'paginator'=>$paginator, 'user' => $dataUser]);
 
     }
 
