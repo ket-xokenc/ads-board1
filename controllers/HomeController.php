@@ -1,6 +1,7 @@
 <?php
 use application\core\BaseController;
-use application\classes\Database;
+use application\classes\Session;
+use application\classes\Registry;
 class HomeController extends BaseController
 {
     public function indexAction()
@@ -45,5 +46,11 @@ class HomeController extends BaseController
             var_dump($finder);}
         else
             header('Location: http://site.com');
+    }
+    private $db;
+    public function __construct($request)
+    {
+        $this->db = Registry::get('database');
+        parent::__construct($request);
     }
 }

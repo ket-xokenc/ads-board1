@@ -13,11 +13,11 @@ class AdminController extends BaseController
     }
     function panelAction()
     {
-        $user = new Users();
-        $id = $user->get();
-
-        $finder = $this->db->query("SELECT * FROM users ORDER BY date_create", array());
-        $this->render('admin/panel', ['row'=>$finder]);
+        //$user = new Users();
+        //$id = $user->get();
+        $row = $this->db->query("SELECT users.id, login, status, phone, users.date_create, COUNT(ads.user_id) AS  caunt
+              FROM users LEFT JOIN ads ON(users.id=ads.user_id) GROUP BY users.id", []);
+        $this->render('admin/panel', ['row'=>$row]);
     }
 
     function banAction()
