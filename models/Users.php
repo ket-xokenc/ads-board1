@@ -187,6 +187,7 @@ class Users extends Model
     public function saveSession($remember = false, $http_only = true, $days = 7)
     {
         $_SESSION["user_id"] = $this->user['id'];
+        $_SESSION['login'] = $this->user['login'];
         $guid = $this->generateStr();
         $this->db->update($this->table, ['guid' => $guid], ['id' => $this->user_id]);
         $_SESSION['role'] = $this->user['role'];
@@ -210,6 +211,7 @@ class Users extends Model
     public function get($userId = null)
     {
         //$this->clearUsers();
+
 
         if ($userId === null)
             $this->user_id = $this->getUid();
@@ -251,6 +253,10 @@ class Users extends Model
 
             $guid = $_COOKIE['sid'];
             $uid = $this->db->fetchOne($this->table, 'id', ['guid' => $guid]);
+            $login =  $this->db->fetchOne($this->table, 'login', ['guid' => $guid]);
+            $_SESSION['user_id'] = $uid;
+            $_SESSION['login'] = $login;
+
             return $uid;
         }
         return false;

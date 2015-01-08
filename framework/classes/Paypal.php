@@ -1,19 +1,26 @@
 <?php
 namespace application\classes;
+
 use application\classes\Registry;
 use application\core\Error;
 
-class Paypal {
+/**
+ * Class Paypal
+ * @package application\classes
+ */
+class Paypal
+{
 
-    function PPHttpPost($methodName_, $nvpStr_, $PayPalMode) {
+    function PPHttpPost($methodName_, $nvpStr_, $PayPalMode)
+    {
         // Set up your API credentials, PayPal end point, and API version.
         $API_UserName = Registry::get('paypal', 'apiUserName');
         $API_Password = Registry::get('paypal', 'apiPassword');
         $API_Signature = Registry::get('paypal', 'apiSignature');
 
-        $paypalmode = ($PayPalMode=='sandbox') ? '.sandbox' : '';
+        $paypalmode = ($PayPalMode == 'sandbox') ? '.sandbox' : '';
 
-        $API_Endpoint = "https://api-3t".$paypalmode.".paypal.com/nvp";
+        $API_Endpoint = "https://api-3t" . $paypalmode . ".paypal.com/nvp";
         $version = urlencode('109.0');
 
         // Set the curl parameters.
@@ -37,8 +44,11 @@ class Paypal {
         // Get response from the server.
         $httpResponse = curl_exec($ch);
 
-        if(!$httpResponse) {
-            exit("$methodName_ failed: ".curl_error($ch).'('.curl_errno($ch).')');
+        if (!$httpResponse) {
+            exit("$methodName_ failed: " . curl_error($ch) . '(' . curl_errno($ch) . ')');
+            $error = new Error("$methodName_ failed: " . curl_error($ch) . '(' . curl_errno($ch) . ')');
+            $error->showMessages();
+            die;
         }
 
         // Extract the response details.
@@ -47,12 +57,12 @@ class Paypal {
         $httpParsedResponseAr = array();
         foreach ($httpResponseAr as $i => $value) {
             $tmpAr = explode("=", $value);
-            if(sizeof($tmpAr) > 1) {
+            if (sizeof($tmpAr) > 1) {
                 $httpParsedResponseAr[$tmpAr[0]] = $tmpAr[1];
             }
         }
 
-        if((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
+        if ((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
             $error = new Error("Invalid HTTP Response for POST request($nvpreq) to $API_Endpoint.");
             $error->showMessages();
             die;
