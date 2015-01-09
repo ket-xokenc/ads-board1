@@ -13,6 +13,10 @@ class AdsController extends BaseController
         $errors = array();
 
         if ($this->getRequest()->isPost()) {
+            if(!$ads->checkAddAds()) {
+                $this->render('users/newAds', ['error' => ['Limit is exceeded'],'dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
+                exit;
+            }
             if (!empty($errors = $ads->create())) {
                 $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()], $errors);
             } else {

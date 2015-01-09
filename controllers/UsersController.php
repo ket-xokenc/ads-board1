@@ -70,6 +70,8 @@ class UsersController extends BaseController
         $user = new Users();
         $userInfo = $user->get();
         setcookie('sid', '', time() - 3600);
+        setcookie('PHPSESSID', '', time() - 3600);
+
         Session::destroy();
         header('Location: /home');
 
