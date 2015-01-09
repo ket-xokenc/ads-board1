@@ -22,4 +22,7 @@
     margin-top: 50px;
     margin-left: 975px;
 }
+.breadcrumb, .form-inline{
+    text-align: right;
+}
 

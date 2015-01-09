@@ -49,15 +49,7 @@ class AdminController extends BaseController
             echo "Статус:  ".$k['status'].'<br />';
 
         }}
-    function imgAction()
-    {
-        if(isset($_FILES))
-        {
-            $name = $_FILES['upload']['name'];
-            copy($_FILES['upload']['tmp_name'], 'images/1.jpeg');
-            header('Location: http://site.com/admin');
-        }else echo "BARAN";
-    }
+
     function categoriesAction()
     {
         $row = $this->db->query("SELECT categories.id, categories.name, COUNT(ads.category_id) AS count1
@@ -70,7 +62,7 @@ class AdminController extends BaseController
         $desc = $_POST['desc'];
 
         $this->db->insert('categories', ['name'=>$name, 'description'=>$desc]);
-        header('Location: http://site.com/categories');
+        header("Location: http://{$_SERVER['SERVER_NAME']}/categories");
     }
     function showAction()
     {

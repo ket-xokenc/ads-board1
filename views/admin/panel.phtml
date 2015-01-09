@@ -2,7 +2,7 @@
     $(document).ready(function(){
         $("#btn").click(function(){
             var sa = $("#schlog").val();
-            $.post("http://site.com/admin/search",
+            $.post("http://site.om/admin/search",
                 {
                     search: sa
                 }, function(data)
@@ -16,13 +16,7 @@
 <div>
     <input type="text" id="schlog" size="20" placeholder="login">
     <button id="btn">search</button>
-    <ul class="breadcrumb">
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a> <span class="divider">/</span></li>
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Панель администратора</a> <span class="divider">/</span></li>
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories';?>">Категории</a> <span class="divider">/</span></li>
-        <li class="active">Профиль юзера</li>
-    </ul>
-    <table class="table table-bordered">
+        <table class="table table-bordered">
         <thead>
         <tr bgcolor="aqua">
             <th>Логин</th>

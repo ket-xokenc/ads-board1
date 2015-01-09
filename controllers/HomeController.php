@@ -45,7 +45,7 @@ class HomeController extends BaseController
                                                      OR title LIKE '%$search%'", array('login'=>$search));
             var_dump($finder);}
         else
-            header('Location: http://site.com');
+            header("Location: http://{$_SERVER['SERVER_NAME']}");
     }
     private $db;
     public function __construct($request)
