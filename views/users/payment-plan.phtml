@@ -9,7 +9,7 @@
                         <h1><?=$plan['name']?></h1>
                     </div>
                     <div class="panel-body">
-                        <h2>$<?=$plan['price']?>/month</h2>
+                        <h2>$<?php echo $plan['price']; if($plan['name']!= 'free') echo '/month'; ?></h2>
                         <hr>
                         <h2><?php if ($plan['count_ads'] == -1) echo 'Ulimited'; else echo $plan['count_ads']?> ads</h2>
                     </div>
