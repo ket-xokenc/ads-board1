@@ -20,8 +20,6 @@
             'jquery',
             'tmpl',
             './jquery.fileupload-image.js',
-            './jquery.fileupload-audio',
-            './jquery.fileupload-video',
             './jquery.fileupload-validate'
         ], factory);
     } else if (typeof exports === 'object') {
