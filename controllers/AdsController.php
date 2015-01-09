@@ -13,6 +13,11 @@ class AdsController extends BaseController
         $errors = array();
 
         if ($this->getRequest()->isPost()) {
+            $errors = $ads->checkAddAds();
+            if($errors !== true) {
+                $this->render('users/newAds', ['error' => [$errors],'dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
+                exit;
+            }
             if (!empty($errors = $ads->create())) {
                 $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()], $errors);
             } else {

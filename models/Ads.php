@@ -130,6 +130,82 @@ class Ads extends Model
         $this->db->delete($table, ['id' => $ads_id]);
     }
 
+    public function checkAddAds()
+    {
+        $userId = Session::get('user_id');
+        $currentDate = date('Y-m-d H:i:s');
+        $plans = new Plans();
+        $plansInfo = current($plans->getActivePlans());
+
+        $lastPayment = $this->db->query("
+                    Select * from payments WHERE payments.user_id = :userId ORDER BY payments.end_date DESC LIMIT 1
+        ", [':userId' => $userId]);
+
+        $lastPayment = current($lastPayment);
+
+        if($lastPayment) {
+            $activePayment = $this->db->query("
+             select * from payments where payments.end_date > CURDATE() AND payments.id = {$lastPayment['id']}
+            ");
+
+            $activePayment = current($activePayment);
+
+            if($activePayment) {
+                $currentCnt = $this->db->query("
+                    select count(*) from ads inner join users on users.id = ads.user_id INNER JOIN payments on payments.user_id = users.id
+                            where payments.id = {$activePayment['id']}
+                            AND payments.start_date <= ads.date_create
+                            AND payments.end_date >= ads.date_create
+                ");
+                $currentCnt = current($currentCnt);
+                $currentCnt = array_pop($currentCnt);
+                $tableCnt = $this->db->query("
+                    select count_ads from plans inner join users on plans.id = users.plan_id where users.id = $userId
+                ");
+                $tableCnt = current($tableCnt);
+                $tableCnt = array_pop($tableCnt);
+
+                if($currentCnt <= $tableCnt || $tableCnt == -1) {
+                    return true;
+                } else {
+                    return 'Limit is exceeded';
+                }
+
+
+            } else {
+                return 'You should buy payment plan!';
+            }
+        } else {
+            $cntAds = $this->db->query("
+                        select count(*) from ads where ads.user_id = $userId
+            ");
+            $cntAds = current($cntAds);
+            $cntAds = array_pop($cntAds);
+            $cntAdsTable = $plansInfo['count_ads'];
+            if($cntAds >= $cntAdsTable) {
+                return 'Limit is exceeded';
+            } else {
+                return true;
+            }
+        }
+
+//        $cntAds = $this->db->query("SELECT COUNT(* ) FROM ads INNER JOIN users ON users.id = ads.user_id
+//                                    INNER JOIN payments ON payments.user_id = users.id
+//						WHERE users.id = :userId
+//						  AND payments.start_date <= ads.date_create
+//                          AND payments.end_date >= ads.date_create
+//                          AND payments.id = (SELECT payments.id FROM payments WHERE user_id = :userId ORDER BY  end_date DESC LIMIT 1)"
+//        , [':userId' => $userId], [':userId' => 'int']);
+//        $cntAds = $cntAds[0][0];
+//        $cntAdsForPlan = $this->db->query("
+//                                SELECT plans.count_ads FROM plans INNER JOIN users ON users.plan_id = plans.id WHERE users.id = $userId
+//        ");
+//        $cntAdsForPlan = $cntAdsForPlan[0][0];
+//        if($cntAds < $cntAdsForPlan)
+//            return true;
+//        return false;
+    }
+
 
 
     public function getAdsById($id){
