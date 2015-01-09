@@ -133,22 +133,48 @@ class Ads extends Model
     public function checkAddAds()
     {
         $userId = Session::get('user_id');
+        $currentDate = date('Y-m-d H:i:s');
 
-        $cntAds = $this->db->query("SELECT COUNT(* ) FROM ads INNER JOIN users ON users.id = ads.user_id
-                                    INNER JOIN payments ON payments.user_id = users.id
-						WHERE users.id = :userId
-						  AND payments.start_date <= ads.date_create
-                          AND payments.end_date >= ads.date_create
-                          AND payments.id = (SELECT payments.id FROM payments WHERE user_id = :userId ORDER BY  end_date DESC LIMIT 1)"
-        , [':userId' => $userId], [':userId' => 'int']);
-        $cntAds = $cntAds[0][0];
-        $cntAdsForPlan = $this->db->query("
-                                SELECT plans.count_ads FROM plans INNER JOIN users ON users.plan_id = plans.id WHERE users.id = $userId
-        ");
-        $cntAdsForPlan = $cntAdsForPlan[0][0];
-        if($cntAds < $cntAdsForPlan)
-            return true;
-        return false;
+        $lastPayment = $this->db->query("
+                    Select * from payments WHERE payments.user_id = :userId ORDER BY payments.end_date DESC LIMIT 1
+        ", [':userId' => $userId]);
+
+        $lastPayment = current($lastPayment);
+
+        if($lastPayment) {
+            $activePayment = $this->db->query("
+             select * from payments where end_date > $currentDate AND id = $lastPayment[0]['id']
+            ");
+
+            $activePayment = current($activePayment);
+
+            if($activePayment) {
+                $cnt = $this->db->query("
+                    select * from ads inner join users on users.id = ads.user_id INNER JOIN payments on payments.user_id = users.id
+                            where payments.id = {$activePayment['id']}
+                ");
+
+
+            } else {
+                return false;
+            }
+        }
+
+//        $cntAds = $this->db->query("SELECT COUNT(* ) FROM ads INNER JOIN users ON users.id = ads.user_id
+//                                    INNER JOIN payments ON payments.user_id = users.id
+//						WHERE users.id = :userId
+//						  AND payments.start_date <= ads.date_create
+//                          AND payments.end_date >= ads.date_create
+//                          AND payments.id = (SELECT payments.id FROM payments WHERE user_id = :userId ORDER BY  end_date DESC LIMIT 1)"
+//        , [':userId' => $userId], [':userId' => 'int']);
+//        $cntAds = $cntAds[0][0];
+//        $cntAdsForPlan = $this->db->query("
+//                                SELECT plans.count_ads FROM plans INNER JOIN users ON users.plan_id = plans.id WHERE users.id = $userId
+//        ");
+//        $cntAdsForPlan = $cntAdsForPlan[0][0];
+//        if($cntAds < $cntAdsForPlan)
+//            return true;
+//        return false;
     }
 
 
