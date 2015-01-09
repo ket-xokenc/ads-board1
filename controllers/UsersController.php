@@ -132,6 +132,7 @@ class UsersController extends BaseController
         $paginator=new Paginator(['ads'=>$ads,'users'=>$users],2,3);
 
 
+
         $this->render('users/profile',['dbinfo'=>$paginator->getData(),'paginator'=>$paginator, 'user' => $dataUser]);
 
     }
