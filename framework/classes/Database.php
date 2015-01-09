@@ -40,6 +40,10 @@ class Database
 
     }
 
+    public  function getLastInsertedId() {
+       return $this->db->lastInsertId();
+    }
+
     /**
      * @param $sql
      * @param array $params

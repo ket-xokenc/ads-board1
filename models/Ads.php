@@ -74,6 +74,13 @@ class Ads extends Model
 
         $this->db->insert($table, $data);
 
+        $path='../public/tmp_files/'.$data['user_id'];
+
+        if(is_dir($path)){
+            foreach(scandir($path) as $img){
+                rename($path, '../public/files/'.$this->db->getLastInsertedId());
+            }
+        }
     }
 
     public function edit($ads_id)
@@ -99,7 +106,8 @@ class Ads extends Model
             return $errorLog;
         }
 
-        $this->db->update($table, $data, ['id' => $ads_id]);
+
+        $this->db->update($table,$data,['id'=>$ads_id]);
 
 
     }
@@ -123,9 +131,9 @@ class Ads extends Model
     }
 
 
-    public function getAdsById($id)
-    {
-        $table = Ads::TABLE;
+
+    public function getAdsById($id){
+        $table=Ads::TABLE;
 
         return $this->db->fetchRow($table, ['*'], ['id' => $id]);
     }
@@ -133,6 +141,7 @@ class Ads extends Model
     public function getAdsByUserId($id, $escape = 0, $number = PHP_INT_MAX)
     {
         $table = Ads::TABLE;
+
 
         return $this->db->query("Select users.name user_name,users.phone users_phone,categories.name categories_name,
                                     $table.title {$table}_title, $table.text {$table}_text, $table.date_create {$table}_date_create,
@@ -213,7 +222,7 @@ class Ads extends Model
             $date = '^' . $date . '$';
         }
 
-        return $this->db->query("SELECT * FROM $table WHERE text REGEXP :date", array(':date' => $date));
+        return $this->db->query("SELECT * FROM $table WHERE date_create REGEXP :date",array(':date'=>$date));
     }
 
     public function getNumberOfAds($user_id)

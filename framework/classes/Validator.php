@@ -33,9 +33,9 @@ class Validator {
 
         foreach($data as $key=>$val){
 
-            //if(empty($data[$key]) && empty($rules[$key]['required'])){
-                //continue;
-            //}
+        /*    if(empty($data[$key])&&empty((bool)$rules[$key]['required'])){
+                continue;
+            }*/
 
             if(!empty($rules[$key])){
 
