@@ -8,8 +8,8 @@
 
             <?php if($pages<=$window+1){?>
 
-                <?php  for($i=1;$i<$window+2;$i++){?>
-                    <li><a href="/profile?page=<?=$i?>"><?=$i?></a></li>
+                <?php  for($i=1;$i<$pages+1;$i++){?>
+                    <li class="<?=($page==$i)?'active':''?>"><a href="/profile?page=<?=$i?>"><?=$i?></a></li>
                 <?php } ?>
 
             <?php }elseif($page>=1&&$page<$window){?>
