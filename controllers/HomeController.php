@@ -21,6 +21,7 @@ class HomeController extends BaseController
         $data = $user->get();
         $ads = new Ads(new Category());
         $dbinfo = $ads->getAllAds();
+//        print_r($dbinfo);exit;
 
         $title = 'Home';
         $this->render('site/home', array('title' => $title, 'user' => $data, 'dbinfo' => $dbinfo));

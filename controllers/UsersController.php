@@ -32,7 +32,8 @@ class UsersController extends BaseController
             $res = $user->authorize(isset($_POST['rememberMe']));
             if (Users::isAuthorized()) {
                 $data = $user->get();
-                $this->render('site/home', ['user' => $data]);
+                header('Location: /home');
+                exit;
             }
         }
         $this->render('users/login', ['error' => $res]);
@@ -70,7 +71,7 @@ class UsersController extends BaseController
         $userInfo = $user->get();
         setcookie('sid', '', time() - 3600);
         Session::destroy();
-        $this->render('site/home');
+        header('Location: /home');
 
     }
 
