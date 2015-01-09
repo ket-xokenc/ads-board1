@@ -11,7 +11,9 @@
             <div><?=$message?></div>
             <?php endif;?>
 
+            <?php if(!empty($error)):?>
             <div class="error-valid"><?=$error?></div>
+            <?php endif;?>
             <form role="form" action="/profile/edit" method="post">
 
                 <div class="form-group">

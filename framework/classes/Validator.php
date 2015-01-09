@@ -49,7 +49,7 @@ class Validator {
                     }
 
                     case 'password':{
-                        if(!preg_match('~^[0-9A-Za-z!@#$%*]$~',$data[$key])){
+                        if(!preg_match('~^[0-9A-Za-z!@#$%*]+$~',$data[$key])){
                             $validErrors[$key]=$message[$key]['validation'];
                         }
                         break;

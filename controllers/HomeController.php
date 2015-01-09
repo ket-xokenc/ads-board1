@@ -1,6 +1,7 @@
 <?php
 use application\core\BaseController;
 use application\classes\Database;
+
 class HomeController extends BaseController
 {
     public function indexAction()
@@ -15,16 +16,22 @@ class HomeController extends BaseController
         //print_r($db->fetchOne('users', 'login', ['login' => 'kvasenko']));exit;
         // $db->query('DELETE from users where login = :login', [':login' => 'alex'], [':login' => 'str']);
         $data = [];
+
         $user = new Users();
         $data = $user->get();
-        $title = 'Домашняя страница';
-        $this->render('site/home', array('title' => $title, 'user' => $data));
+        $ads = new Ads(new Category());
+        $dbinfo = $ads->getAllAds();
+
+        $title = 'Home';
+        $this->render('site/home', array('title' => $title, 'user' => $data, 'dbinfo' => $dbinfo));
         //   $result = mail('kvasenko@ukr.net', 'subject', 'message');
     }
+
     public function addAction()
     {
         echo 'kjhsfd';
     }
+
     public function staticPageAction()
     {
         $user = new Users();
