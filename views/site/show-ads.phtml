@@ -1,0 +1,142 @@
+<link rel="stylesheet" href="/css/slick.css">
+<script src="/js/slick.js"></script>
+
+<style>
+    .slick-slide{
+        width: 240px;
+        padding-left: 50px;
+    }
+    .slick-list{
+        height: 100%;
+    }
+    #slick-prev{
+        position: absolute;
+        top: 625px;
+    }
+    #slick-next{
+        position: absolute;
+        top: 625px;
+        right: 15px;
+    }
+    .slider-for{
+        width: 100%;
+        height: 500px;
+        margin: 0 auto;
+    }
+    .slider-nav{
+        width: 90%;
+        margin: 5px auto;
+    }
+</style>
+
+
+<div class="container standart-space">
+    <div class="row">
+        <?php foreach($dbinfo as $vals){?>
+            <div class="col-lg-8 col-lg-offset-2">
+                    <h2 class="ads-style"><?=$vals['title']?></h2>
+
+             <?php if(!empty($imgs)&&!empty($thumbnails)){?>
+
+                <div class="slider-for">
+                        <?php foreach($imgs as $img){?>
+                            <?php $imgSize=getimagesize("../public/files/{$vals['ads_id']}/{$img}");?>
+                            <div><img src="<?="/files/{$vals['ads_id']}/{$img}"?>" width="<?=$imgSize[0]?>" height="<?=$imgSize[1]?>"></div>
+                        <?php }?>
+                </div>
+
+                <button id="slick-prev" class="btn btn-default btn-sm"><</button>
+
+                <div class="slider-nav">
+                        <?php foreach($thumbnails as $thumbnail){?>
+                            <div><img src="<?="/files/{$vals['ads_id']}/thumbnail/{$thumbnail}"?>"></div>
+                        <?php }?>
+                </div>
+
+
+                <button id="slick-next" class="btn btn-default btn-sm">></button>
+
+
+             <?php }else{?>
+                <div class="slider-for">
+                    <div><img class="no-photo" src="/files/no-photo.png"></div>
+                </div>
+             <?php }?>
+
+                    <div class="description" >
+                        <h2 class="ads-style">Description:</h2>
+                        <span><?=$vals['text']?></span>
+                    </div>
+                    <div class="ads-style">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-8" style="padding-left: 0px">
+                                    <div><span class="ads-font">Category: </span><?=$vals['categories_name']?></div>
+                                    <div><span class="ads-font">Name: </span><?=$vals['user_name']?></div>
+                                    <div><span class="ads-font">Phone: </span><?=$vals['users_phone']?></div>
+                                    <div><span class="ads-font">Date: </span><?=$vals['ads_date_create']?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        <?php }?>
+    </div>
+</div>
+
+<script>
+
+    var sliderFor=$('.slider-for');
+
+    sliderFor.slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.slider-nav'
+    });
+    $('.slider-nav').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        asNavFor: '.slider-for',
+        prevArrow:$('#slick-prev'),
+        nextArrow:$('#slick-next'),
+        variableWidth: true,
+        centerMode: true,
+        focusOnSelect: true
+    });
+
+    positioning();
+
+    function positioning(){
+
+        if($('.slider-nav div img').length==1){
+            $('#slick-prev,#slick-next,.slider-nav').hide();
+        }
+
+        var divHeight=sliderFor.outerHeight();
+        var divWidth=sliderFor.outerWidth();
+        $('.no-photo').height(divHeight);
+        $('.no-photo').width(divWidth);
+
+        $('.slider-for div img').each(function(){
+            var imgHeight=$(this).height();
+            var imgWidth=$(this).width();
+
+            if(imgHeight>divHeight){
+                $(this).height(divHeight);
+            }
+
+            if(imgWidth>divWidth){
+                $(this).height(divWidth);
+            }
+
+            $(this).css({
+                "position":"absolute",
+                "top": (divHeight-imgHeight)/2,
+                "left": (divWidth-imgWidth)/2
+            });
+        });
+    }
+
+</script>
