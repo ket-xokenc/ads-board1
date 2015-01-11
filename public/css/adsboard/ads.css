@@ -26,3 +26,7 @@
 .ads-gap{
     margin-top: 30px;
 }
+
+.description{
+    word-wrap: break-word;
+}

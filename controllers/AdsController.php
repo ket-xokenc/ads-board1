@@ -22,7 +22,7 @@ class AdsController extends BaseController
                 $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()], $errors);
             } else {
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-                $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get(), 'info' => 'Ads successfuly created']);
+                $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get()]);
             }
         } else {
             $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
@@ -33,7 +33,7 @@ class AdsController extends BaseController
     {
         $users = new Users();
         $category = new Category();
-        $ads = new Ads($category, $users);
+        $ads = new Ads($category);
         $params = $this->getRequest()->getParams();
         $errors = array();
 
@@ -46,7 +46,7 @@ class AdsController extends BaseController
                 $this->render('users/edit-ads', ['dbinfo' => $ads->getAdsById($params[0]), 'user' => $users->get()], $errors);
             } else {
                 header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
-                $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get(), 'info' => 'Ads successfuly edited']);
+                $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get()]);
             }
         } else {
             $this->render('users/edit-ads', ['dbinfo' => $ads->getAdsById($params[0]), 'user' => $users->get()]);
@@ -58,7 +58,7 @@ class AdsController extends BaseController
     {
         $users = new Users();
         $category = new Category();
-        $ads = new Ads($category, $users);
+        $ads = new Ads($category);
         $params = $this->getRequest()->getParams();
         $errors = array();
 
@@ -78,10 +78,27 @@ class AdsController extends BaseController
 
         header("Location: http://{$_SERVER['HTTP_HOST']}/profile");
 
-        $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get(), 'info' => 'Ads successfuly deleted']);
+        $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get()]);
 
 
     }
 
+    public function showAction(){
+        $users = new Users();
+        $category = new Category();
+        $ads = new Ads($category);
 
+        $params = $this->getRequest()->getParams();
+        $dbinfo=$ads->getAdsById($params[0]);
+        $thumbnails=array();
+        $imgs=array();
+
+        if(is_dir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail")&&
+            is_dir("../public/files/{$dbinfo[0]['ads_id']}")){
+            $thumbnails=array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail"), array('..', '.'));
+            $imgs=array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}"), array('..', '.','thumbnail'));
+        }
+
+        $this->render('site/show-ads', ['dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
+    }
 } 
