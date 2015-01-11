@@ -33,9 +33,9 @@ class Validator {
 
         foreach($data as $key=>$val){
 
-            if(empty($data[$key])&&empty((bool)$rules[$key]['required'])){
+        /*    if(empty($data[$key])&&empty((bool)$rules[$key]['required'])){
                 continue;
-            }
+            }*/
 
             if(!empty($rules[$key])){
 
@@ -49,7 +49,7 @@ class Validator {
                     }
 
                     case 'password':{
-                        if(!preg_match('~^[0-9A-Za-z!@#$%*]$~',$data[$key])){
+                        if(!preg_match('~^[0-9A-Za-z!@#$%*]+$~',$data[$key])){
                             $validErrors[$key]=$message[$key]['validation'];
                         }
                         break;
