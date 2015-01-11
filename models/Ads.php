@@ -77,9 +77,10 @@ class Ads extends Model
         $path='../public/tmp_files/'.$data['user_id'];
 
         if(is_dir($path)){
-            foreach(scandir($path) as $img){
-                rename($path, '../public/files/'.$this->db->getLastInsertedId());
+            if(!is_dir('../public/files/')){
+                mkdir('../public/files/');
             }
+                rename($path, '../public/files/'.$this->db->getLastInsertedId());
         }
     }
 
@@ -203,9 +204,20 @@ class Ads extends Model
     }
 
     public function getAdsById($id){
-        $table=Ads::TABLE;
+        $table = Ads::TABLE;
 
-        return $this->db->fetchRow($table, ['*'], ['id' => $id]);
+        return $this->db->query("Select users.name as user_name,
+              users.phone as users_phone,
+              ads.date_create as ads_date_create,
+              categories.name as categories_name,
+              ads.title as title,
+              ads.text as text,
+              ads.id as ads_id
+             from users inner join $table on
+                                    $table.user_id=users.id
+                        inner join categories ON
+                                    categories.id = ads.category_id
+                                    WHERE ads.id=$id");
     }
 
     public function getAdsByUserId($id, $escape = 0, $number = PHP_INT_MAX)
@@ -237,36 +249,6 @@ class Ads extends Model
                                     $table.category_id=categories.id where categories.name=:name", array(':name' => $name));
     }
 
-    public function getAdsByUserName($name)
-    {
-        $table = Ads::TABLE;
-
-        return $this->db->query("Select * from users inner join $table on
-                                    $table.user_id=users.id where users.name=:name", array(':name' => $name));
-    }
-
-    public function getAdsByTitle($title, $is_regex = false)
-    {
-        $table = Ads::TABLE;
-
-        if (!$is_regex) {
-            $title = '^' . $title . '$';
-        }
-
-        return $this->db->query("SELECT * FROM $table WHERE title REGEXP :title", array(':title' => $title));
-    }
-
-    public function getAdsByText($text, $is_regex = false)
-    {
-        $table = Ads::TABLE;
-
-        if (!$is_regex) {
-            $text = '^' . $text . '$';
-        }
-
-        return $this->db->query("SELECT * FROM $table WHERE text REGEXP :text", array(':text' => $text));
-    }
-
     public function getAllAds()
     {
         $table = Ads::TABLE;
@@ -276,23 +258,13 @@ class Ads extends Model
               ads.date_create as ads_date_create,
               categories.name as categories_name,
               ads.title as ads_title,
-              ads.text as ads_text
+              ads.text as ads_text,
+              ads.id as ads_id
              from users inner join $table on
                                     $table.user_id=users.id
                         inner join categories ON
                                     categories.id = ads.category_id
                         ORDER BY $table.date_create DESC");
-    }
-
-    public function getAdsByDate($date, $is_regex = false)
-    {
-        $table = Ads::TABLE;
-
-        if (!$is_regex) {
-            $date = '^' . $date . '$';
-        }
-
-        return $this->db->query("SELECT * FROM $table WHERE date_create REGEXP :date",array(':date'=>$date));
     }
 
     public function getNumberOfAds($user_id)

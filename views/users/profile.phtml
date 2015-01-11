@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-lg-4 text-right" style="padding-right:0px">
                                 <a href="/profile/ads-edit/<?=$vals['ads_id']?>" class="btn btn-default btn-xs">Edit</a>
-                                <a id="ads-delete" href="/profile/ads-delete/<?=$vals['ads_id']?>" class="btn btn-danger btn-xs">Delete</a>
+                                <a href="/profile/ads-delete/<?=$vals['ads_id']?>" class="btn btn-danger btn-xs ads-delete">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -71,10 +71,10 @@
 
 <script>
     $(function() {
-        $("#ads-delete").click(function(e) {
+        $(".ads-delete").click(function(e) {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result){
-                    window.location.href = $('#ads-delete').attr('href');
+                    window.location.href = $('.ads-delete').attr('href');
                 }
             });
             e.preventDefault();
