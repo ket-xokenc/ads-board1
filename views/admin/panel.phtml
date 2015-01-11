@@ -1,24 +1,40 @@
 <script type="text/javascript">
     $(document).ready(function(){
-        $("#btn").click(function(){
-            var sa = $("#schlog").val();
-            $.post("http://site.om/admin/search",
+        $("form").submit(function ()
+        {
+            return false;
+        });
+        $(".active").click(function(){
+            var search = $(".form-control").val();
+            $.post("http://site.com/admin/search",
                 {
-                    search: sa
+                    search: search
                 }, function(data)
                 {
-                    $('#my_p').html(data);
+                    $('#result').html(data);
                 });
         });
     })
 </script>
-<p id="my_p"></p>
-<div>
-    <input type="text" id="schlog" size="20" placeholder="login">
-    <button id="btn">search</button>
-        <table class="table table-bordered">
+
+<div class="panelcl">
+    <ul class="pagination">
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a></li>
+        <li class="active"><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Пользователи</a></li>
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories';?>">Категории</a></li>
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories/show';?>">Объявления</a></li>
+    </ul>
+    <table class="table table-striped" id="result"></table>
+    <form class="form-inline" role="form">
+            <div class="form-group">
+                <label for="text">Поиск</label>
+                <input type="text" name="desc" class="form-control" placeholder="Логин пользователя, заголовок публикации или категорию" size="60" required>
+            </div>
+            <button type="submit" class="active">Search</button>
+    </form>
+    <table class="table table-striped">
         <thead>
-        <tr bgcolor="aqua">
+        <tr>
             <th>Логин</th>
             <th>Телефон</th>
             <th>Статус</th>
@@ -36,11 +52,11 @@
                 <td><?php echo $tt["caunt"]; ?></td>
                 <td><?php echo $tt["date_create"]; ?></td>
                 <td>
-                    <a href="/admin/show/<?php echo $tt["id"]; ?>">Псмотреть</a>
+                        <a href="#">SHOW |</a>
                     <?php if($tt['status']=='banned'):?>
-                        <a href="/admin/unban/<?php echo $tt["id"]; ?>">Разблокировать</a>
+                        <a href="/admin/unban/<?php echo $tt["id"]; ?>">UNBAN</a>
                     <?php else:?>
-                        <a href="/admin/ban/<?php echo $tt["id"]; ?>">Заблокировать</a>
+                        <a href="/admin/ban/<?php echo $tt["id"]; ?>">BAN</a>
                     <?php endif; ?>
                 </td>
             </tr>

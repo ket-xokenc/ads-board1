@@ -1,11 +1,28 @@
-
-<table class="table table-bordered">
+<div class="panelcl">
+    <ul class="pagination">
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a></li>
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Пользователи</a></li>
+        <li class="active"><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories';?>">Категории</a></li>
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories/show';?>">Объявления</a></li>
+    </ul>
+    <form class="form-inline" role="form" action="/admin/add-cat" method="post">
+        <div class="form-group">
+            <label for="text">Имя категории: </label>
+            <input type="text" name="name" class="form-control" placeholder="name" required>
+        </div>
+        <div class="form-group">
+            <label for="text">Описание категории:</label>
+            <input type="text" name="desc" class="form-control" placeholder="description" required>
+        </div>
+        <button type="submit" class="btn btn-default">Добавить</button>
+    </form>
+<table class="table table-striped">
     <thead>
-    <tr bgcolor="aqua">
+    <tr>
         <th>Id</th>
         <th>Name category</th>
+        <th>Descripition</th>
         <th>Count</th>
-        <th>Show</th>
     </tr>
     </thead>
     <tbody>
@@ -13,26 +30,10 @@
         <tr>
             <td><?php echo $tt["id"]; ?></td>
             <td><?php echo $tt["name"]; ?></td>
+            <td><?php echo $tt['description']; ?></td>
             <td><?php echo $tt['count1']; ?></td>
-            <?php if($tt['count1']==0):?>
-                <td>Ноль</td>
-            <?php else: ?>
-                <td><a href="categories/show/<?php echo $tt['id']; ?>">Show this category</a></td>
-            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>
-</table><button id="mybut">hide</button>
-<div id="mydiv"><form action="/admin/add-cat" method="post" class="form-search">
-        <input type="text" name="name" placeholder="Name" required size="27"> <br />
-        <input type="text" name="desc" placeholder="Description" size="27" required> <br />
-        <input type="submit" value="create new category" ><br />
-    </form></div>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('#mybut').click(function() {
-            $("div#mydiv").toggle();
-        });
-        $('#mydiv').hide();
-    });
-</script>
+</table>
+</div>

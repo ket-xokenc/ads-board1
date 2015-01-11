@@ -17,14 +17,17 @@
     <link href="/css/adsboard/menu.css" rel="stylesheet">
 
     <link href="/css/adsboard/ads.css" rel="stylesheet">
+    <link href="/css/my-css.css" rel="stylesheet">
 
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
+
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="/js/ajax.js"></script>
 </head>
 
 <body>
@@ -43,9 +46,10 @@
                 </div>
             </div>
 
-            <?php if(!empty($user['login'])){?>
+            <!--            --><?php //var_dump($_SESSION);exit; ?>
+            <?php if(isset($_SESSION['login'])){?>
                 <div class="col-lg-5  text-right col-lg-height col-middle" style="padding-right: 0px">
-                    <a class="btn btn-lg" href="/profile"><?=$user['login']?></a>
+                    <a class="btn btn-lg" href="/profile"><?=$_SESSION['login']?></a>
                     <a href="/logout" class="btn btn-lg">Logout</a>
                 </div>
             <?php }else{ ?>
@@ -57,22 +61,6 @@
 
             <?php }?>
         </div>
-        <form class="form-inline" role="form" action="/search">
-            <div class="form-group">
-                <input type="text" size="27" name="search" class="form-control" placeholder="Title, User login or Category">
-                <button type="submit" class="btn-sm btn-default">Search</button>
-            </div>
-        </form>
-        <ul class="breadcrumb">
-            <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a> <span class="divider">/</span></li>
-           <?php if($user['role']=='admin'):?>
-            <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Панель администратора</a> <span class="divider">/</span></li>
-
-            <?php else: ?>
-            <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Панель</a> <span class="divider">/</span></li>
-            <?php endif; ?>
-            <li class="active">Профиль юзера</li>
-        </ul>
     </div>
     <?=$content?>
 

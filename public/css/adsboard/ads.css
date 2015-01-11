@@ -18,11 +18,12 @@
     margin-top: 10px;
 }
 
-.form-search{
-    margin-top: 50px;
-    margin-left: 975px;
+.panelcl{
+    text-align: left;
+    width: 1100px;
+    margin-left: 500px;
 }
-.breadcrumb, .form-inline{
-    text-align: right;
+.form-inline, .table-striped{
+    margin-top: 10px;
 }
 

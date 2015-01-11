@@ -1,22 +1,52 @@
-<table class="table table-bordered">
+<div class="panelcl">
+    <ul class="pagination">
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'];?>">Главная</a></li>
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Пользователи</a></li>
+        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories';?>">Категории</a></li>
+        <li class="active"><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories/show';?>">Объявления</a></li>
+    </ul>
+
+<table class="table table-striped">
     <thead>
-    <tr bgcolor="aqua">
+    <tr>
         <th>Title</th>
         <th>Text</th>
-        <th>login</th>
-        <th>Status</th>
+        <th>name</th>
         <th>Date_create</th>
+        <th>login</th>
+        <th>status</th>
+        <th>id</th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($row as $tt): ?>
+    <?php
+    $n = array();
+    $i = array();
+    foreach ($row as $tt): ?>
         <tr>
             <td><?php echo $tt["title"]; ?></td>
             <td><?php echo $tt["text"]; ?></td>
-            <td><a href="#"><?php echo $tt['login']; ?></a> </td>
-            <td><?php echo $tt['status']; ?></td>
+            <td><?php echo $tt["name"]; ?></td>
             <td><?php echo $tt['date_create']; ?></td>
+            <td><?php echo $tt['login']; ?></td>
+            <td><?php echo $tt['status']; ?></td>
+            <td><?php echo $tt['id']; ?></td>
         </tr>
-    <?php endforeach; ?>
+    <?php
+            array_push($n, $tt['name']);
+            array_push($i, $tt['id']);
+    endforeach;
+            $name = array_unique($n);
+            $id = array_unique($i);
+            $r = array_combine($id, $name);?>
     </tbody>
 </table>
+
+<form method="post" action="" id="metd">
+        <select name="form[]">
+            <option value="777">Все категории</option>
+            <?php foreach ($r as $k=>$v):?>
+                <option value="<?php echo $k?>">Категория: <?php echo $v; ?></option> <?php endforeach; ?>
+        </select>
+        <input type="submit" name="formSubmit" value="select">
+</form> </div>
