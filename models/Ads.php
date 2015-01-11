@@ -142,7 +142,6 @@ class Ads extends Model
         ", [':userId' => $userId]);
 
         $lastPayment = current($lastPayment);
-
         if($lastPayment) {
             $activePayment = $this->db->query("
              select * from payments where payments.end_date > CURDATE() AND payments.id = {$lastPayment['id']}
@@ -188,25 +187,20 @@ class Ads extends Model
                 return true;
             }
         }
-
-//        $cntAds = $this->db->query("SELECT COUNT(* ) FROM ads INNER JOIN users ON users.id = ads.user_id
-//                                    INNER JOIN payments ON payments.user_id = users.id
-//						WHERE users.id = :userId
-//						  AND payments.start_date <= ads.date_create
-//                          AND payments.end_date >= ads.date_create
-//                          AND payments.id = (SELECT payments.id FROM payments WHERE user_id = :userId ORDER BY  end_date DESC LIMIT 1)"
-//        , [':userId' => $userId], [':userId' => 'int']);
-//        $cntAds = $cntAds[0][0];
-//        $cntAdsForPlan = $this->db->query("
-//                                SELECT plans.count_ads FROM plans INNER JOIN users ON users.plan_id = plans.id WHERE users.id = $userId
-//        ");
-//        $cntAdsForPlan = $cntAdsForPlan[0][0];
-//        if($cntAds < $cntAdsForPlan)
-//            return true;
-//        return false;
     }
 
-
+    public function getAdsByString($string)
+    {
+        $table=Ads::TABLE;
+        return $this->db->query("
+                              Select users.name user_name, users.phone users_phone, categories.name categories_name,
+                                    $table.title {$table}_title, $table.text {$table}_text, $table.date_create {$table}_date_create,
+                                    $table.id {$table}_id
+                                    from $table inner join categories on
+                                    $table.category_id=categories.id
+                                    inner join users on users.id=$table.user_id
+                                    where $table.title like '%".$string."%' order by $table.date_create DESC limit 5");
+    }
 
     public function getAdsById($id){
         $table=Ads::TABLE;
@@ -225,7 +219,7 @@ class Ads extends Model
                                     from $table inner join categories on
                                     $table.category_id=categories.id
                                     inner join users on users.id=$table.user_id
-                                    where users.id=:id  limit $escape,$number ", array(':id' => $id));
+                                    where users.id=:id  order by $table.date_create DESC limit $escape,$number ", array(':id' => $id));
     }
 
     public function getAdsByCategoryId($id)
