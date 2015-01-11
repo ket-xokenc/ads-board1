@@ -17,10 +17,7 @@ class AdminController extends BaseController
     }
     function panelAction()
     {
-
-//        $acl = new Acl();
-//        $acl->access('Admin', 'panel');
-        $row = $this->db->query("SELECT users.id, login, status, phone, users.date_create,
+        $row = $this->db->query("SELECT users.id, login, status, users.phone, users.date_create,
                                 COUNT(ads.user_id) AS  caunt
                                 FROM users LEFT JOIN ads ON(users.id=ads.user_id) GROUP BY users.id", []);
         $this->render('admin/panel', ['row'=>$row]);
@@ -48,7 +45,7 @@ class AdminController extends BaseController
         if(isset($_POST['search']) && iconv_strlen($_POST['search'])>1){
             $search = $_POST['search'];
             $search = preg_replace("#[^0-9a-z]#i", "", $search);
-        $finder = $this->db->query("SELECT users.login, categories.name, ads.title, ads.text, phone, status
+        $finder = $this->db->query("SELECT users.login, categories.name, ads.title, ads.text, ads.phone, status
               FROM users LEFT JOIN ads ON(ads.user_id=users.id)
               LEFT JOIN categories ON(categories.id=ads.category_id)
               WHERE login LIKE '%$search%'
