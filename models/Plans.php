@@ -24,4 +24,16 @@ class Plans extends Model
     {
         return $this->db->fetchOne($this->table, 'id', ['name' => $name]);
     }
+
+    public function switchPlan()
+    {
+        if (isset($_SESSION['user_id'])) {
+            $activePayment = $this->db->query("
+                select * from plans inner join users on users.plan_id = plans.id where users.id = {$_SESSION['user_id']}
+            ");
+            if (!$activePayment) {
+                $this->db->update('users', ['plan_id' => 1], ['id' => $_SESSION['user_id']]);
+            }
+        }
+    }
 }
