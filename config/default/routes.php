@@ -10,7 +10,7 @@ return [
         'login' => 'users/login',
         'login/([-_a-z0-9]+)' => 'users/login/$1',
         'registration' => 'users/registration',
-        'search' => 'home/index',
+        'search' => 'home/search',
         'logout' => 'users/logout',
         'restore-password' =>'users/restorePassword',
         'confirmation/hash/([a-zA-Z0-9]+)' => 'users/confirmation/$1',

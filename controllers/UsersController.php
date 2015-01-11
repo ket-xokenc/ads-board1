@@ -118,6 +118,7 @@ class UsersController extends BaseController
         $dataInfo = $user->get();
         $plans = new Plans();
         $dataPlans = $plans->getActivePlans();
+        $plans->switchPlan();
         $this->render('users/payment-plan', ['user' => $dataInfo, 'plans' => $dataPlans]);
     }
 

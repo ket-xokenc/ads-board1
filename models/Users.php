@@ -333,7 +333,7 @@ class Users extends Model
     {
         $name = preg_match('/^[a-zA-ZА-Яа-я]{3,18}$/', trim($_POST['name'])) ? $_POST['name'] : false;
         $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
-        $phone = preg_match('/^\+38\d{10}$/', trim($_POST['phone'])) ? $_POST['phone'] : false;
+        $phone = preg_match('/^\d{3,14}$/', trim($_POST['phone'])) ? $_POST['phone'] : false;
 
         if (!empty($_POST['old_password'])) {
             $passwordOld = preg_match('/^[a-zA-Z0-9_-]{3,18}$/', trim($_POST['old_password'])) ? $_POST['old_password'] : false;
