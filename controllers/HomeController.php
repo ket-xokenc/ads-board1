@@ -16,7 +16,7 @@ class HomeController extends BaseController
 //        print_r($dbinfo);exit;
 
         $title = 'Home';
-        $paginator=new Paginator(['ads'=>$ads,'users'=>$user],2,3);
+        $paginator = new Paginator(['ads' => $ads, 'users' => $user], 2, 3);
 
         $this->render('site/home', array('title' => $title, 'user' => $dataUser, 'dbinfo' => $dbinfo, 'paginator' => $paginator));
     }
@@ -32,8 +32,8 @@ class HomeController extends BaseController
 
             $ads = new Ads(new Category());
             $dbinfo = $ads->getAdsByString($_POST['search']);
-            if(!empty($dbinfo)) {
-                foreach($dbinfo as $vals) {
+            if (!empty($dbinfo)) {
+                foreach ($dbinfo as $vals) {
                     echo "
                         <div class=\"col-lg-12\">
                 <div class=\"panel panel-primary \">
@@ -52,6 +52,10 @@ class HomeController extends BaseController
                                     <span class=\"ads-font\">Phone: </span>{$vals['users_phone']}
                                     <span class=\"ads-font\">Date: </span>{$vals['ads_date_create']}
                                 </div>
+                                <div class=\"col-lg-4 text-right\" style=\"padding-right:0px\">
+                                    <a href=\"/show/{$vals['ads_id']}\" class=\"btn btn-default btn-sm\">Read More...</a>
+                                </div>
+
                             </div>
                         </div>
                     </div>
