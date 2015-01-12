@@ -62,7 +62,7 @@ class Validator {
                         break;
                     }
                     case 'phone':{
-                        if(!preg_match('/^\+38\d+$/', trim($data[$key]))){
+                        if(!preg_match('/^\d+$/', trim($data[$key]))){
                             $validErrors[$key]=$message[$key]['validation'];
                         }
                         break;

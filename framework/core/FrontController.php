@@ -52,10 +52,10 @@ class FrontController
         $controllerName = $this->controller;
         $methodName = $this->action;
 
-       /* if(!$acl->access($controllerName,$methodName)){
-            header("Location:http://{$_SERVER['HTTP_HOST']}/");
-            return;
-        }*/
+//        if(!$acl->access($controllerName,$methodName)){
+//            header("Location:http://{$_SERVER['HTTP_HOST']}/");
+//            return;
+//        }
 
         $controllerObj = new $controllerName(new Request(
                         array('params' => $this->params,

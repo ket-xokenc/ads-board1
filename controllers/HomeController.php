@@ -18,8 +18,7 @@ class HomeController extends BaseController
         $title = 'Home';
         $paginator=new Paginator(['ads'=>$ads,'users'=>$user],2,3);
 
-        $this->render('site/home', array('title' => $title, 'user' => $dataUser, 'dbinfo' => $paginator->getData(), 'paginator' => $paginator));
-        //   $result = mail('kvasenko@ukr.net', 'subject', 'message');
+        $this->render('site/home', array('title' => $title, 'user' => $dataUser, 'dbinfo' => $dbinfo, 'paginator' => $paginator));
     }
 
     public function addAction()
