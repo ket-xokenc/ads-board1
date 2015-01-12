@@ -12,8 +12,11 @@ class AdminController extends BaseController
 
         $user = new Users();
         $id = $user->get();
-        if($id['role'] !== 'admin')
-            $this->render('users/login', []);
+        if($id['role'] !== 'admin') {
+            $error = 'Вы не админ';
+            $this->render('users/login', ['error' => $error]);
+        }
+
     }
     function panelAction()
     {
