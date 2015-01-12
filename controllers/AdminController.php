@@ -9,18 +9,25 @@ class AdminController extends BaseController
     {
         $this->db = Registry::get('database');
         parent::__construct($request);
-
+    }
+    function is_adm()
+    {
+        $e = '<strong>WARNING: ВЫ НЕ АДМИНИСТРАТОР ! ! !</strong>';
         $user = new Users();
         $id = $user->get();
         if($id['role'] !== 'admin')
-            $this->render('users/login', []);
+        {
+            $this->render('admin/adm-form', ['error'=>$e]);
+        }
+        else return true;
     }
     function panelAction()
     {
+        if($this->is_adm() == true){
         $row = $this->db->query("SELECT users.id, login, status, users.phone, users.date_create,
                                 COUNT(ads.user_id) AS  caunt
                                 FROM users LEFT JOIN ads ON(users.id=ads.user_id) GROUP BY users.id", []);
-        $this->render('admin/panel', ['row'=>$row]);
+        $this->render('admin/panel', ['row'=>$row]);}
     }
 
     function banAction()
