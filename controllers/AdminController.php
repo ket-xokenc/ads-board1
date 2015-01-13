@@ -5,28 +5,50 @@
 class AdminController extends BaseController
 {
     private $db;
+    private $admin;
     public function __construct($request)
     {
         $this->db = Registry::get('database');
         parent::__construct($request);
-
-        $user = new Users();
-        $id = $user->get();
-        if($id['role'] !== 'admin') {
-            $error = 'Вы не админ';
-            $this->render('users/login', ['error' => $error]);
-        }
+        $this->admin = new Users();
 
     }
-    function panelAction()
+    public function regiserAction()
     {
+        if ($this->getRequest()->isPost())
+        {
+            $r = $this->admin->authorize();
+            if (Users::isAuthorized())
+            {
+                header('Location: /admin');
+            }
+        }
+        $this->render('admin/login_adm', ['error' => $r]);
+    }
+    public function is_adm()
+    {
+        $array = $this->admin->get();
+        if($array['role'] == 'admin')
+            return true;
+        else return false;
+    }
+
+    public function panelAction()
+    {
+        if($this->is_adm())
+        {
         $row = $this->db->query("SELECT users.id, login, status, users.phone, users.date_create,
                                 COUNT(ads.user_id) AS  caunt
                                 FROM users LEFT JOIN ads ON(users.id=ads.user_id) GROUP BY users.id", []);
         $this->render('admin/panel', ['row'=>$row]);
+        }
+        else
+            $res = 'Для входа вам нужны права администратора!';
+            $this->render('admin/login_adm', ['error'=>$res]);
+
     }
 
-    function banAction()
+    public function banAction()
     {
         $par = $this->getRequest()->getParams();
         foreach ($par as $k) {
@@ -34,7 +56,7 @@ class AdminController extends BaseController
             header("Location: http://".$_SERVER['SERVER_NAME']."/admin");
         }
     }
-    function unbanAction()
+    public function unbanAction()
     {
         $par = $this->getRequest()->getParams();
         foreach ($par as $k) {
@@ -43,7 +65,7 @@ class AdminController extends BaseController
         }
     }
 
-    function searchAction()
+    public function searchAction()
     {
         if(isset($_POST['search']) && iconv_strlen($_POST['search'])>1){
             $search = $_POST['search'];
@@ -68,13 +90,22 @@ class AdminController extends BaseController
             <td>'.$tt["title"].'</td></tr>';
     }}}}
 
-    function categoriesAction()
+    public function categoriesAction()
     {
+        if($this->is_adm())
+        {
         $row = $this->db->query("SELECT categories.id, categories.name, categories.description, COUNT(ads.category_id) AS count1
                                     FROM categories LEFT JOIN ads ON(categories.id=ads.category_id) GROUP BY categories.id", []);
         $this->render('admin/categories', ['row'=>$row]);
+        }
+        else
+        {
+            $res = 'Для входа вам нужны права администратора!';
+            $this->render('admin/login_adm', ['error'=>$res]);
+        }
     }
-    function addCatAction()
+
+    public function addCatAction()
     {
         $name = $_POST['name'];
         $desc = $_POST['desc'];
@@ -82,23 +113,20 @@ class AdminController extends BaseController
         $this->db->insert('categories', ['name'=>$name, 'description'=>$desc]);
         header("Location: http://{$_SERVER['SERVER_NAME']}/categories");
     }
-    function showAction()
+
+    public function showAction()
     {
-
-
         if(isset($_POST['formSubmit']))
         {
             $form = $_POST['form'];
             $sett = array_shift($form);
             $sett = intval($sett);
-
             if($sett == 777)
             {
                 header("Location: http://{$_SERVER['SERVER_NAME']}/categories/show");
             }
-
-            else {
-
+            else
+                {
                 $row = $this->db->query("SELECT title, text, ads.date_create, categories.name, categories.id,
                                 users.login, users.status FROM ads
                                 LEFT JOIN categories ON(ads.category_id=categories.id)
@@ -106,11 +134,18 @@ class AdminController extends BaseController
                 $this->render('admin/show', ['row'=>$row]);
                 }
         }
-
+        if($this->is_adm())
+        {
         $row = $this->db->query("SELECT title, text, ads.date_create, categories.name, categories.id,
                                 users.login, users.status FROM ads
                                 LEFT JOIN categories ON(ads.category_id=categories.id)
                                 LEFT JOIN users ON(ads.user_id=users.id)", []);
         $this->render('admin/show', ['row'=>$row]);
+        }
+        else
+        {
+            $res = 'Для входа вам нужны права администратора!';
+            $this->render('admin/login_adm', ['error'=>$res]);
+        }
     }
 }
