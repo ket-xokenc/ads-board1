@@ -33,9 +33,9 @@ class Validator {
 
         foreach($data as $key=>$val){
 
-        /*    if(empty($data[$key])&&empty((bool)$rules[$key]['required'])){
-                continue;
-            }*/
+            //if(empty($data[$key]) && empty($rules[$key]['required'])){
+                //continue;
+            //}
 
             if(!empty($rules[$key])){
 
@@ -62,7 +62,7 @@ class Validator {
                         break;
                     }
                     case 'phone':{
-                        if(!preg_match('/^\+38\d+$/', trim($data[$key]))){
+                        if(!preg_match('/^\d+$/', trim($data[$key]))){
                             $validErrors[$key]=$message[$key]['validation'];
                         }
                         break;
