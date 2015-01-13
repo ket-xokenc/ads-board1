@@ -2,11 +2,11 @@
     <h1><?=$title?></h1>
     <div class="row">
             <div class="col-lg-5">
-                <form class="form-inline" action="/profile/search" method="post">
+                <form class="form-inline" action="/search" method="post">
                     <div class="form-group">
                         <input type="text" class="form-control input-lg"  placeholder="Search ads" name="search" id="search_box">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg">Search</button>
+                    <button type="submit" class="btn btn-primary btn-lg" disabled="disabled" name="search-btn">Search</button>
                 </form>
             </div>
         <div id="results">
