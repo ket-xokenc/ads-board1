@@ -277,5 +277,26 @@ class Ads extends Model
             return $this->db->query("SELECT count(*) FROM $table where $table.user_id=$user_id")[0][0];
         }
     }
-
-} 
+    public function getAdsByText($string)
+    {
+        $table = 'search';
+        $cl = new SphinxClient ();
+        $cl->SetServer("localhost", 3312);
+        $cl->SetConnectTimeout(1);
+        $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
+        $cl->SetMatchMode(SPH_MATCH_ANY);
+        $result = $cl->Query($string);
+        if ( $result !== false ) {
+             if (!empty($result["matches"])){
+                 $found = array_keys($result['matches']); //id found ads
+                 $res = array();
+                for ($j = 0; $j < count($found); $j++) {
+                    $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
+                    $res = array_merge($res, $temp);
+                }
+                 return $res;
+            }
+        }
+        else  return '';
+    }
+}
