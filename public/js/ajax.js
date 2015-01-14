@@ -11,7 +11,7 @@ $(function() {
         var data            = 'search='+ searchString;
 
         // если длина searchString > 3
-        if(searchString.length >= 3) {
+        if(searchString.length >= 3 || searchString.length == 0) {
             // делаем ajax запрос
             $.ajax({
                 type: "POST",

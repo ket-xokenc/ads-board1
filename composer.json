@@ -8,7 +8,8 @@
     ],
 
     "require": {
-        "monolog/monolog": "1.2.*"
+        "monolog/monolog": "1.2.*",
+      "gigablah/sphinxphp": "2.0.6-alpha"
     },
     "autoload": {
       "psr-4":{
