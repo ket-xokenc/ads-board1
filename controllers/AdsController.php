@@ -14,8 +14,8 @@ class AdsController extends BaseController
 
         if ($this->getRequest()->isPost()) {
             $errors = $ads->checkAddAds();
-            if($errors !== true) {
-                $this->render('users/newAds', ['error' => [$errors],'dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
+            if ($errors !== true) {
+                $this->render('users/newAds', ['error' => [$errors], 'dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
                 exit;
             }
             if (!empty($errors = $ads->create())) {
@@ -83,22 +83,24 @@ class AdsController extends BaseController
 
     }
 
-    public function showAction(){
+    public function showAction()
+    {
         $users = new Users();
         $category = new Category();
         $ads = new Ads($category);
 
         $params = $this->getRequest()->getParams();
-        $dbinfo=$ads->getAdsById($params[0]);
-        $thumbnails=array();
-        $imgs=array();
+        $dbinfo = $ads->getAdsById($params[0]);
+        $thumbnails = array();
+        $imgs = array();
 
-        if(is_dir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail")&&
-            is_dir("../public/files/{$dbinfo[0]['ads_id']}")){
-            $thumbnails=array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail"), array('..', '.'));
-            $imgs=array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}"), array('..', '.','thumbnail'));
+        if (is_dir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail") &&
+            is_dir("../public/files/{$dbinfo[0]['ads_id']}")
+        ) {
+            $thumbnails = array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail"), array('..', '.'));
+            $imgs = array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}"), array('..', '.', 'thumbnail'));
         }
 
-        $this->render('site/show-ads', ['dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
+        $this->render('site/show-ads', ['dbinfo' => $dbinfo, 'imgs' => $imgs, 'thumbnails' => $thumbnails, 'user' => $users->get()]);
     }
 } 
