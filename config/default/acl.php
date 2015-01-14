@@ -6,9 +6,7 @@ return [
             'delete'=>'user',
             'create'=>'user',
         ],
-        'users'=>[
-           'profile' => 'user',
-        ],
+
     ],
 
 

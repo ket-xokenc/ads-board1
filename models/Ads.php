@@ -135,6 +135,7 @@ class Ads extends Model
     public function checkAddAds()
     {
         $userId = Session::get('user_id');
+        $user = Session::get('user');
         $currentDate = date('Y-m-d H:i:s');
         $plans = new Plans();
         $plansInfo = current($plans->getActivePlans());
@@ -155,7 +156,7 @@ class Ads extends Model
 
             if($activePayment) {
                 $currentCnt = $this->db->query("
-                    select count(*) from ads where ads.user_id = :userId and ads.date_create > :startDate
+                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate
                 ", [':userId' => $userId, ':startDate' => $startDate]);
 
                 $currentCnt = current($currentCnt);
@@ -163,7 +164,7 @@ class Ads extends Model
 
                 $tableCnt = $lastPayment['count_ads'];
 
-                if($currentCnt <= $tableCnt || $tableCnt == -1) {
+                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $user['plan_id'] != 1) {
                     return true;
                 } else {
                     return 'Limit is exceeded';
