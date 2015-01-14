@@ -75,7 +75,9 @@ class Database
         }
 
         $stmt->execute();
-        return $stmt->fetchAll();
+        $res = $stmt->fetchAll();
+        if($res)
+            return $res;
     }
 
     /**
