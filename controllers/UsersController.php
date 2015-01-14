@@ -130,11 +130,10 @@ class UsersController extends BaseController
         $category = new Category();
         $ads = new Ads($category);
 
-        $paginator=new Paginator(['ads'=>$ads,'users'=>$users],2,3);
+        $paginator = new Paginator(['ads' => $ads, 'users' => $users], 2, 3);
 
 
-
-        $this->render('users/profile',['dbinfo'=>$paginator->getData(),'paginator'=>$paginator, 'user' => $dataUser]);
+        $this->render('users/profile', ['dbinfo' => $paginator->getData(), 'paginator' => $paginator, 'user' => $dataUser]);
 
     }
 
@@ -158,7 +157,7 @@ class UsersController extends BaseController
     public function subscribePaymentPlanAction()
     {
         $siteUrl = Registry::get('siteUrl');
-        if(isset($_POST['signup']) || isset($_POST['buy'])) {
+        if (isset($_POST['signup']) || isset($_POST['buy'])) {
             header('Location: http://' . $_SERVER['SERVER_NAME'] . '/login');
             die;
         }
@@ -168,8 +167,8 @@ class UsersController extends BaseController
 
         $paypalMode = Registry::get('paypal', 'mode');
         $paypalCurrencyCode = Registry::get('paypal', 'currencyCode');
-        $paypalReturnURL = 'http://'.$siteUrl.'/payment/success';
-        $paypalCancelURL = 'http://'.$siteUrl.'/payment/cancelled';
+        $paypalReturnURL = 'http://' . $siteUrl . '/payment/success';
+        $paypalCancelURL = 'http://' . $siteUrl . '/payment/cancelled';
 
         $paypalmode = ($paypalMode == 'sandbox') ? '.sandbox' : '';
 
@@ -180,7 +179,7 @@ class UsersController extends BaseController
             $ItemDesc = $_POST["itemdesc"]; //Item Description
             $ItemQty = $_POST["itemqty"];
 
-            if($ItemName == 'free') {
+            if ($ItemName == 'free') {
                 $payments = new Payments();
                 $payments->saveTransaction(0, $ItemName);
                 $this->render('users/info', ['messages' => 'Success!']);

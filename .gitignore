@@ -2,4 +2,3 @@
 /logs/
 /vendor/
 composer.lock
-/public/files/*
