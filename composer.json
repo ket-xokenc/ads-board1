@@ -15,6 +15,7 @@
         "application\\core\\": "framework/core/",
         "application\\classes\\": "framework/classes/",
         "":["controllers/","models/"]
-      }
+      },
+      "files": ["sphinxapi.php"]
     }
 }

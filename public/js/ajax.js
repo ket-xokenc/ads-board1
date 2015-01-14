@@ -3,8 +3,8 @@
  */
 
 $(function() {
-
-    $("#search_box").keyup(function() {
+    $('.form-inline').submit(function(){return false});
+    $("#search_boxx").click(function() {
         // получаем то, что написал пользователь
         var searchString    = $("#search_box").val();
         // формируем строку запроса
