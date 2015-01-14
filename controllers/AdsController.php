@@ -8,6 +8,7 @@ class AdsController extends BaseController
     public function createAction()
     {
         $users = new Users();
+        $dataUser = $users->get();
         $category = new Category();
         $ads = new Ads($category);
         $errors = array();
