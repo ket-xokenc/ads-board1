@@ -3,15 +3,15 @@
  */
 
 $(function() {
-
-    $("#search_box").keyup(function() {
+    $('.form-inline').submit(function(){return false});
+    $("#search_boxx").click(function() {
         // получаем то, что написал пользователь
         var searchString    = $("#search_box").val();
         // формируем строку запроса
         var data            = 'search='+ searchString;
 
         // если длина searchString > 3
-        if(searchString.length >= 3 || searchString.length == 0) {
+        if(searchString.length >= 3) {
             // делаем ajax запрос
             $.ajax({
                 type: "POST",

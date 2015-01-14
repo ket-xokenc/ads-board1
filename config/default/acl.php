@@ -6,7 +6,6 @@ return [
             'delete'=>'user',
             'create'=>'user',
         ],
-
     ],
 
 

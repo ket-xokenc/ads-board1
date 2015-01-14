@@ -283,7 +283,7 @@ class Ads extends Model
         $cl->SetServer("localhost", 3312);
         $cl->SetConnectTimeout(1);
         $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
-        $cl->SetMatchMode(SPH_MATCH_ANY);
+       // $cl->SetMatchMode(SPH_MATCH_ANY);
         $result = $cl->Query($string);
         if ( $result !== false ) {
              if (!empty($result["matches"])){
