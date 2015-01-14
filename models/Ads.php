@@ -3,6 +3,7 @@
 use application\classes\Registry;
 use application\core\Model;
 use application\classes\Session;
+use Sphinx\SphinxClient;
 
 class Ads extends Model
 {
