@@ -122,19 +122,26 @@
         $('.slider-for div img').each(function(){
             var imgHeight=$(this).height();
             var imgWidth=$(this).width();
+            var top=0;
+            var left=0;
 
             if(imgHeight>divHeight){
                 $(this).height(divHeight);
+            }else{
+                top=(divHeight-imgHeight)/2
             }
 
             if(imgWidth>divWidth){
-                $(this).height(divWidth);
+                $(this).width(divWidth);
+            }else{
+                left=(divWidth-imgWidth)/2
             }
+
 
             $(this).css({
                 "position":"absolute",
-                "top": (divHeight-imgHeight)/2,
-                "left": (divWidth-imgWidth)/2
+                "top": top,
+                "left": left
             });
         });
     }
