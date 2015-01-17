@@ -99,6 +99,7 @@ class AdsController extends BaseController
             $imgs=array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}"), array('..', '.','thumbnail'));
         }
 
+        //$this->addView('coments', 'coments/show');
         $this->render('site/show-ads', ['dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
     }
 } 
