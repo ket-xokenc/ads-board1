@@ -28,10 +28,12 @@ return [
         'admin/unban/([0-9]+)' => 'admin/unban/$1',
         'admin/search' => 'admin/search/$1',
         'admin/add-cat' => 'admin/addCat/$1',
+        'admin/reg' => 'admin/regiser/$1',
         'categories' => 'admin/categories/$1',
         'categories/show' => 'admin/show/$1',
         'subsccribe-payment-plane/([a-zA-Z]+)' => 'users/subscribePaymentPlan/$1',
         'payment/success' => 'users/subscribePaymentPlan',
         'payment/cancelled' => 'users/paymentCancelled',
+        'show/add-comment' => 'comment/addComment',
     ]
 ];

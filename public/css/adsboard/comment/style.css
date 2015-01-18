@@ -1,0 +1,19 @@
+p.comment {
+    background-color: blue;
+    padding: 5px;
+}
+
+#addCommentContainer {
+    padding: 10px;
+    background-color: #ECECEC;
+}
+.title-comment {
+    text-align: center;
+}
+.text-comment {
+    word-break: break-all;
+}
+.comment-desc {
+    color: #2EB2D9;
+    border-bottom: 1px solid #C3E7F1;
+}

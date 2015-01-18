@@ -188,6 +188,7 @@ class Users extends Model
     {
         $_SESSION["user_id"] = $this->user['id'];
         $_SESSION['login'] = $this->user['login'];
+        $_SESSION['user'] = $this->user;
         $guid = $this->generateStr();
         $this->db->update($this->table, ['guid' => $guid], ['id' => $this->user_id]);
         $_SESSION['role'] = $this->user['role'];

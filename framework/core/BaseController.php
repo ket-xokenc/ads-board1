@@ -29,6 +29,13 @@ class BaseController
         foreach($data as $k => $v){
             $$k = $v;
         }
+        if (!empty($this->viewTemp)) {
+            foreach ($this->viewTemp as $name => $file) {
+                ob_start();
+                include '../views/'.$file.'.phtml';
+                $$name = ob_get_clean();
+            }
+        }
         if(is_array($filename)){
             foreach($filename as $file){
                 ob_start();

@@ -8,13 +8,14 @@ class Acl {
         $hier=Config::get('hierarchy');
         $role=Session::get('role')?:'guest';
 
-        $controller=strtolower(str_ireplace("Controller", "", $controller));
-        $action=strtolower(str_ireplace("Action", "", $action));
+        $controller=strtolower(str_ireplace("Controller", "", $controller))?:'';
+        $action=strtolower(str_ireplace("Action", "", $action))?:'';
 
-        if((empty($acl[$controller])||
-             $acl[$controller][$action]===$role)||
-              ($acl[$controller][$action]==='guest')||
-               array_search($role, $hier)>array_search($acl[$controller][$action], $hier)){
+        if((empty($acl[$controller]))||
+            empty($acl[$controller][$action])||
+            ($acl[$controller][$action]===$role)||
+                ($acl[$controller][$action]==='guest')||
+                    (array_search($role, $hier)>array_search($acl[$controller][$action], $hier))){
            return true;
         }
 

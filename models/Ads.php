@@ -3,6 +3,7 @@
 use application\classes\Registry;
 use application\core\Model;
 use application\classes\Session;
+use Sphinx\SphinxClient;
 
 class Ads extends Model
 {
@@ -134,38 +135,36 @@ class Ads extends Model
     public function checkAddAds()
     {
         $userId = Session::get('user_id');
+        $user = Session::get('user');
         $currentDate = date('Y-m-d H:i:s');
         $plans = new Plans();
         $plansInfo = current($plans->getActivePlans());
 
         $lastPayment = $this->db->query("
-                    Select * from payments WHERE payments.user_id = :userId ORDER BY payments.end_date DESC LIMIT 1
+                    Select payments.*, plans.count_ads from payments, plans WHERE payments.user_id = :userId AND plans.id = payments.plan_id ORDER BY payments.end_date DESC LIMIT 1
         ", [':userId' => $userId]);
 
-        $lastPayment = current($lastPayment);
-        if($lastPayment) {
-            $activePayment = $this->db->query("
-             select * from payments where payments.end_date > CURDATE() AND payments.id = {$lastPayment['id']}
-            ");
+        if ($lastPayment) {
+            $lastPayment = current($lastPayment);
+            $endDate = $lastPayment['end_date'];
+            $startDate = $lastPayment['start_date'];
 
-            $activePayment = current($activePayment);
+            $activePayment  =false;
+            if ($endDate > $currentDate) {
+                $activePayment = true;
+            }
 
             if($activePayment) {
                 $currentCnt = $this->db->query("
-                    select count(*) from ads inner join users on users.id = ads.user_id INNER JOIN payments on payments.user_id = users.id
-                            where payments.id = {$activePayment['id']}
-                            AND payments.start_date <= ads.date_create
-                            AND payments.end_date >= ads.date_create
-                ");
+                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate
+                ", [':userId' => $userId, ':startDate' => $startDate]);
+
                 $currentCnt = current($currentCnt);
                 $currentCnt = array_pop($currentCnt);
-                $tableCnt = $this->db->query("
-                    select count_ads from plans inner join users on plans.id = users.plan_id where users.id = $userId
-                ");
-                $tableCnt = current($tableCnt);
-                $tableCnt = array_pop($tableCnt);
 
-                if($currentCnt <= $tableCnt || $tableCnt == -1) {
+                $tableCnt = $lastPayment['count_ads'];
+
+                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $user['plan_id'] != 1) {
                     return true;
                 } else {
                     return 'Limit is exceeded';
@@ -177,8 +176,8 @@ class Ads extends Model
             }
         } else {
             $cntAds = $this->db->query("
-                        select count(*) from ads where ads.user_id = $userId
-            ");
+                        select count(*) from ads where ads.user_id = :userId
+            ", [':userId' => $userId]);
             $cntAds = current($cntAds);
             $cntAds = array_pop($cntAds);
             $cntAdsTable = $plansInfo['count_ads'];
@@ -284,7 +283,7 @@ class Ads extends Model
         $cl->SetServer("localhost", 3312);
         $cl->SetConnectTimeout(1);
         $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
-        $cl->SetMatchMode(SPH_MATCH_ANY);
+       // $cl->SetMatchMode(SPH_MATCH_ANY);
         $result = $cl->Query($string);
         if ( $result !== false ) {
              if (!empty($result["matches"])){
