@@ -5,7 +5,8 @@ p.comment {
 
 #addCommentContainer {
     padding: 10px;
-    background-color: #ECECEC;
+    background-color: #D9F7FF;
+    border-radius: 5px 5px 5px 5px;
 }
 .title-comment {
     text-align: center;

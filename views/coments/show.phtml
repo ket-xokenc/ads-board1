@@ -1,9 +1,10 @@
 <div class="container standart-space">
     <div class="row">
         <h3 align="center">Comments</h3>
-        <?php if (empty($dataComments)){
-            echo 'No comments<br />';
-        }else {?>
+        <?php if (empty($dataComments)){?>
+            <div style="text-align: center">No results</div>
+            <hr>
+        <?php }else {?>
         <?php foreach($dataComments as $comment):?>
             <div class="col-lg-7 col-lg-offset-2 registration-margin">
                 <div class="panel panel-primary ">
