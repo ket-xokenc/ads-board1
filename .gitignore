@@ -2,3 +2,5 @@
 /logs/
 /vendor/
 composer.lock
+/public/files/*
+/public/tmp_files/*

@@ -1,6 +1,6 @@
 <?php
-    use application\core\BaseController;
-    use application\classes\Registry;
+use application\core\BaseController;
+use application\classes\Registry;
 
 class AdminController extends BaseController
 {
@@ -11,6 +11,7 @@ class AdminController extends BaseController
         $this->db = Registry::get('database');
         parent::__construct($request);
         $this->admin = new Users();
+
     }
     public function regiserAction()
     {
