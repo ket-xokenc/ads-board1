@@ -1,0 +1,30 @@
+<?php include_once 'menu.phtml';?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Имя Пользователя: <strong><?php echo $row['name'] ?></strong></h3>
+            <h3>Логин: <strong><?php echo $row['login'] ?></strong></h3>
+            <h3>Телефон: <strong><?php echo $row['phone'] ?></strong></h3>
+            <h3>Дата регистрации: <strong><?php echo $row['date_create'] ?></strong></h3>
+            <h3>Эл. почта: <strong><?php echo $row['email'] ?></strong></h3>
+        </div>
+        <div class="col-md-4">
+            <h3>Тариф: <ins><?php echo $plan['name'] ?></ins></h3>
+            <h3>Цена: <ins><?php echo $plan['price'] ?>$</ins></h3>
+            <h3>Объявлений: <ins><?php echo $plan['count_ads'] ?></ins></h3>
+            <h3>с: <ins><?php echo $plan['start_date'] ?></ins></h3>
+            <h3>по: <ins><?php echo $plan['end_date'] ?></ins></h3>
+        </div>
+    </div>
+    <div class="row">
+        <?php foreach ($comment as $comments): ?>
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+        <h3><a href="#"><?php echo $comments['title']; ?></a></h3>
+        <p><ins><?php echo $comments['date_create']; ?></ins></p>
+        <pre><?php echo $comments['text']; ?></pre>
+        </div>
+    <?php endforeach; ?>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function(){
-        $("form").submit(function ()
+        $(".my_form_adm").submit(function ()
         {
             return false;
         });
@@ -16,15 +16,11 @@
         });
     })
 </script>
+<?php include_once 'menu.phtml';?>
 <div class="container">
 <div class="col-lg-12">
-    <ul class="pagination">
-        <li class="active"><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Пользователи</a></li>
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories';?>">Категории</a></li>
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories/show';?>">Объявления</a></li>
-    </ul>
     <table class="table table-striped" id="result"></table>
-    <form class="form-inline" role="form">
+    <form class="form-inline my_form_adm" role="form">
             <div class="form-group">
                 <label for="text">Поиск</label>
                 <input type="text" name="desc" class="form-control" placeholder="Логин пользователя, заголовок публикации или категорию" size="60" required>
@@ -51,11 +47,11 @@
                 <td><?php echo $tt["caunt"]; ?></td>
                 <td><?php echo $tt["date_create"]; ?></td>
                 <td>
-                        <a href="#">SHOW |</a>
+                        <a href="/admin/user-page/<?php echo $tt["id"]; ?>">SHOW </a>
                     <?php if($tt['status']=='banned'):?>
-                        <a href="/admin/unban/<?php echo $tt["id"]; ?>">UNBAN</a>
+                        <a href="/admin/unban/<?php echo $tt["id"]; ?>"> UNBAN</a>
                     <?php else:?>
-                        <a href="/admin/ban/<?php echo $tt["id"]; ?>">BAN</a>
+                        <a href="/admin/ban/<?php echo $tt["id"]; ?>"> BAN</a>
                     <?php endif; ?>
                 </td>
             </tr>
