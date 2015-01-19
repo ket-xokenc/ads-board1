@@ -35,5 +35,6 @@ return [
         'subsccribe-payment-plane/([a-zA-Z]+)' => 'users/subscribePaymentPlan/$1',
         'payment/success' => 'users/subscribePaymentPlan',
         'payment/cancelled' => 'users/paymentCancelled',
+        'show/add-comment' => 'comment/addComment',
     ]
 ];
