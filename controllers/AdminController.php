@@ -74,13 +74,15 @@ class AdminController extends BaseController
                 echo '<p><strong>попробуйте другое ключевое слово</strong></p><br />';
             }
             else{
-        foreach ($finder as $tt) {
+        foreach ($finder as $tt)
+        {
             echo
             '<tr><td>'.$tt["login"].'</td>
                 <td>'.$tt["phone"].'</td>
                 <td>'.$tt["status"].'</td>
                 <td>'.$tt["name"].'</td>
-                <td>'.$tt["title"].'</td></tr>'; }}}}
+                <td>'.$tt["title"].'</td></tr>';
+        }}}}
 
     public function categoriesAction()
     {
@@ -105,7 +107,7 @@ class AdminController extends BaseController
             {
                 foreach($cats[$parent_id] as $cat)
                 {
-                    $tree .= '<li>'.$cat['name'].' id'.$cat['id'];
+                    $tree .= '<li><a href="/category/'.$cat['id'].'">'.$cat['name'].'</a>';
                     $tree .=  $this->getCategory($cats,$cat['id']);
                     $tree .= '</li>';
                 }
@@ -138,7 +140,7 @@ class AdminController extends BaseController
         $plan = $this->get_plan($id);
         foreach ($plan as $p)
         {
-            $this->render('admin/personal_page', ['row'=>$this->get_user($id), 'plan'=>$p, 'comment'=>$this->get_comments($id)]);
+            $this->render('admin/personal_page', ['row'=>$this->get_user($id), 'plan'=>$p, 'menu'=>$this->menu(), 'comment'=>$this->get_comments($id)]);
         }
 
 
@@ -160,6 +162,9 @@ class AdminController extends BaseController
     }
 
 
+    /**
+     *
+     */
     public function addCatAction()
     {
         if(iconv_strlen($_POST['name'])>1 && iconv_strlen($_POST['description'])>1)

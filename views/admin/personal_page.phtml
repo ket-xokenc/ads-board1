@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="row">
-        <?php foreach ($comment as $comments): ?>
+        <?php if(is_array($comment))foreach ($comment as $comments): ?>
         <div class="col-md-4"></div>
         <div class="col-md-8">
         <h3><a href="#"><?php echo $comments['title']; ?></a></h3>

@@ -5,7 +5,7 @@
             return false;
         });
         $(".active").click(function(){
-            var search = $(".form-control").val();
+            var search = $(".input-sch").val();
             $.post("admin/search",
                 {
                     search: search
@@ -14,7 +14,7 @@
                     $('#result').html(data);
                 });
         });
-    })
+    });
 </script>
 <?php include_once 'menu.phtml';?>
 <div class="container">
@@ -23,7 +23,7 @@
     <form class="form-inline my_form_adm" role="form">
             <div class="form-group">
                 <label for="text">Поиск</label>
-                <input type="text" name="desc" class="form-control" placeholder="Логин пользователя, заголовок публикации или категорию" size="60" required>
+                <input type="text" name="desc" class="form-control input-sch" placeholder="Логин пользователя, заголовок публикации или категорию" size="60" required>
             </div>
             <button type="submit" class="active">Search</button>
     </form>

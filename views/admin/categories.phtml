@@ -16,7 +16,8 @@
                 <?php foreach ($categories as $v):?>
                     <option value="<?php echo $v['id']?>"><?php echo $v['name']?></option> <?php endforeach; ?>
         </select>
-
     </form>
-    <?php echo $items; ?>
+    <div class="row">
+        <div class="span3 offset2"><?php echo $items; ?></div>
+    </div>
 </div>
