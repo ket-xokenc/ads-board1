@@ -201,70 +201,70 @@
 
 
 
-                    <form role="form" action="/profile/add-ads" method="post">
+            <form role="form" action="/profile/add-ads" method="post">
 
 
-                        <div class="col-lg-6">
+                <div class="col-lg-6">
 
 
-                        <div class="col-lg-12 text-right">
+                <div class="col-lg-12 text-right">
 
-                            <span class="text-capitalize">Select Category:</span>
+                    <span class="text-capitalize">Select Category:</span>
 
-                            <select class="selectpicker btn btn-default" name="category">
-                                <?php foreach($dbinfo as $vals):?>
-                                  <option value="<?=$vals['name']?>"><?=$vals['name']?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <span class="text-danger"><?php echo !empty($errors['category'])?$errors['category']:''?></span>
+                    <select class="selectpicker btn btn-default" name="category">
+                        <?php foreach($dbinfo as $vals):?>
+                          <option value="<?=$vals['name']?>"><?=$vals['name']?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span class="text-danger"><?php echo !empty($errors['category'])?$errors['category']:''?></span>
 
-                        </div>
+                </div>
 
-                        <div class="col-lg-12">
+                <div class="col-lg-12">
 
-                            <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
-                                 <label class="control-label" for="titleName">Title</label>
-                                 <input type="text" class="form-control" id="titleName" placeholder="Ads Title" name="title">
-                                 <span class="text-danger"><?php echo !empty($errors['title'])?$errors['title']:''?></span>
-                            </div>
-                            <div class="form-group <?php echo !empty($errors['text'])?'has-error':''?>">
-                                <label class="control-label" for="descField">Description</label>
-                                <textarea class="form-control" id="descField" rows="10" placeholder="Your Description" name="text"></textarea>
-                                <span class="text-danger"><?php echo !empty($errors['text'])?$errors['text']:''?></span>
-                            </div>
-                     <!--       <div class="form-group <?php /*echo !empty($errors['userName'])?'has-error':''*/?>">
-                                <label class="control-label" for="userName">Your Name</label>
-                                <input type="text" class="form-control" id="userName" placeholder="Your Name" name="userName">
-                                <span class="text-danger"><?php /*echo !empty($errors['userName'])?$errors['userName']:''*/?></span>
-                            </div>
-                            <div class="form-group <?php /*echo !empty($errors['userPhone'])?'has-error':''*/?>">
-                                <label class="control-label" for="userPhone">Your Phone</label>
-                                <input type="text" class="form-control" id="userPhone" placeholder="Your Phone" name="userPhone">
-                                <span class="text-danger"><?php /*echo !empty($errors['userPhone'])?$errors['userPhone']:''*/?></span>
-                            </div>-->
-                        </div>
-
-
-                        <div class="col-lg-6 text-left">
-                            <button  class="btn btn-default add-img">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Add Img...</span>
-                            </button>
-                            <button  class="btn btn-default delete-img">
-                                <i class="glyphicon glyphicon-trash"></i>
-                                <span>Delete All</span>
-                            </button>
-                        </div>
-                            <div class="col-lg-6 text-right">
-                                <button type="submit" class="btn btn-default">Create new Ads</button>
-                            </div>
+                    <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
+                         <label class="control-label" for="titleName">Title</label>
+                         <input type="text" class="form-control" id="titleName" placeholder="Ads Title" name="title">
+                         <span class="text-danger"><?php echo !empty($errors['title'])?$errors['title']:''?></span>
+                    </div>
+                    <div class="form-group <?php echo !empty($errors['text'])?'has-error':''?>">
+                        <label class="control-label" for="descField">Description</label>
+                        <textarea class="form-control" id="descField" rows="10" placeholder="Your Description" name="text"></textarea>
+                        <span class="text-danger"><?php echo !empty($errors['text'])?$errors['text']:''?></span>
+                    </div>
+             <!--       <div class="form-group <?php /*echo !empty($errors['userName'])?'has-error':''*/?>">
+                        <label class="control-label" for="userName">Your Name</label>
+                        <input type="text" class="form-control" id="userName" placeholder="Your Name" name="userName">
+                        <span class="text-danger"><?php /*echo !empty($errors['userName'])?$errors['userName']:''*/?></span>
+                    </div>
+                    <div class="form-group <?php /*echo !empty($errors['userPhone'])?'has-error':''*/?>">
+                        <label class="control-label" for="userPhone">Your Phone</label>
+                        <input type="text" class="form-control" id="userPhone" placeholder="Your Phone" name="userPhone">
+                        <span class="text-danger"><?php /*echo !empty($errors['userPhone'])?$errors['userPhone']:''*/?></span>
+                    </div>-->
+                </div>
 
 
-
+                <div class="col-lg-6 text-left">
+                    <button  class="btn btn-default add-img">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Add Img...</span>
+                    </button>
+                    <button  class="btn btn-default delete-img">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>Delete All</span>
+                    </button>
+                </div>
+                    <div class="col-lg-6 text-right">
+                        <button type="submit" class="btn btn-default">Create new Ads</button>
                     </div>
 
 
-                </form>
+
+            </div>
+
+
+        </form>
 
 
 

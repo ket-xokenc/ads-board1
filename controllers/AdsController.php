@@ -1,7 +1,6 @@
 <?php
 use application\core\BaseController as BaseController;
 
-
 class AdsController extends BaseController
 {
 
@@ -101,7 +100,9 @@ class AdsController extends BaseController
             $thumbnails = array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}/thumbnail"), array('..', '.'));
             $imgs = array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}"), array('..', '.', 'thumbnail'));
         }
-
-        $this->render('site/show-ads', ['dbinfo' => $dbinfo, 'imgs' => $imgs, 'thumbnails' => $thumbnails, 'user' => $users->get()]);
+        $comment = new Comment();
+        $dataComments = $comment->getCommentsByAdId($dbinfo[0]['ads_id']);
+        $this->addView('coments', 'coments/show');
+        $this->render('site/show-ads', ['dataComments'=> $dataComments,'dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
     }
 } 

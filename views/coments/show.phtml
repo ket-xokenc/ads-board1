@@ -1,0 +1,80 @@
+<div class="container standart-space">
+    <div class="row">
+        <h3 align="center">Comments</h3>
+        <?php if (empty($dataComments)){?>
+            <div style="text-align: center">No results</div>
+            <hr>
+        <?php }else {?>
+        <?php foreach($dataComments as $comment):?>
+            <div class="col-lg-7 col-lg-offset-2 registration-margin">
+                <div class="panel panel-primary ">
+                    <div class="panel-body comment-desc">
+                        <p>Name: <?=$comment['user_name']?></p>
+                        <p>Date: <?=$comment['create_comment']?></p>
+                    </div>
+                    <div class="panel-body text-comment">
+                        <?=$comment['text']?>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach;}?>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7 col-lg-offset-2 registration-margin">
+            <div id="addCommentContainer">
+                <p class="title-comment">Add new comment</p>
+                <form id="addCommentForm" method="post" action="add-comment">
+                    <div>
+
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <span><?=\application\classes\Session::get('login')?></span>
+                            <input type="text" name="ad_id" id="id" hidden="hidden" value="<?=$dbinfo[0]['ads_id']?>"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="body">Message</label>
+                            <textarea name="body" id="body" cols="20" class="form-control" rows="6"></textarea>
+                        </div>
+                        <input type="submit" id="submit" class="submit" value="Send" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        var working = false;
+
+        $('#addCommentForm').submit(function(e){
+
+            e.preventDefault();
+            if(working) return false;
+
+            working = true;
+            $('#submit').val('processing');
+            $('span.error').remove();
+
+            $.post('add-comment',$(this).serialize(),function(msg){
+
+                working = false;
+                $('#submit').val('Отправить');
+
+                if(msg.status){
+                    $(msg.html).hide().insertBefore('#addCommentContainer').slideDown();
+                    $('#body').val('');
+                }
+                else {
+
+                    $.each(msg.errors,function(k,v){
+                        $('label[for='+k+']').append(' <span style="color:red" class="error">'+v+'</span>');
+                    });
+                }
+            },'json');
+
+        });
+
+    });
+</script>

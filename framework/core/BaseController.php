@@ -9,6 +9,7 @@ class BaseController
     protected $app;
     private $request;
     private $data = array();
+    private $viewTemp = array();
 
     public function __construct($request = null)
     {
@@ -24,8 +25,16 @@ class BaseController
         $content=array();
         extract($this->data);
 
+
         foreach($data as $k => $v){
             $$k = $v;
+        }
+        if (!empty($this->viewTemp)) {
+            foreach ($this->viewTemp as $name => $file) {
+                ob_start();
+                include '../views/'.$file.'.phtml';
+                $$name = ob_get_clean();
+            }
         }
         if(is_array($filename)){
             foreach($filename as $file){
@@ -38,8 +47,20 @@ class BaseController
             include_once '../views/'.$filename.'.phtml';
             $content = ob_get_clean();
         }
+        if (!empty($this->viewTemp)) {
+            foreach ($this->viewTemp as $name => $file) {
+                ob_start();
+                include '../views/'.$file.'.phtml';
+                $$name = ob_get_clean();
+            }
+        }
 
         include_once '../views/layouts/'.$this->layout.'.phtml';
+    }
+
+    public function addView($name, $value)
+    {
+        $this->viewTemp[$name] = $value;
     }
 
     public function getRequest()
