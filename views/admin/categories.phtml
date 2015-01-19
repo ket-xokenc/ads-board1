@@ -1,38 +1,23 @@
+<?php include_once 'menu.phtml';?>
+
 <div class="container">
-    <ul class="pagination">
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin';?>">Пользователи</a></li>
-        <li class="active"><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories';?>">Категории</a></li>
-        <li><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/categories/show';?>">Объявления</a></li>
-    </ul>
     <form class="form-inline" role="form" action="/admin/add-cat" method="post">
         <div class="form-group">
-            <label for="text">Имя категории: </label>
-            <input type="text" name="name" class="form-control" placeholder="name" required>
+            <input type="text" name="name" class="form-control" placeholder="Имя категории" required>
         </div>
         <div class="form-group">
-            <label for="text">Описание категории:</label>
-            <input type="text" name="desc" class="form-control" placeholder="description" required>
+            <input type="text" name="description" class="form-control" placeholder="Описание категории" required>
         </div>
         <button type="submit" class="btn btn-default">Добавить</button>
+        <div class="checkbox">
+            <label><input type="checkbox" name="checkbox" value="1">Подкатегория</label>
+        </div>
+            <select name="pid" class="form-control">
+                <?php foreach ($categories as $v):?>
+                    <option value="<?php echo $v['id']?>"><?php echo $v['name']?></option> <?php endforeach; ?>
+        </select>
     </form>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Name category</th>
-        <th>Descripition</th>
-        <th>Count</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($row as $tt): ?>
-        <tr>
-            <td><?php echo $tt["id"]; ?></td>
-            <td><?php echo $tt["name"]; ?></td>
-            <td><?php echo $tt['description']; ?></td>
-            <td><?php echo $tt['count1']; ?></td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+    <div class="row">
+        <div class="span3 offset2"><?php echo $items; ?></div>
+    </div>
 </div>

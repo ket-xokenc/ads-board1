@@ -1,8 +1,9 @@
 /*
-SQLyog Ultimate v9.50 
+SQLyog Ultimate v11.52 (64 bit)
 MySQL - 5.5.40-0ubuntu0.14.04.1 : Database - ads_board
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -31,13 +32,13 @@ CREATE TABLE `ads` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `category_id` (`category_id`),
-  CONSTRAINT `ads_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-  CONSTRAINT `ads_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  CONSTRAINT `ads_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `ads_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `ads` */
 
-insert  into `ads`(`id`,`user_id`,`title`,`text`,`category_id`,`phone`,`date_create`) values (4,2,'aaaaaaaaaaaaaaaaaaaaaaaaa','eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeыаа',1,NULL,'2015-01-08 16:45:39'),(5,2,'продампродам','продампродампродампродампродампродампродампродампродампродампродам\r\n',1,NULL,'2015-01-08 16:44:31');
+insert  into `ads`(`id`,`user_id`,`title`,`text`,`category_id`,`phone`,`date_create`) values (1,2,'фывфы','Советник президента Украины Юрий Бирюков заявляет, что в воскресенье утром украинские военнослужащие получили приказ и открыли огонь по позициям незаконных вооруженных формирований (НВФ) в секторе \"Б\".\r\n\"Доброе утро, страна. 08.01, уже можно сказать о том, что два часа назад вся группировка наших войск в секторе \"Б\" получила приказ и открыла массированный огонь по известным позициям сепаров\", - написал он на своей страничке в соцсети Facebook.\r\n\"Мы соблюдали перемирие, да? Мы показывали, что заинтересованы в спокойном урегулировании, да? Ну так вот, сегодня мы покажем насколько мы умеем бить по зубам\", - отметил Ю.Бирюков.',16,NULL,'2015-01-18 14:05:53'),(2,3,'Манчестер Юнайтед переигр','Не с позиций явных фаворитов подходили к очередному матчу чемпионата в этот раз подопечные Луи Ван Гаала. Манчестер Юнайтед уже давно, а именно на протяжении трех туров не может набрать в поединке премьер-лиги полноценные три очка. В прошлом туре манкунианцы и вовсе потерпели сухое поражение на Олд Траффорд от Саутгемптона. Потому обязаны были реабилитироваться сегодня Красные дьяволы. В то же время перед Харри Реднаппом стояла задача сохранения за собой места на тренерском мостике. По информации из английской прессой позиции менеджера в клубе после ряда неудачных результатов заметно пошатнулись.',1,NULL,'2015-01-18 14:06:49');
 
 /*Table structure for table `categories` */
 
@@ -47,12 +48,35 @@ CREATE TABLE `categories` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(16) DEFAULT NULL,
   `description` varchar(32) DEFAULT NULL,
+  `pid` int(11) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 /*Data for the table `categories` */
 
-insert  into `categories`(`id`,`name`,`description`) values (1,'Отдых','лоивраымпбвьафыоим');
+insert  into `categories`(`id`,`name`,`description`,`pid`) values (1,'asdasdas','asdasda',0),(16,'новая','категория',0),(17,'вввввв','фвыфывфывфыв',1),(18,'фывфыв','фывфывфыв',17),(19,'asdasdasdsad','asdsadasdasdasd',17),(20,'Отдых','Принадлежности для отдыха',0),(21,'ККККК','КККККК',20);
+
+/*Table structure for table `comments` */
+
+DROP TABLE IF EXISTS `comments`;
+
+CREATE TABLE `comments` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `ad_id` int(11) unsigned DEFAULT NULL,
+  `text` text,
+  `date_create` timestamp NULL DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `ad_id` (`ad_id`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`ad_id`) REFERENCES `ads` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+/*Data for the table `comments` */
+
+insert  into `comments`(`id`,`user_id`,`ad_id`,`text`,`date_create`,`status`) values (1,3,1,'Хороший товар, рэспект','2015-01-18 15:06:34',NULL),(2,3,2,'asdasdasdasdasd','2015-01-18 15:45:30',NULL);
 
 /*Table structure for table `images` */
 
@@ -87,7 +111,7 @@ CREATE TABLE `payments` (
 
 /*Data for the table `payments` */
 
-insert  into `payments`(`id`,`user_id`,`plan_id`,`start_date`,`end_date`,`transaction_id`) values (1,2,2,'2015-01-08 13:10:43','2015-02-07 13:10:43','4'),(2,2,2,'2015-01-08 13:14:51','2015-02-07 13:14:51','1RC36827U4880220T'),(3,2,2,'2015-01-08 13:21:19','2015-02-07 13:21:19','1RC36827U4880220T'),(4,2,2,'2015-01-08 13:21:29','2015-02-07 13:21:29','1RC36827U4880220T'),(5,2,3,'2015-01-08 13:28:51','2015-02-07 13:28:51','42S2530886168363U'),(6,2,3,'2015-01-08 13:30:17','2015-02-07 13:30:17','42S2530886168363U'),(7,2,3,'2015-01-08 15:17:38','2015-02-07 15:17:38','4WN70612S75780039'),(8,2,1,'2015-01-08 16:06:26','2015-02-07 16:06:26','0'),(9,2,1,'2015-01-08 16:06:37','2015-02-07 16:06:37','0'),(10,2,1,'2015-01-08 16:12:18','2015-02-07 16:12:18','0');
+insert  into `payments`(`id`,`user_id`,`plan_id`,`start_date`,`end_date`,`transaction_id`) values (1,2,2,'2015-01-08 13:10:43','2015-02-07 13:10:43','4'),(2,3,2,'2015-01-18 14:50:59','2015-02-07 13:14:51','1RC36827U4880220T');
 
 /*Table structure for table `plans` */
 
@@ -125,11 +149,11 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   KEY `plan_id` (`plan_id`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`plan_id`) REFERENCES `plans` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`login`,`name`,`password`,`status`,`role`,`email`,`phone`,`salt`,`guid`,`date_create`,`plan_id`) values (2,'admin','admin','9cbf72dba5709b3298bbd2bbbf8b1e85','confirmed','user','admin@ukr.net','+3806347531','54abac7224de2','mSL8dToiqW','2015-01-06 11:35:46',1);
+insert  into `users`(`id`,`login`,`name`,`password`,`status`,`role`,`email`,`phone`,`salt`,`guid`,`date_create`,`plan_id`) values (2,'admin','admin','9cbf72dba5709b3298bbd2bbbf8b1e85','confirmed','admin','admin@ukr.net','+3806347531','54abac7224de2','yqd9bMeX9x','2015-01-06 11:35:46',1),(3,'vas','vas','60d137ddc301fe95265528419e33ac27','confirmed','user','vas@vas.com','123','54b5713a425ec','XGoKVwGkVF','2015-01-13 21:25:46',1);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

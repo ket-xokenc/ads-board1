@@ -3,7 +3,7 @@
  */
 
 $(function() {
-    $('.form-inline').submit(function(){return false});
+    $('.myform2').submit(function(){return false});
     $("#search_boxx").click(function() {
         // получаем то, что написал пользователь
         var searchString    = $("#search_box").val();
