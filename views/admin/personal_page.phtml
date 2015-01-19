@@ -21,7 +21,7 @@
         <?php if(is_array($comment))foreach ($comment as $comments): ?>
         <div class="col-md-4"></div>
         <div class="col-md-8">
-        <h3><a href="#"><?php echo $comments['title']; ?></a></h3>
+        <h3><a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/show/'.$comments['id'];?>"><?php echo $comments['title']; ?></a></h3>
         <p><ins><?php echo $comments['date_create']; ?></ins></p>
         <pre><?php echo $comments['text']; ?></pre>
         </div>

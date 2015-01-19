@@ -42,8 +42,7 @@ class AdminController extends BaseController
         $this->render('admin/panel', ['menu'=>$this->menu(), 'row'=>$row]);
         }
         else
-            $res = 'Для входа вам нужны права администратора!';
-            $this->render('admin/login_adm', ['error'=>$res]);
+            $this->render('admin/login_adm', ['error'=>'<strong>Для входа вам нужны права администратора!!!</strong>']);
     }
 
     public function banAction()
@@ -142,8 +141,6 @@ class AdminController extends BaseController
         {
             $this->render('admin/personal_page', ['row'=>$this->get_user($id), 'plan'=>$p, 'menu'=>$this->menu(), 'comment'=>$this->get_comments($id)]);
         }
-
-
     }
 
     private function get_user($id)
@@ -157,14 +154,10 @@ class AdminController extends BaseController
     }
     private function get_comments($id)
     {
-        return $this->db->query("SELECT comments.text, comments.date_create, ads.title
+        return $this->db->query("SELECT comments.text, comments.date_create, ads.title, ads.id
             FROM comments LEFT JOIN ads ON (comments.ad_id=ads.id) WHERE comments.user_id='$id'", []);
     }
 
-
-    /**
-     *
-     */
     public function addCatAction()
     {
         if(iconv_strlen($_POST['name'])>1 && iconv_strlen($_POST['description'])>1)
@@ -190,12 +183,12 @@ class AdminController extends BaseController
         if($par == 999)
         {
             $row = $this->db->query("SELECT title, text, ads.date_create, categories.name,
-            users.login, users.status FROM ads LEFT JOIN categories ON(ads.category_id=categories.id)
+            users.login, users.id FROM ads LEFT JOIN categories ON(ads.category_id=categories.id)
             LEFT JOIN users ON(ads.user_id=users.id)", []);
             $this->render('admin/show', ['menu'=>$this->menu(), 'row'=>$row]);
         }
             $row = $this->db->query("SELECT title, text, ads.date_create, categories.name,
-            users.login, users.status FROM ads LEFT JOIN categories ON(ads.category_id=categories.id)
+            users.login, users.id FROM ads LEFT JOIN categories ON(ads.category_id=categories.id)
             LEFT JOIN users ON(ads.user_id=users.id) WHERE ads.category_id='$par'", []);
             $this->render('admin/show', ['menu'=>$this->menu(), 'row'=>$row]);
     }

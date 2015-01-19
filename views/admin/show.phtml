@@ -9,7 +9,6 @@
         <th>name</th>
         <th>Date_create</th>
         <th>login</th>
-        <th>status</th>
     </tr>
     </thead>
     <tbody>
@@ -19,8 +18,11 @@
             <td><?php echo $tt["text"]; ?></td>
             <td><?php echo $tt["name"]; ?></td>
             <td><?php echo $tt['date_create']; ?></td>
-            <td><?php echo $tt['login']; ?></td>
-            <td><?php echo $tt['status']; ?></td>
+            <td>
+                <strong>
+                    <a href="<?php echo "http://".$_SERVER['SERVER_NAME'].'/admin/user-page/'.$tt['id'];?>"><?php echo $tt['login']; ?></a>
+                </strong>
+            </td>
         </tr>
     <?php endforeach;?>
     </tbody>
