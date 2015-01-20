@@ -1,18 +1,16 @@
 <?php
 
 use application\classes\Registry as Registry;
+use application\core\Model;
 
-class Category
+class Category extends Model
 {
-
-    private $db;
 
     const TABLE = 'categories';
 
-
     public function __construct()
     {
-        $this->db = Registry::get('database');
+        parent::__construct();
     }
 
     public function create()
@@ -134,4 +132,79 @@ class Category
 
         return $this->db->fetchAll($table, ['*']);
     }
+
+    public function getCategoryHierarchy(){
+        $table = Category::TABLE;
+
+        /*$data = array();
+        $index = array();
+        $query = $this->db->query("SELECT id, pid, name FROM categories ORDER BY name");
+        foreach($query as $row) {
+            $id = $row["id"];
+            $parent_id = $row["pid"] == '0' ? "NULL" : $row["pid"];
+            $data[$id] = $row;
+            $index[$parent_id][] = $id;
+        }
+
+        $hierarchy=array();
+
+        $buildHierarchy=function($parent_id, $level) use ($data,$index,$hierarchy,&$buildHierarchy){
+            $parent_id = $parent_id == '0' ? "NULL" : $parent_id;
+            if (isset($index[$parent_id])) {
+                foreach ($index[$parent_id] as $id) {
+                    echo str_repeat("-", $level) . $data[$id]["name"] . "\n";
+                    $buildHierarchy($id, $level + 1);
+                }
+            }
+        };
+
+        $buildHierarchy('0',0);*/
+
+        $refs = array();
+        $list = array();
+
+        $sql = "SELECT id, pid, name FROM categories ORDER BY name";
+
+        $result = $this->db->query($sql);
+
+        foreach ($result as $row)
+        {
+            $ref = & $refs[$row['id']];
+
+            $ref['pid'] = $row['pid'];
+            $ref['name']      = $row['name'];
+
+            if ($row['pid'] == 0)
+            {
+                $list[$row['id']] = & $ref;
+            }
+            else
+            {
+                $refs[$row['pid']]['children'][$row['id']] = & $ref;
+            }
+        }
+
+        echo $this->toUL($list);
+
+    }
+
+    function toUL(array $array)
+    {
+        $html = '<ul>' . PHP_EOL;
+
+        foreach ($array as $value)
+        {
+            $html .= '<li>' . $value['name'];
+            if (!empty($value['children']))
+            {
+                $html .= $this->toUL($value['children']);
+            }
+            $html .= '</li>' . PHP_EOL;
+        }
+
+        $html .= '</ul>' . PHP_EOL;
+
+        return $html;
+    }
+
 } 
