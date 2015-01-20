@@ -4,14 +4,14 @@
 
 $(function() {
     $('.myform2').submit(function(){return false});
-    $("#search_boxx").click(function() {
+    $("#search_box").keyup(function() {
         // получаем то, что написал пользователь
         var searchString    = $("#search_box").val();
         // формируем строку запроса
         var data            = 'search='+ searchString;
 
         // если длина searchString > 3
-        if(searchString.length >= 3) {
+        if(searchString.length >= 1) {
             // делаем ajax запрос
             $.ajax({
                 type: "POST",

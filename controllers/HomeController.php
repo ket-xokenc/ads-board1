@@ -31,7 +31,7 @@ class HomeController extends BaseController
         if (isset($_POST['search'])) {
 
             $ads = new Ads(new Category());
-            $dbinfo = $ads->getAdsByString($_POST['search']);
+            $dbinfo = $ads->getAdsByText($_POST['search']);
             if (!empty($dbinfo)) {
                 foreach ($dbinfo as $vals) {
                     echo "
