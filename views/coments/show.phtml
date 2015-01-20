@@ -1,39 +1,32 @@
 <div class="container standart-space">
     <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
         <h3 align="center">Comments</h3>
-        <?php if (empty($dataComments)){?>
+        <?php if (empty($comments)){?>
             <div style="text-align: center">No results</div>
             <hr>
-        <?php }else {?>
-        <?php foreach($dataComments as $comment):?>
-            <div class="col-lg-7 col-lg-offset-2 registration-margin">
-                <div class="panel panel-primary ">
-                    <div class="panel-body comment-desc">
-                        <p>Name: <?=$comment['user_name']?></p>
-                        <p>Date: <?=$comment['create_comment']?></p>
-                    </div>
-                    <div class="panel-body text-comment">
-                        <?=$comment['text']?>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach;}?>
+        <?php }else {
+            echo $comments;
+        }?>
+        </div>
+
     </div>
 
     <div class="row">
         <div class="col-lg-7 col-lg-offset-2 registration-margin">
+            <button id="addNewComment">Add comment</button>
             <div id="addCommentContainer">
                 <p class="title-comment">Add new comment</p>
                 <form id="addCommentForm" method="post" action="add-comment">
                     <div>
 
                         <div class="form-group">
-                            <label for="name">Name:</label>
-                            <span><?=\application\classes\Session::get('login')?></span>
                             <input type="text" name="ad_id" id="id" hidden="hidden" value="<?=$dbinfo[0]['ads_id']?>"/>
                         </div>
                         <div class="form-group">
-                            <label for="body">Message</label>
+                            <input type="hidden" name="pid" value="0" id="pid">
+                            <span class="text-comment">Name: <?=\application\classes\Session::get('login')?></span>
+                            <span class="error"></span>
                             <textarea name="body" id="body" cols="20" class="form-control" rows="6"></textarea>
                         </div>
                         <input type="submit" id="submit" class="submit" value="Send" />
@@ -48,9 +41,10 @@
     $(document).ready(function(){
         var working = false;
 
-        $('#addCommentForm').submit(function(e){
 
+        $(commentForm).on('click', function(e){
             e.preventDefault();
+            alert('dkkkkkkkkkk');
             if(working) return false;
 
             working = true;
@@ -61,9 +55,8 @@
 
                 working = false;
                 $('#submit').val('Отправить');
-
                 if(msg.status){
-                    $(msg.html).hide().insertBefore('#addCommentContainer').slideDown();
+                    $(msg.html).hide().insertBefore($(this.parent())).slideDown();
                     $('#body').val('');
                 }
                 else {
@@ -74,6 +67,29 @@
                 }
             },'json');
 
+        });
+        var commentForm;
+        $('#addNewComment, .reply').click(function (e) {
+            if (commentForm) {
+                commentForm.remove();
+            }
+            var current = $(this);
+
+            commentForm = $('#addCommentContainer').clone();
+
+            if ($(this).attr('id') == 'addNewComment') {
+                commentForm.appendTo(current.parent());
+            } else {
+                commentForm.insertAfter(current.parent());
+                commentForm.css('marginTop', 5);
+                commentForm.children('p').hide();
+                var pid;
+                pid = current.parent().find('#id').val();
+                commentForm.find('#pid').attr('value', pid);
+            }
+            commentForm.show();
+
+            return false;
         });
 
     });

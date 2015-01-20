@@ -1,0 +1,23 @@
+<ul class="comment-list">
+    <li class="media">
+        <div class="wrapper-comment">
+            <span class="comment-desc">
+                Name: <?=$comment['user_name']?>
+            </span>
+            <input type="hidden" name="id" id="id" value="<?=$comment['id']?>">
+            <span class="comment-desc"> Date: <?=$comment['create_comment']?></span>
+            <hr class="comment-line">
+            <div class="media-body">
+
+                <div class="text-comment">
+                    <?=$comment['text']?>
+                </div>
+            </div>
+            <a class="reply" href="`">reply</a>
+        </div>
+
+        <?php if(isset($comment['childs']) &&!empty($comment['childs'])) {?>
+            <p><?php echo AdsController::commentsString($comment['childs']) ?></p>
+        <?php }?>
+    </li>
+</ul>

@@ -101,8 +101,44 @@ class AdsController extends BaseController
             $imgs = array_diff(scandir("../public/files/{$dbinfo[0]['ads_id']}"), array('..', '.', 'thumbnail'));
         }
         $comment = new Comment();
+
         $dataComments = $comment->getCommentsByAdId($dbinfo[0]['ads_id']);
+        $treeComments = $this->mapTree($dataComments);
+        $commentsString = self::commentsString($treeComments);
+
+
         $this->addView('coments', 'coments/show');
-        $this->render('site/show-ads', ['dataComments'=> $dataComments,'dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
+        $this->render('site/show-ads', ['comments'=> $commentsString,'dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
+    }
+
+    public function mapTree($dataset)
+    {
+        $tree = array();
+        foreach ($dataset as $id=>&$node) {
+            if (!$node['pid']) {
+                $tree[$id] = &$node;
+            } else {
+                $dataset[$node['pid']]['childs'][$id] = &$node;
+            }
+        }
+        return $tree;
+    }
+
+    public static function commentsString($data)
+    {
+        $string = '';
+        foreach($data as $w) {
+            $string .= self::commentsToTemplate($w);
+        }
+        return $string;
+    }
+
+    public static function commentsToTemplate($comment)
+    {
+        ob_start();
+        include '../views/coments/comment_template.phtml';
+
+        $comments_string =  ob_get_clean(); // Получаем содержимое буфера в виде строки
+        return $comments_string;
     }
 } 
