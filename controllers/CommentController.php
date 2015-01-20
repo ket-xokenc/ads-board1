@@ -15,7 +15,7 @@ class CommentController extends BaseController
         if ($this->getRequest()->isPost()) {
             $data = $comment->addComment();
             if ($data and $data['status'] == 'ok') {
-                echo json_encode(array('status'=>1,'html'=>AdsController::commentsToTemplate($data)));
+                echo json_encode(array('status'=>1,'html'=>AdsController::commentsToTemplate($data, false)));
             } else {
                 echo '{"status":0,"errors":'.json_encode($errors).'}';
             }

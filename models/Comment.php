@@ -65,8 +65,10 @@ class Comment extends Model
                 INNER JOIN users ON users.id = comments.`user_id` WHERE comments.`ad_id` = :adId
         ", [':adId' => $adId]);
         $newArr = [];
-        foreach ($data as $k => $v) {
-            $newArr[$v['id']] = $v;
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $newArr[$v['id']] = $v;
+            }
         }
         return $newArr;
     }

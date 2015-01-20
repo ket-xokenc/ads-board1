@@ -13,7 +13,7 @@
                     <?=$comment['text']?>
                 </div>
             </div>
-            <a class="reply" href="`">reply</a>
+            <a class="reply" href="" <?php if(!$link) {?> hidden<?php }?>>reply</a>
         </div>
 
         <?php if(isset($comment['childs']) &&!empty($comment['childs'])) {?>

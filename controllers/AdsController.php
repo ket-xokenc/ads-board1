@@ -133,7 +133,7 @@ class AdsController extends BaseController
         return $string;
     }
 
-    public static function commentsToTemplate($comment)
+    public static function commentsToTemplate($comment, $link = true)
     {
         ob_start();
         include '../views/coments/comment_template.phtml';
