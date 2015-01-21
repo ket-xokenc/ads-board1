@@ -139,6 +139,7 @@ class Ads extends Model
         $currentDate = date('Y-m-d H:i:s');
         $plans = new Plans();
         $plansInfo = current($plans->getActivePlans());
+        $userPlanId = $this->db->fetchOne('users', 'plan_id', ['id' => $userId]);
 
         $lastPayment = $this->db->query("
                     Select payments.*, plans.count_ads from payments, plans WHERE payments.user_id = :userId AND plans.id = payments.plan_id ORDER BY payments.end_date DESC LIMIT 1
@@ -159,17 +160,22 @@ class Ads extends Model
                     select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate group by users.id
                 ", [':userId' => $userId, ':startDate' => $startDate]);
 
-                $currentCnt = current($currentCnt);
-                $currentCnt = array_pop($currentCnt);
+                if ($currentCnt) {
+                    $currentCnt = current($currentCnt);
+                    $currentCnt = array_pop($currentCnt);
+                } else {
+                    $currentCnt = 0;
+                }
 
                 $tableCnt = $lastPayment['count_ads'];
                 if ($tableCnt == -1) {
                     Session::set('countAds', -1);
                 }
-                Session::set('countAds', $tableCnt - $currentCnt);
-                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $user['plan_id'] != 1) {
+                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $userPlanId != 1) {
+                    Session::set('countAds', $tableCnt - $currentCnt);
                     return true;
                 } else {
+                    Session::set('countAds', $currentCnt);
                     return 'Limit is exceeded';
                 }
 

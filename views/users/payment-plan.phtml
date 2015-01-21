@@ -3,7 +3,7 @@
         <h3><?php if(\application\classes\Session::get('countAds') == -1) {
                 echo 'Unlimited';
             } else
-            echo \application\classes\Session::get('countAds');?> Ads</h3>
+            echo 'Remains '.\application\classes\Session::get('countAds');?> Ads</h3>
         <?php foreach($plans as $plan): ?>
         <div class="col-lg-4">
             <form role="form" action="/subsccribe-payment-plane/<?=$plan['name']?>" method="post">
