@@ -33,37 +33,51 @@ class HomeController extends BaseController
             $ads = new Ads(new Category());
             $dbinfo = $ads->getAdsByText($_POST['search']);
             if (!empty($dbinfo)) {
+//                $data = array();
+//
                 foreach ($dbinfo as $vals) {
-                    echo "
-                        <div class=\"col-lg-12\">
-                <div class=\"panel panel-primary \">
-                    <div class=\"ads-style panel-heading\">
-                        <h2>{$vals['ads_title']}</h2>
-                    </div>
-                    <div class=\"panel-body\">
-                        {$vals['ads_text']}
-                    </div>
-                    <div class=\"ads-style panel-footer\">
-                        <div class=\"container-fluid\">
-                            <div class=\"row\">
-                                <div class=\"col-lg-8\" style=\"padding-left:0px\">
-                                    <span class=\"ads-font\">Category: </span>{$vals['categories_name']}
-                                    <span class=\"ads-font\">Name: </span>{$vals['user_name']}
-                                    <span class=\"ads-font\">Phone: </span>{$vals['users_phone']}
-                                    <span class=\"ads-font\">Date: </span>{$vals['ads_date_create']}
-                                </div>
-                                <div class=\"col-lg-4 text-right\" style=\"padding-right:0px\">
-                                    <a href=\"/show/{$vals['ads_id']}\" class=\"btn btn-default btn-sm\">Read More...</a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                    ";
+                    echo "<li " . $vals['ads_title'] . "</li>";
                 }
-            } else echo '<p>Нет результатов</p>';
+                //echo json_encode($vals['ads_title']);
+//                    //echo json_encode($vals['ads_id']);
+//                  //  $res['ads_id'] = $vals['ads_id'];
+//                    $data['ads_id'] = $vals['ads_id'];
+//                }
+//                echo json_encode($data);
+//            }
+//            if (!empty($dbinfo)) {
+//                foreach ($dbinfo as $vals) {
+//                    echo "
+//                        <div class=\"col-lg-12\">
+//                <div class=\"panel panel-primary \">
+//                    <div class=\"ads-style panel-heading\">
+//                        <h2>{$vals['ads_title']}</h2>
+//                    </div>
+//                    <div class=\"panel-body\">
+//                        {$vals['ads_text']}
+//                    </div>
+//                    <div class=\"ads-style panel-footer\">
+//                        <div class=\"container-fluid\">
+//                            <div class=\"row\">
+//                                <div class=\"col-lg-8\" style=\"padding-left:0px\">
+//                                    <span class=\"ads-font\">Category: </span>{$vals['categories_name']}
+//                                    <span class=\"ads-font\">Name: </span>{$vals['user_name']}
+//                                    <span class=\"ads-font\">Phone: </span>{$vals['users_phone']}
+//                                    <span class=\"ads-font\">Date: </span>{$vals['ads_date_create']}
+//                                </div>
+//                                <div class=\"col-lg-4 text-right\" style=\"padding-right:0px\">
+//                                    <a href=\"/show/{$vals['ads_id']}\" class=\"btn btn-default btn-sm\">Read More...</a>
+//                                </div>
+//
+//                            </div>
+//                        </div>
+//                    </div>
+//                </div>
+//            </div>
+//                    ";
+//                }
+//            } else echo '<p>Нет результатов</p>';
+            }
         }
     }
 
