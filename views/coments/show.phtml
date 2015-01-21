@@ -1,9 +1,9 @@
 <div class="container standart-space">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
-        <h3 align="center">Comments</h3>
+        <h3>Comments</h3>
         <?php if (empty($comments)){?>
-            <div style="text-align: center">No results</div>
+<!--            <div style="text-align: center">No results</div>-->
             <hr>
         <?php }else {
             echo $comments;
@@ -56,7 +56,9 @@
                 working = false;
                 if(msg.status){
                     $('#addCommentContainer').siblings(":last").after(msg.html);
+                    $('#addNewComment').insertAfter($('#addCommentContainer').siblings(":last"));
                     commentForm.remove();
+                    $('#addNewComment').show();
                 }
                 else {
 
@@ -77,6 +79,7 @@
             commentForm = $('#addCommentContainer').clone(true, true);
 
             if ($(this).attr('id') == 'addNewComment') {
+                $('#addNewComment').hide();
                 commentForm.appendTo(current.parent());
             } else {
                 commentForm.insertAfter(current.parent());
