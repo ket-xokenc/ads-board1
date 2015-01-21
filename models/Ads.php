@@ -156,14 +156,17 @@ class Ads extends Model
 
             if($activePayment) {
                 $currentCnt = $this->db->query("
-                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate
+                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate group by users.id
                 ", [':userId' => $userId, ':startDate' => $startDate]);
 
                 $currentCnt = current($currentCnt);
                 $currentCnt = array_pop($currentCnt);
 
                 $tableCnt = $lastPayment['count_ads'];
-
+                if ($tableCnt == -1) {
+                    Session::set('countAds', -1);
+                }
+                Session::set('countAds', $tableCnt - $currentCnt);
                 if(($currentCnt <= $tableCnt || $tableCnt == -1) && $user['plan_id'] != 1) {
                     return true;
                 } else {
@@ -172,6 +175,7 @@ class Ads extends Model
 
 
             } else {
+                Session::set('countAds', 0);
                 return 'You should buy payment plan!';
             }
         } else {
@@ -181,6 +185,7 @@ class Ads extends Model
             $cntAds = current($cntAds);
             $cntAds = array_pop($cntAds);
             $cntAdsTable = $plansInfo['count_ads'];
+            Session::set('countAds', $cntAdsTable - $cntAds);
             if($cntAds >= $cntAdsTable) {
                 return 'Limit is exceeded';
             } else {

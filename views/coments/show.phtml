@@ -1,13 +1,13 @@
 <div class="container standart-space">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
-        <h3>Comments</h3>
-        <?php if (empty($comments)){?>
-<!--            <div style="text-align: center">No results</div>-->
-            <hr>
-        <?php }else {
-            echo $comments;
-        }?>
+            <h3>Comments</h3>
+            <?php if (empty($comments)) { ?>
+                <!--            <div style="text-align: center">No results</div>-->
+                <hr>
+            <?php } else {
+                echo $comments;
+            } ?>
         </div>
 
     </div>
@@ -17,19 +17,21 @@
             <button id="addNewComment">Add comment</button>
             <div id="addCommentContainer">
                 <p class="title-comment">Add new comment</p>
+
                 <form id="addCommentForm" method="post" action="add-comment">
                     <div id="comment-d">
 
                         <div class="form-group">
-                            <input type="text" name="ad_id" id="id" hidden="hidden" value="<?=$dbinfo[0]['ads_id']?>"/>
+                            <input type="text" name="ad_id" id="id" hidden="hidden"
+                                   value="<?= $dbinfo[0]['ads_id'] ?>"/>
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="pid" value="0" id="pid">
-                            <span class="text-comment">Name: <?=\application\classes\Session::get('login')?></span>
+                            <span class="text-comment">Name: <?= \application\classes\Session::get('login') ?></span>
                             <span class="error"></span>
                             <textarea name="body" id="body" cols="20" class="form-control" rows="6"></textarea>
                         </div>
-                        <input type="submit" id="submit" class="submit" value="Send" />
+                        <input type="submit" id="submit" class="submit" value="Send"/>
                     </div>
                 </form>
             </div>
@@ -38,13 +40,13 @@
 </div>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         var working = false;
 
 
-        $('#addCommentContainer').on('submit','#addCommentForm', function(e){
+        $('#addCommentContainer').on('submit', '#addCommentForm', function (e) {
             e.preventDefault();
-            if(working) return false;
+            if (working) return false;
             var a;
             a = this;
 
@@ -52,9 +54,9 @@
             $('#submit').val('send');
             $('span.error').remove();
 
-            $.post('add-comment',$(this).serialize(),function(msg){
+            $.post('add-comment', $(this).serialize(), function (msg) {
                 working = false;
-                if(msg.status){
+                if (msg.status) {
                     $('#addCommentContainer').siblings(":last").after(msg.html);
 //                    $('#addNewComment').insertAfter($('.row').siblings(":last"));
                     commentForm.remove();
@@ -62,11 +64,11 @@
                 }
                 else {
 
-                    $.each(msg.errors,function(k,v){
-                        $('label[for='+k+']').append(' <span style="color:red" class="error">'+v+'</span>');
+                    $.each(msg.errors, function (k, v) {
+                        $('label[for=' + k + ']').append(' <span style="color:red" class="error">' + v + '</span>');
                     });
                 }
-            },'json');
+            }, 'json');
 
         });
         var commentForm;
@@ -93,6 +95,8 @@
 
             return false;
         });
+
+
 
     });
 </script>

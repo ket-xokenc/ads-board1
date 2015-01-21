@@ -116,9 +116,12 @@ class UsersController extends BaseController
     {
         $user = new Users();
         $dataInfo = $user->get();
+        $ads = new Ads(new Category());
         $plans = new Plans();
-        $dataPlans = $plans->getActivePlans();
         $plans->switchPlan();
+        $dataPlans = $plans->getActivePlans();
+
+        $err = $ads->checkAddAds();
         $this->render('users/payment-plan', ['user' => $dataInfo, 'plans' => $dataPlans]);
     }
 
