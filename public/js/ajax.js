@@ -6,31 +6,38 @@ $(function() {
     $('.myform2').submit(function () {
         return false
     });
+    $('#search_box').keyup(autocomplet);
+
 
 
 });
 function autocomplet(){
     var keyword = $('#search_box').val();
-    if(keyword>=1){
+    if(keyword.length>=2){
         $.ajax({
             type: "POST",
             url: "search",
-            data: {keyword : keyword},
+            data: {search : keyword},
             success: function (data) { // запустится после получения результатов
+                $("#ads_id").empty();
                 $("#ads_id").show();
+                //console.log(data);
                 $("#ads_id").append(data);
+               // $('li').click(set_item($('li').text()));
+                $('li').click(console.log($(this).text()));
+            },
+            complete: function(){
+                //$('li').click(console.log($(this).text()));
             }
         });
     }
-    else{
-        $('#ads_id').hide();
-    }
+    return false;
 }
 function set_item(item) {
     $('#search_box').val(item);
     $('#ads_id').hide();
 }
-
+//
 //$(function() {
 //    $('.myform2').submit(function () {
 //        return false

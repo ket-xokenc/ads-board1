@@ -31,12 +31,15 @@ class HomeController extends BaseController
         if (isset($_POST['search'])) {
 
             $ads = new Ads(new Category());
+           // echo $_POST['search'],'<br/>';
             $dbinfo = $ads->getAdsByText($_POST['search']);
+         // var_dump($dbinfo);
             if (!empty($dbinfo)) {
 //                $data = array();
 //
+               // echo "hhh";
                 foreach ($dbinfo as $vals) {
-                    echo "<li " . $vals['ads_title'] . "</li>";
+                    echo "<li><a href=\"/show/{$vals['ads_id']}\">{$vals['ads_title']} </a></li>";
                 }
                 //echo json_encode($vals['ads_title']);
 //                    //echo json_encode($vals['ads_id']);
