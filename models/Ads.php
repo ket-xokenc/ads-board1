@@ -291,6 +291,7 @@ class Ads extends Model
                  $res = array();
                 for ($j = 0; $j < count($found); $j++) {
                     $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
+                 //   ChromePhp::log($temp);
                     $res = array_merge($res, $temp);
                 }
                  return $res;

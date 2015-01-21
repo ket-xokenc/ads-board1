@@ -39,7 +39,7 @@ class HomeController extends BaseController
 //
                // echo "hhh";
                 foreach ($dbinfo as $vals) {
-                    echo "<li><a href=\"/show/{$vals['ads_id']}\">{$vals['ads_title']} </a></li>";
+                    echo "<li class=\"list-group-item\"><a href=\"/show/{$vals['ads_id']}\">{$vals['ads_title']} </a></li>";
                 }
                 //echo json_encode($vals['ads_title']);
 //                    //echo json_encode($vals['ads_id']);
@@ -81,6 +81,7 @@ class HomeController extends BaseController
 //                }
 //            } else echo '<p>Нет результатов</p>';
             }
+            else echo "<li class=\"list-group-item\">Нет результатов</li>";
         }
     }
 

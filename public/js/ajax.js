@@ -1,12 +1,11 @@
-/**
- * Created by alexandr on 11.01.15.
- */
-
 $(function() {
     $('.myform2').submit(function () {
         return false
     });
-    $('#search_box').keyup(autocomplet);
+   $('#search_box').keyup(autocomplet);
+    if($('ul').children().length == 0) {
+        $('ul').css({display:'none'});
+    }
 
 
 
@@ -24,20 +23,17 @@ function autocomplet(){
                 //console.log(data);
                 $("#ads_id").append(data);
                // $('li').click(set_item($('li').text()));
-                $('li').click(console.log($(this).text()));
-            },
-            complete: function(){
-                //$('li').click(console.log($(this).text()));
+               // $('li').click(console.log($(this).text()));
+
             }
         });
     }
-    return false;
+    else {
+        $('#ads_id').hide();
+    }
 }
-function set_item(item) {
-    $('#search_box').val(item);
-    $('#ads_id').hide();
-}
-//
+
+
 //$(function() {
 //    $('.myform2').submit(function () {
 //        return false
