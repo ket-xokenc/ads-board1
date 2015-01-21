@@ -49,16 +49,16 @@
             a = this;
 
             working = true;
-            $('#submit').val('processing');
+            $('#submit').val('send');
             $('span.error').remove();
 
             $.post('add-comment',$(this).serialize(),function(msg){
                 working = false;
                 if(msg.status){
                     $('#addCommentContainer').siblings(":last").after(msg.html);
-                    $('#addNewComment').insertAfter($('#addCommentContainer').siblings(":last"));
+//                    $('#addNewComment').insertAfter($('.row').siblings(":last"));
                     commentForm.remove();
-                    $('#addNewComment').show();
+                    $('#addNewComment').hide();
                 }
                 else {
 
@@ -70,7 +70,7 @@
 
         });
         var commentForm;
-        $('#addNewComment, .reply').click(function (e) {
+        $('#addNewComment, .reply').on('click', function (e) {
             if (commentForm) {
                 commentForm.remove();
             }
