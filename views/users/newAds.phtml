@@ -207,26 +207,31 @@
                 <div class="col-lg-6">
 
 
-                <div class="col-lg-12 text-right">
+                    <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
+                        <label class="control-label" for="category">Select Category:</label>
+                        <select class="form-control selectpicker" name="category" id="category">
+                            <?php foreach($dbinfo as $vals):?>
+                                <?php if($vals['pid']==0){?>
+                                    <option data-id="<?=$vals['id']?>"><?=$vals['name']?></option>
+                                <?php } ?>
+                            <?php endforeach; ?>
+                        </select>
+                        <span class="text-danger"><?php echo !empty($errors['category'])?$errors['category']:''?></span>
+                    </div>
 
-                    <span class="text-capitalize">Select Category:</span>
-
-                    <select class="selectpicker btn btn-default" name="category">
-                        <?php foreach($dbinfo as $vals):?>
-                          <option value="<?=$vals['name']?>"><?=$vals['name']?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <span class="text-danger"><?php echo !empty($errors['category'])?$errors['category']:''?></span>
-
-                </div>
-
-                <div class="col-lg-12">
+                    <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
+                        <label class="control-label" for="subcategory">Select Category:</label>
+                        <select class="form-control selectpicker" name="category" id="subcategory">
+                        </select>
+                        <span class="text-danger"><?php echo !empty($errors['subcategory'])?$errors['subcategory']:''?></span>
+                    </div>
 
                     <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
                          <label class="control-label" for="titleName">Title</label>
                          <input type="text" class="form-control" id="titleName" placeholder="Ads Title" name="title">
                          <span class="text-danger"><?php echo !empty($errors['title'])?$errors['title']:''?></span>
                     </div>
+
                     <div class="form-group <?php echo !empty($errors['text'])?'has-error':''?>">
                         <label class="control-label" for="descField">Description</label>
                         <textarea class="form-control" id="descField" rows="10" placeholder="Your Description" name="text"></textarea>
@@ -242,7 +247,7 @@
                         <input type="text" class="form-control" id="userPhone" placeholder="Your Phone" name="userPhone">
                         <span class="text-danger"><?php /*echo !empty($errors['userPhone'])?$errors['userPhone']:''*/?></span>
                     </div>-->
-                </div>
+
 
 
                 <div class="col-lg-6 text-left">
@@ -284,4 +289,16 @@
         $('.fileupload-buttonbar .delete').trigger('click');
         return false;
     });
+    $( "#category" )
+        .change(function () {
+            $.ajax({
+                type:'POST',
+                url: '/ads/subcategory',
+                dataType:'json',
+                data:{category: $( "#category option:selected" ).data('id')}
+            }).done(function(data){
+                $( "#subcategory").
+            });
+        })
+        .change();
 </script>

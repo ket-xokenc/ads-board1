@@ -25,7 +25,7 @@ class AdsController extends BaseController
                 $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get()]);
             }
         } else {
-            $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
+                $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
         }
     }
 
@@ -104,5 +104,11 @@ class AdsController extends BaseController
         $dataComments = $comment->getCommentsByAdId($dbinfo[0]['ads_id']);
         $this->addView('coments', 'coments/show');
         $this->render('site/show-ads', ['dataComments'=> $dataComments,'dbinfo' => $dbinfo,'imgs'=>$imgs,'thumbnails'=>$thumbnails, 'user' => $users->get()]);
+    }
+
+    public function subCategoryAction(){
+        $category = new Category();
+        //var_dump($_POST['category']);
+        echo json_encode($category->getSubCategories($_POST['category']));
     }
 } 
