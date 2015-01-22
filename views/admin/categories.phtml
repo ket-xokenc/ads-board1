@@ -1,4 +1,4 @@
-<?php include_once 'menu.phtml';?>
+<?php include_once 'menu.phtml'; ?>
 
 <div class="container">
     <form class="form-inline" role="form" action="/admin/add-cat" method="post">
@@ -12,9 +12,9 @@
         <div class="checkbox">
             <label><input type="checkbox" name="checkbox" value="1">Подкатегория</label>
         </div>
-            <select name="pid" class="form-control">
-                <?php foreach ($categories as $v):?>
-                    <option value="<?php echo $v['id']?>"><?php echo $v['name']?></option> <?php endforeach; ?>
+        <select name="pid" class="form-control">
+            <?php foreach ($categories as $v): ?>
+                <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option> <?php endforeach; ?>
         </select>
     </form>
     <div class="row">
