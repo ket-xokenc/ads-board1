@@ -39,7 +39,6 @@ class Comment extends Model
     {
         $errorLog = array();
         $data = [];
-        $data['body'] = $_POST['body'];
         if (($errorLog = $this->validator->validate($data)) !== true) {
             $errorLog['status'] = 'error';
             return $errorLog;
@@ -47,20 +46,30 @@ class Comment extends Model
         $userId = Session::get('user_id');
         $adsId = (int) $_POST['ad_id'];
         $dateCreate = date('Y-m-d H:i:s');
-        $data['date_create'] = $dateCreate;
+        $data['create_comment'] = $dateCreate;
         $data['status'] = 'ok';
+        $data['text'] = $_POST['body'];
+        $data['user_name'] = Session::get('login');
 
 
-        $this->db->insert('comments', ['user_id' => $userId, 'ad_id' => $adsId, 'text' => $_POST['body'], 'date_create' => $dateCreate]);
+
+        $this->db->insert('comments', ['user_id' => $userId, 'pid' => $_POST['pid'], 'ad_id' => $adsId, 'text' => $_POST['body'], 'date_create' => $dateCreate]);
+        $data['id'] = $this->db->getLastInsertedId();
         return $data;
     }
 
     public function getCommentsByAdId($adId)
     {
         $data = $this->db->query("
-            SELECT comments.text,  comments.`date_create` create_comment, users.name user_name FROM comments
+            SELECT comments.text,comments.id,  DATE_FORMAT(comments.date_create, '%d %M %Y %H:%i') create_comment, comments.pid, users.name user_name FROM comments
                 INNER JOIN users ON users.id = comments.`user_id` WHERE comments.`ad_id` = :adId
         ", [':adId' => $adId]);
-        return $data;
+        $newArr = [];
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $newArr[$v['id']] = $v;
+            }
+        }
+        return $newArr;
     }
 }

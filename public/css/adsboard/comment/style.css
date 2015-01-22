@@ -5,16 +5,56 @@ p.comment {
 
 #addCommentContainer {
     padding: 10px;
-    background-color: #D9F7FF;
+    background-color: #EEF9FF;
     border-radius: 5px 5px 5px 5px;
+    width: 500px;
+    margin-left: 20px;
+    display: none;
+}
+
+#addNewComment {
+     position: relative;
+    left: 200px;
+    margin-bottom: 20px;
+}
+
+#addCommentContainer textarea {
+    resize:vertical;
 }
 .title-comment {
     text-align: center;
 }
 .text-comment {
     word-break: break-all;
+    color: #1C333E;
 }
 .comment-desc {
-    color: #2EB2D9;
-    border-bottom: 1px solid #C3E7F1;
+    padding-left: 3px;
+}
+
+
+ul.comment-list:first-child {
+    padding-left: 0px;
+}
+.comment-list {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+.wrapper-comment {
+    position: relative;
+    border-radius: 5px 5px 5px 5px;
+    padding: 10px;
+    border: 2px solid #D1E6FF;
+    width: 500px;
+    color: #1095D3;
+    margin-top: 10px;
+}
+    .wrapper-comment a {
+        position: relative;
+        left: 440px;
+    }
+.comment-line {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
