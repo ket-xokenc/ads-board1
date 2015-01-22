@@ -20,12 +20,8 @@ function autocomplet(){
             success: function (data) { // запустится после получения результатов
                 $("#ads_id").empty();
                 $("#ads_id").show();
-                //console.log(data);
                 $("#ads_id").append(data);
-               // $('li').click(set_item($('li').text()));
-               // $('li').click(console.log($(this).text()));
-
-            }
+              }
         });
     }
     else {

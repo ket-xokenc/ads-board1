@@ -1,17 +1,6 @@
 #results {
     margin-top: 70px;
 }
-/*ul {*/
-    /*border: 1px solid #696969;*/
-    /*width: 266px;*/
-    /*position: absolute;*/
-    /*z-index: 1;*/
-    /*background: #f3f3f3;*/
-    /*list-style: none;*/
-/*}*/
-/*li {*/
-    /*border-bottom : 1px solid #696969;*/
-/*}*/
 .list-group-item {
-    width: 266px;
+   width: inherit;
 }
