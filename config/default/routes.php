@@ -18,6 +18,7 @@ return [
         'payment-plan' => 'users/paymentPlan',
         'profile' => 'users/profile',
         'profile/edit' => 'users/edit',
+        'profile/search' =>'home/search',
         'profile/add-ads' => 'ads/create',
         'profile/add-img' => 'img/add',
         'ads/subcategory' => 'ads/subCategory',
