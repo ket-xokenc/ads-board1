@@ -107,8 +107,14 @@ class AdsController extends BaseController
     }
 
     public function subCategoryAction(){
-        $category = new Category();
-        //var_dump($_POST['category']);
-        echo json_encode($category->getSubCategories($_POST['category']));
+        if ($this->getRequest()->isPost()) {
+            $category = new Category();
+            echo json_encode($category->getSubCategories($_POST['category']));
+        }
+    }
+
+    public function subCategoryFieldsAction(){
+        $fields = new AdsFields();
+        echo json_encode($fields->selectAllFields($_POST['subcategory']));
     }
 } 
