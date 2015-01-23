@@ -53,3 +53,15 @@
         <?php endforeach;?>
     </div>
 </div>
+<script>
+$(function() {
+    $("form").on('submit', function(e) {
+        var res;
+        res = confirm("Are you sure?");
+        console.log(res);
+        if(!res)
+            e.preventDefault();
+    });
+
+});
+</script>
