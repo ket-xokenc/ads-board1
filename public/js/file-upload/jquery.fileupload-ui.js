@@ -76,7 +76,7 @@
             // used by the maxNumberOfFiles validation:
             getNumberOfFiles: function () {
                 return this.filesContainer.children()
-                    .not('.processing').length;
+                    .not('.processing,.error').length;
             },
 
             // Callback to retrieve the list of files from the server response:
@@ -94,6 +94,7 @@
                 if (e.isDefaultPrevented()) {
                     return false;
                 }
+
                 var $this = $(this),
                     that = $this.data('blueimp-fileupload') ||
                         $this.data('fileupload'),
@@ -127,7 +128,21 @@
                         data.context.each(function (index) {
                             var error = data.files[index].error;
                             if (error) {
-                                $(this).find('.error').text(error);
+                                var message=$('<div class="error alert alert-danger">'+error+'</div>').css({
+                                    position: 'absolute',
+                                    bottom: '0px',
+                                    left: 0,
+                                    width:$('#dropzone').innerWidth(),
+                                    padding: '0px',
+                                    margin:0
+                                });
+
+                                $('#dropzone .files').append(message);
+                                data.abort();
+                                $('#dropzone .files').children(":not(.in,.error)").remove();
+                                message.fadeOut(2000,function(){
+                                    $('#dropzone .files').children(".error").remove();
+                                });
                             }
                         });
                     }
