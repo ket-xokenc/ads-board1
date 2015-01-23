@@ -298,7 +298,9 @@ class Ads extends Model
                  } else {
                      for ($j = 0; $j < count($found); $j++) {
                          $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
-                         $res = array_merge($res, $temp);
+                         if ($temp) {
+                             $res = array_merge($res, $temp);
+                         }
                      }
                  }
                  return $res;
