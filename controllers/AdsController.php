@@ -25,7 +25,7 @@ class AdsController extends BaseController
                 $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get()]);
             }
         } else {
-            $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
+                $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
         }
     }
 
@@ -140,5 +140,11 @@ class AdsController extends BaseController
 
         $comments_string =  ob_get_clean(); // Получаем содержимое буфера в виде строки
         return $comments_string;
+    }
+
+    public function subCategoryAction(){
+        $category = new Category();
+        //var_dump($_POST['category']);
+        echo json_encode($category->getSubCategories($_POST['category']));
     }
 } 

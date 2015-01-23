@@ -1,18 +1,16 @@
 <?php
 
 use application\classes\Registry as Registry;
+use application\core\Model;
 
-class Category
+class Category extends Model
 {
-
-    private $db;
 
     const TABLE = 'categories';
 
-
     public function __construct()
     {
-        $this->db = Registry::get('database');
+        parent::__construct();
     }
 
     public function create()
@@ -134,4 +132,15 @@ class Category
 
         return $this->db->fetchAll($table, ['*']);
     }
+
+    public function getSubCategories($catId){
+        $table = Category::TABLE;
+
+        $sql = "SELECT * FROM categories WHERE pid=$catId";
+
+        return $this->db->query($sql);
+
+    }
+
+
 } 
