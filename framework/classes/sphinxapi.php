@@ -1,6 +1,7 @@
 <?php
+
 //
-// $Id: Sphinxapi.php 4522 2014-01-30 11:00:18Z tomat $
+// $Id: sphinxapi.php 4522 2014-01-30 11:00:18Z tomat $
 //
 
 //
@@ -1827,5 +1828,5 @@ class SphinxClient
 }
 
 //
-// $Id: Sphinxapi.php 4522 2014-01-30 11:00:18Z tomat $
+// $Id: sphinxapi.php 4522 2014-01-30 11:00:18Z tomat $
 //

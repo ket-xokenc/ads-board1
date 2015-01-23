@@ -3,8 +3,6 @@
 use application\classes\Registry;
 use application\core\Model;
 use application\classes\Session;
-use Sphinx\SphinxClient;
-
 class Ads extends Model
 {
 
@@ -283,17 +281,26 @@ class Ads extends Model
         $cl->SetServer("localhost", 3312);
         $cl->SetConnectTimeout(1);
         $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
-        $cl->SetMatchMode(SPH_MATCH_ANY);
+      //$cl->SetMatchMode(SPH_MATCH_ANY);
         $result = $cl->Query($string);
         if ( $result !== false ) {
-             if (!empty($result["matches"])){
+             if (!empty($result["matches"])) {
                  $found = array_keys($result['matches']); //id found ads
                  $res = array();
-                for ($j = 0; $j < count($found); $j++) {
-                    $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
-                 //   ChromePhp::log($temp);
-                    $res = array_merge($res, $temp);
-                }
+                 if (!empty($_POST['page'])) {
+                     $userId = Session::get('user_id');
+                     for ($j = 0; $j < count($found); $j++) {
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j] AND user_id = $userId");
+                         if ($temp) {
+                             $res = array_merge($res, $temp);
+                         }
+                     }
+                 } else {
+                     for ($j = 0; $j < count($found); $j++) {
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
+                         $res = array_merge($res, $temp);
+                     }
+                 }
                  return $res;
             }
         }

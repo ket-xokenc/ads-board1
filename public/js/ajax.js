@@ -6,17 +6,16 @@ $(function() {
     if($('ul').children().length == 0) {
         $('ul').css({display:'none'});
     }
-
-
-
 });
 function autocomplet(){
     var keyword = $('#search_box').val();
-    if(keyword.length>=2){
+    if(keyword.length>=3){
         $.ajax({
             type: "POST",
             url: "search",
-            data: {search : keyword},
+            data: {search : keyword,
+                    page : $('#profile').attr('name')
+                },
             success: function (data) { // запустится после получения результатов
                 $("#ads_id").empty();
                 $("#ads_id").show();
