@@ -54,7 +54,7 @@ $(function() {
             else {
 
                 $.each(msg.errors, function (k, v) {
-                    $('label[for=' + k + ']').append(' <span style="color:red" class="error">' + v + '</span>');
+                    $('textarea#body').before(' <span style="color:red" class="error">' + v + '</span>');
                 });
             }
         }, 'json');

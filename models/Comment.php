@@ -38,7 +38,7 @@ class Comment extends Model
     public  function addComment()
     {
         $errorLog = array();
-        $data = [];
+        $data = ['body' => $_POST['body']];
         if (($errorLog = $this->validator->validate($data)) !== true) {
             $errorLog['status'] = 'error';
             return $errorLog;
