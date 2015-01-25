@@ -2,13 +2,15 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <h3>Comments</h3>
+            <button id="addNewComment">Add comment</button>
             <?php if (empty($comments)) { ?>
                 <!--            <div style="text-align: center">No results</div>-->
                 <hr>
             <?php } else {
                 echo $comments;
             } ?>
-            <button id="addNewComment">Add comment</button>
+            <br />
+            <span id="show-more"><a href="">show more</a></span>
         </div>
 
     </div>

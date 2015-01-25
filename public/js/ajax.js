@@ -44,12 +44,14 @@ $(function() {
         $.post('add-comment', $(this).serialize(), function (msg) {
             working = false;
             if (msg.status) {
-                $('#addNewComment').before(msg.html);
+                $('#addNewComment').after(msg.html);
                 commentForm.remove();
                 var res = $(this).find('input').eq(1).attr('pid');
                 if(res ==  '0') {
                     $('#addCommentContainer').siblings(":last").after($('addNewComment').content());
                 }
+                checkShowComments();
+
             }
             else {
 
@@ -96,11 +98,12 @@ $(function() {
             commentForm.remove();
         }
         var current = $(this);
+        $('span.error').remove();
 
         commentForm = $('#addCommentContainer').clone(true, true);
         if ($(this).attr('id') == 'addNewComment') {
             commentForm.find('form').attr('id', 'addCommentFormEnd');
-            commentForm.appendTo(current.parent());
+            commentForm.insertAfter(current);
         } else {
             commentForm.insertAfter(current.parent());
             commentForm.css('marginTop', 5);
@@ -113,5 +116,46 @@ $(function() {
 
         return false;
     });
+
+    var cntStep= 4;
+    var cnt = cntStep;
+    var temp;
+
+    $('#show-more').on('click', showComments);
+    function showComments(e){
+        var comments = $('.comment-list');
+        cnt += cntStep;
+        if(comments.length) {
+            comments.hide();
+            var a = 0;
+            comments.each(function (i, el) {
+                if (i < cnt) {
+                    $(el).show();
+                    a++;
+                }
+
+            });
+        }
+        cnt = a;
+        checkShowComments();
+        e.preventDefault();
+        return false;
+    }
+    checkShowComments();
+    function checkShowComments(){
+        comments = $('.comment-list');
+        if(comments.length > (cnt )){
+            $('#show-more').show();
+
+        } else {
+            $('#show-more').hide();
+        }
+        comments.hide();
+        comments.each(function (i, el) {
+            if (i < cnt) {
+                $(el).show();
+        }
+    });
+    }
 
 });
