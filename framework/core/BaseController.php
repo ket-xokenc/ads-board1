@@ -55,7 +55,11 @@ class BaseController
             }
         }
 
-        include_once '../views/layouts/'.$this->layout.'.phtml';
+        if(!empty($this->layout)) {
+            include_once '../views/layouts/' . $this->layout . '.phtml';
+        }else{
+            echo $content;
+        }
     }
 
     public function addView($name, $value)

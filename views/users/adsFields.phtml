@@ -1,0 +1,64 @@
+<?php if(!empty($dbinfo)){?>
+<?php foreach ($dbinfo as $row) { ?>
+    <?php if (!empty($row['type'])) { ?>
+        <?php $params=json_decode($row['params']);?>
+        <?php switch ($row['type']){
+
+            case "select":?>
+                <div class="form-group">
+                    <label class="control-label" for="<?='ads_field_'.$row['id']; ?>"><?= $row['name']; ?></label>
+                    <select class="form-control selectpicker" name="<?='ads_field_'.$row['id']; ?>" id="<?='ads_field_'.$row['id']; ?>">
+                        <?php foreach ($params as $param) { ?>
+                            <option value="<?=$param?>"><?=$param?></option>
+                        <?php } ?>
+                    </select>
+                    <span class="text-danger"><?php echo !empty($errors['subcategory']) ? $errors['subcategory'] : '' ;?></span>
+                </div>
+            <?php break;?>
+
+            <?php case "checkbox":?>
+                <fieldset class="scheduler-border">
+                <legend class="scheduler-border"><?=$row['name']?></legend>
+                <?php foreach ($params as $param) { ?>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="<?='ads_field_'.$row['id'].'[]';?>" value="<?=$param?>"><?=$param?>
+                        </label>
+                    </div>
+                <?php } ?>
+                </fieldset>
+            <?php break;?>
+
+            <?php case "radio":?>
+                <fieldset class="scheduler-border">
+                <legend class="scheduler-border"><?=$row['name']?></legend>
+                <?php foreach ($params as $param) { ?>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="<?='ads_field_'.$row['id'];?>" value="<?=$param?>" checked><?=$param?>
+                        </label>
+                    </div>
+                <?php } ?>
+                </fieldset>
+            <?php break;?>
+
+            <?php case "textfield":?>
+                <div class="form-group">
+                    <label class="control-label" for="<?='ads_field_'.$row['id']; ?>"><?= $row['name']; ?></label>
+                    <input type="text" class="form-control" id="<?='ads_field_'.$row['id']; ?>" name="<?='ads_field_'.$row['id']; ?>">
+                    <span class="text-danger"><?php echo !empty($errors['subcategory']) ? $errors['subcategory'] : '' ;?></span>
+                </div>
+            <?php break;?>
+
+            <?php case "textbox": ?>
+                <div class="form-group">
+                    <label class="control-label" for="<?='ads_field_'.$row['id']; ?>"><?= $row['name']; ?></label>
+                    <textarea class="form-control" id="<?='ads_field_'.$row['id']; ?>" rows="5" name="<?='ads_field_'.$row['id']; ?>"></textarea>
+                    <span class="text-danger"><?php echo !empty($errors['subcategory']) ? $errors['subcategory'] : '' ;?></span>
+                </div>
+            <?php break;?>
+
+        <?php } ?>
+    <?php } ?>
+<?php } ?>
+<?php } ?>

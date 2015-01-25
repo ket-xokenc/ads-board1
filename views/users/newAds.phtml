@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/css/file-upload/style.css">
 
-<link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+<link rel="stylesheet" href="/css/file-upload/blueimp-gallery.min.css">
 <link rel="stylesheet" href="/css/file-upload/jquery.fileupload.css">
 <link rel="stylesheet" href="/css/file-upload/jquery.fileupload-ui.css">
 <!-- CSS adjustments for browsers with JavaScript disabled -->
@@ -53,7 +53,67 @@
                 <a class="play-pause"></a>
                 <ol class="indicator"></ol>
             </div>
+        </div>
 
+
+
+    <div class="col-lg-5 col-lg-push-1">
+
+        <form role="form" action="/profile/add-ads" method="post">
+
+            <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
+                <label class="control-label" for="category">Select Category:</label>
+                <select class="form-control selectpicker" name="category" id="category">
+                    <?php foreach($dbinfo as $vals):?>
+                        <?php if($vals['pid']==0){?>
+                            <option data-id="<?=$vals['id']?>"><?=$vals['name']?></option>
+                        <?php } ?>
+                    <?php endforeach; ?>
+                </select>
+                <span class="text-danger"><?php echo !empty($errors['category'])?$errors['category']:''?></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="subcategory">Select Subcategory:</label>
+                <select class="form-control selectpicker" name="subcategory" id="subcategory">
+                </select>
+                <span class="text-danger"><?php echo !empty($errors['subcategory'])?$errors['subcategory']:''?></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="title">Title:</label>
+                <input type="text" class="form-control" id="title" name="title">
+            </div>
+
+            <div id="subcategory-fields">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="text">Description:</label>
+                <textarea rows="5" class="form-control" id="text" name="text"></textarea>
+            </div>
+
+            <div class="text-left pull-left">
+                <button  class="btn btn-default add-img">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    Add imgs...
+                </button>
+            </div>
+
+            <div class=" text-right">
+                <button type="submit" class="btn btn-default">Create new Ads</button>
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+
+</div>
+
+</div>
             <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <div class="template-upload fade col-lg-4">
@@ -120,15 +180,16 @@
     </div>
 {% } %}
 </script>
+
             <script src="/js/file-upload/vendor/jquery.ui.widget.js"></script>
             <!-- The Templates plugin is included to render the upload/download listings -->
-            <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+            <script src="/js/file-upload/vendor/tmpl.min.js"></script>
             <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-            <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+            <script src="/js/file-upload/vendor/load-image.all.min.js"></script>
             <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-            <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+            <script src="/js/file-upload/vendor/canvas-to-blob.min.js"></script>
             <!-- blueimp Gallery script -->
-            <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+            <script src="/js/file-upload/vendor/jquery.blueimp-gallery.min.js"></script>
             <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
             <script src="/js/file-upload/jquery.iframe-transport.js"></script>
             <!-- The basic File Upload plugin -->
@@ -147,78 +208,6 @@
             <!--[if (gte IE 8)&(lt IE 10)]>
             <script src="/js/file-upload/cors/jquery.xdr-transport.js"></script>
             <![endif]-->
-
-
-
-
-
-
-
-
-        </div>
-
-
-    <div class="col-lg-5 col-lg-push-1">
-
-            <form role="form" action="/profile/add-ads" method="post">
-
-                    <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
-                        <label class="control-label" for="category">Select Category:</label>
-                        <select class="form-control selectpicker" name="category" id="category">
-                            <?php foreach($dbinfo as $vals):?>
-                                <?php if($vals['pid']==0){?>
-                                    <option data-id="<?=$vals['id']?>"><?=$vals['name']?></option>
-                                <?php } ?>
-                            <?php endforeach; ?>
-                        </select>
-                        <span class="text-danger"><?php echo !empty($errors['category'])?$errors['category']:''?></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="subcategory">Select Subcategory:</label>
-                        <select class="form-control selectpicker" name="category" id="subcategory">
-                        </select>
-                        <span class="text-danger"><?php echo !empty($errors['subcategory'])?$errors['subcategory']:''?></span>
-                    </div>
-
-
-                    <div id="subcategory-fields">
-
-
-                    <!--<div class="form-group <?php /*echo !empty($errors['title'])?'has-error':''*/?>">
-                         <label class="control-label" for="titleName">Title</label>
-                         <input type="text" class="form-control" id="titleName" placeholder="Ads Title" name="title">
-                         <span class="text-danger"><?php /*echo !empty($errors['title'])?$errors['title']:''*/?></span>
-                    </div>
-
-                    <div class="form-group <?php /*echo !empty($errors['text'])?'has-error':''*/?>">
-                        <label class="control-label" for="descField">Description</label>
-                        <textarea class="form-control" id="descField" rows="10" placeholder="Your Description" name="text"></textarea>
-                        <span class="text-danger"><?php /*echo !empty($errors['text'])?$errors['text']:''*/?></span>
-                    </div>-->
-                        </div>
-
-                    <div class="col-lg-6">
-                        <button  class="btn btn-default add-img">
-                            <i class="glyphicon glyphicon-plus"></i>
-                            Add imgs...
-                        </button>
-                    </div>
-
-                    <div class="col-lg-6 text-right">
-                        <button type="submit" class="btn btn-default">Create new Ads</button>
-                    </div>
-
-        </form>
-
-    </div>
-
-
-
-
-</div>
-
-</div>
 
 <script>
     $('.add-img').click(function(){
@@ -255,25 +244,19 @@
 
     $( "#subcategory" )
         .change(function () {
-            //$( "#subcategory").empty();
-            console.log($( "#subcategory option:selected" ).data('id'));
+            //console.log($( "#subcategory option:selected" ).data('id'));
             $.ajax({
                 type:'POST',
                 url: '/profile/subFields',
-                dataType:'json',
+                dataType:'html',
                 data:{subcategory: $( "#subcategory option:selected" ).data('id')}
             }).done(function(data){
-                console.log(data);
-                /*data.forEach(function (elem) {
-                    switch (elem['prop_type']) {
-                        //case
-                    }
-                });*/
-
+                //console.log(data);
+                   $("#subcategory-fields").html(data);
             });
         });
 
-    if(!$( "#subcategory").children().is(':empty')) {
+    if($( "#subcategory option").length>0) {
         $("#subcategory").change();
     }
 </script>

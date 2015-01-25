@@ -59,29 +59,48 @@ class Ads extends Model
     public function create()
     {
         $table = Ads::TABLE;
-        $data = array();
+        $data1 = array();
+        $data2 = array();
         $errorLog = array();
 
 
-        if (($errorLog = $this->validator->validate($_POST)) !== true) {
+        /*if (($errorLog = $this->validator->validate($_POST)) !== true) {
             return $errorLog;
+        }*/
+
+        $data1['category_id'] = $this->category->getCategoryByName($_POST['subcategory'])['id'];
+        $data1['user_id'] = Session::get('user_id');
+        $data1['date_create'] = date('Y-m-d H:i:s');
+        $data1['title']=$_POST['title'];
+        $data1['text']=$_POST['text'];
+
+        $this->db->insert($table, $data1);
+
+        $lastInsertId=$this->db->getLastInsertedId();
+
+        foreach($_POST as $key=>$value){
+            if(strrpos($key,'ads_field_')===0) {
+                $data2['property_id'] = preg_split('#_#', $key)[2];
+                $data2['ads_id'] = $lastInsertId;
+
+                if (!is_array($value)) {
+                    $data2['value'] = $value;
+                } else {
+                    $data2['value'] = json_encode($value);
+                }
+
+                $this->db->insert('property_ads', $data2);
+            }
         }
 
-        $data['category_id'] = $this->category->getCategoryByName($_POST['category'])['id'];
-        $data['user_id'] = Session::get('user_id');
-        $data['date_create'] = date('Y-m-d H:i:s');
-        $data['title'] = $_POST['title'];
-        $data['text'] = $_POST['text'];
 
-        $this->db->insert($table, $data);
-
-        $path='../public/tmp_files/'.$data['user_id'];
+        $path='../public/tmp_files/'.$data1['user_id'];
 
         if(is_dir($path)){
             if(!is_dir('../public/files/')){
                 mkdir('../public/files/');
             }
-                rename($path, '../public/files/'.$this->db->getLastInsertedId());
+                rename($path, '../public/files/'.$lastInsertId);
         }
     }
 
