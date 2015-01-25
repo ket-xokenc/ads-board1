@@ -4,7 +4,7 @@
 $(document).ready(function () {
     $(".delbutton").on('click', function () {
         var elem = $(this);
-        var del_id = elem.data("id");
+        var del_id = elem.data("del");
         var info = 'delete=' + del_id;
         if (confirm("Вы уверены что хотите удалить?")) {
             $.ajax({
@@ -23,7 +23,7 @@ $(document).ready(function () {
     $(".my_form_adm").submit(function () {
         return false;
     });
-    $(".active").click(function () {
+    $(".sch-act").click(function () {
         var search = $(".input-sch").val();
         $.post("admin/search",
             {
@@ -36,7 +36,6 @@ $(document).ready(function () {
     var max_fields = 10;
     var wrapper = $(".input_fields_wrap");
     var add_button = $(".add_field_button");
-
     var x = 1;
     $(add_button).click(function (e) {
         e.preventDefault();
@@ -50,6 +49,12 @@ $(document).ready(function () {
         e.preventDefault();
         $(this).parent('div').remove();
         x--;
-    })
+    });
+
+
+    $(".update_prop").on("click", function(){
+        var elem = $(this).data("update");
+        console.log(elem);
+    });
 
 });

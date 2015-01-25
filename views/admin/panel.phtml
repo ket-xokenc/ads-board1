@@ -8,7 +8,7 @@
                     <input type="text" name="desc" class="form-control input-sch"
                            placeholder="Логин пользователя, заголовок публикации или категорию" required>
                 </div>
-                <button type="submit" class="active">Search</button>
+                <button type="submit" class="active sch-act">Search</button>
             </form>
             <div class="col-md-4" id="result"></div>
         </div>
@@ -16,12 +16,11 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Логин</th>
-                    <th>Телефон</th>
-                    <th>Статус</th>
-                    <th>Опубликовано</th>
-                    <th>Дата регистрации</th>
-                    <th>Действия</th>
+                    <th>Login</th>
+                    <th>Phone</th>
+                    <th>Ads</th>
+                    <th>Registered</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,7 +28,6 @@
                     <tr>
                         <td><?php echo $tt["login"]; ?></td>
                         <td><?php echo $tt["phone"]; ?></td>
-                        <td><?php echo $tt["status"]; ?></td>
                         <td><?php echo $tt["caunt"]; ?></td>
                         <td><?php echo $tt["date_create"]; ?></td>
                         <td>

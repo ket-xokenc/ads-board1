@@ -17,7 +17,7 @@
                             <td><?php echo $tt["name"]; ?></td>
                             <td><?php echo $tt["type"]; ?></td>
                             <td>
-                                <a href="" data-id="<?php echo $tt["id"]; ?>" class="delbutton">del</a>
+                                <a href="" data-del="<?php echo $tt["id"]; ?>" class="delbutton">del</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -37,7 +37,6 @@
             </form>
         </div>
         <div class="col-md-4">
-            <h1><?php if (!empty($error)) echo $error; ?></h1>
 
             <form action="add" method="post">
                 <table class="table table-striped">
@@ -49,7 +48,9 @@
                     <tbody>
                     <?php foreach ($property_all as $tt): ?>
                         <tr>
-                            <td><?php echo $tt["name"]; ?></td>
+                            <td>
+                                <input type="button" data-update="<?php echo $tt["id"]; ?>" class="update_prop" value="<?php echo $tt["name"]; ?>">
+                            </td>
                             <td><?php echo $tt["type"]; ?></td>
                             <td>
                                 <input type="checkbox" name="add[<?php echo $tt["id"]; ?>]"
