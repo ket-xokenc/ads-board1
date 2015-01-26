@@ -10,12 +10,15 @@
         <h3>Your Ads:</h3>
     </div>
     <div class="col-lg-5">
-        <form class="form-inline" action="/profile/search" method="post">
+        <form class="form-inline myform2" action="/profile/search" method="post">
             <div class="form-group">
-                <input type="text" class="form-control input-lg"  placeholder="Search ads" name="search">
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg">Search</button>
+                <input type="hidden" name="profile" id = 'profile'>
+                <input type="text" class="form-control input-lg" autocomplete="off" placeholder="Search ads" name="search" id="search_box">
+                <ul id="ads_id" class="list-group text-left"></ul>
         </form>
+            </div>
+<!--            <button type="submit" class="btn btn-primary btn-lg">Search</button>-->
+
     </div>
     <div class="col-lg-2">
         <a href="/profile/add-ads" class="btn btn-default btn-lg">Add new Ads</a>
@@ -26,7 +29,7 @@
 <div class="container text-left ads">
     <div class="row">
 
-
+<?php if(!empty($dbinfo)):?>
     <?php foreach($dbinfo as $vals):?>
         <div class="col-lg-12">
             <div class="panel panel-primary ">
@@ -47,7 +50,7 @@
                             </div>
                             <div class="col-lg-4 text-right" style="padding-right:0px">
                                 <a href="/profile/ads-edit/<?=$vals['ads_id']?>" class="btn btn-default btn-xs">Edit</a>
-                                <a href="/profile/ads-delete/<?=$vals['ads_id']?>" class="btn btn-danger btn-xs ads-delete">Delete</a>
+                                <a href="/profile/ads-delete/<?=$vals['ads_id']?>" class="btn btn-danger btn-xs ads-del">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -55,7 +58,7 @@
             </div>
         </div>
     <?php endforeach;?>
-
+<?php endif;?>
     </div>
 
 
@@ -71,14 +74,13 @@
 
 <script>
     $(function() {
-        $(".ads-delete").click(function(e) {
+        $(".ads-del").click(function(e) {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result){
-                    window.location.href = $('.ads-delete').attr('href');
+                    window.location.href = $('.ads-del').attr('href');
                 }
             });
             e.preventDefault();
         });
-
     });
 </script>

@@ -1,5 +1,9 @@
 <div class="container text-center standart-space">
     <div class="row">
+        <h3><?php if(\application\classes\Session::get('countAds') == -1) {
+                echo 'Unlimited';
+            } else
+            echo 'Remains '.\application\classes\Session::get('countAds');?> Ads</h3>
         <?php foreach($plans as $plan): ?>
         <div class="col-lg-4">
             <form role="form" action="/subsccribe-payment-plane/<?=$plan['name']?>" method="post">
@@ -11,7 +15,7 @@
                     <div class="panel-body">
                         <h2>$<?php echo $plan['price']; if($plan['name']!= 'free') echo '/month'; ?></h2>
                         <hr>
-                        <h2><?php if ($plan['count_ads'] == -1) echo 'Ulimited'; else echo $plan['count_ads']?> ads</h2>
+                        <h2><?php if ($plan['count_ads'] == -1) echo 'Unlimited'; else echo $plan['count_ads']?> ads</h2>
                     </div>
                     <input type="hidden" name="itemname" value="<?=$plan['name']?>" />
                     <input type="hidden" name="itemdesc" value="aaaaa" />
@@ -49,3 +53,15 @@
         <?php endforeach;?>
     </div>
 </div>
+<script>
+$(function() {
+    $("form").on('submit', function(e) {
+        var res;
+        res = confirm("Are you sure?");
+        console.log(res);
+        if(!res)
+            e.preventDefault();
+    });
+
+});
+</script>

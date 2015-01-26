@@ -13,11 +13,11 @@ class AdsController extends BaseController
         $errors = array();
 
         if ($this->getRequest()->isPost()) {
-            $errors = $ads->checkAddAds();
+            /*$errors = $ads->checkAddAds();
             if ($errors !== true) {
                 $this->render('users/newAds', ['error' => [$errors], 'dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
                 exit;
-            }
+            }*/
             if (!empty($errors = $ads->create())) {
                 $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()], $errors);
             } else {
@@ -25,7 +25,7 @@ class AdsController extends BaseController
                 $this->render('users/profile', ['dbinfo' => $ads->getAdsByUserId($users->getUid()), 'user' => $users->get()]);
             }
         } else {
-            $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
+                $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
         }
     }
 
@@ -140,5 +140,18 @@ class AdsController extends BaseController
 
         $comments_string =  ob_get_clean(); // Получаем содержимое буфера в виде строки
         return $comments_string;
+    }
+
+    public function subCategoryAction(){
+        if ($this->getRequest()->isPost()) {
+            $category = new Category();
+            echo json_encode($category->getSubCategories($_POST['category']));
+        }
+    }
+
+    public function subCategoryFieldsAction(){
+        $fields = new AdsFields();
+        $this->layout='';
+        $this->render('users/adsFields', ['dbinfo' => $fields->selectAllFields($_POST['subcategory'])]);
     }
 } 

@@ -3,8 +3,6 @@
 use application\classes\Registry;
 use application\core\Model;
 use application\classes\Session;
-use Sphinx\SphinxClient;
-
 class Ads extends Model
 {
 
@@ -59,29 +57,48 @@ class Ads extends Model
     public function create()
     {
         $table = Ads::TABLE;
-        $data = array();
+        $data1 = array();
+        $data2 = array();
         $errorLog = array();
 
 
-        if (($errorLog = $this->validator->validate($_POST)) !== true) {
+        /*if (($errorLog = $this->validator->validate($_POST)) !== true) {
             return $errorLog;
+        }*/
+
+        $data1['category_id'] = $this->category->getCategoryByName($_POST['subcategory'])['id'];
+        $data1['user_id'] = Session::get('user_id');
+        $data1['date_create'] = date('Y-m-d H:i:s');
+        $data1['title']=$_POST['title'];
+        $data1['text']=$_POST['text'];
+
+        $this->db->insert($table, $data1);
+
+        $lastInsertId=$this->db->getLastInsertedId();
+
+        foreach($_POST as $key=>$value){
+            if(strrpos($key,'ads_field_')===0) {
+                $data2['property_id'] = preg_split('#_#', $key)[2];
+                $data2['ads_id'] = $lastInsertId;
+
+                if (!is_array($value)) {
+                    $data2['value'] = $value;
+                } else {
+                    $data2['value'] = json_encode($value);
+                }
+
+                $this->db->insert('property_ads', $data2);
+            }
         }
 
-        $data['category_id'] = $this->category->getCategoryByName($_POST['category'])['id'];
-        $data['user_id'] = Session::get('user_id');
-        $data['date_create'] = date('Y-m-d H:i:s');
-        $data['title'] = $_POST['title'];
-        $data['text'] = $_POST['text'];
 
-        $this->db->insert($table, $data);
-
-        $path='../public/tmp_files/'.$data['user_id'];
+        $path='../public/tmp_files/'.$data1['user_id'];
 
         if(is_dir($path)){
             if(!is_dir('../public/files/')){
                 mkdir('../public/files/');
             }
-                rename($path, '../public/files/'.$this->db->getLastInsertedId());
+                rename($path, '../public/files/'.$lastInsertId);
         }
     }
 
@@ -139,6 +156,7 @@ class Ads extends Model
         $currentDate = date('Y-m-d H:i:s');
         $plans = new Plans();
         $plansInfo = current($plans->getActivePlans());
+        $userPlanId = $this->db->fetchOne('users', 'plan_id', ['id' => $userId]);
 
         $lastPayment = $this->db->query("
                     Select payments.*, plans.count_ads from payments, plans WHERE payments.user_id = :userId AND plans.id = payments.plan_id ORDER BY payments.end_date DESC LIMIT 1
@@ -156,22 +174,31 @@ class Ads extends Model
 
             if($activePayment) {
                 $currentCnt = $this->db->query("
-                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate
+                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate group by users.id
                 ", [':userId' => $userId, ':startDate' => $startDate]);
 
-                $currentCnt = current($currentCnt);
-                $currentCnt = array_pop($currentCnt);
+                if ($currentCnt) {
+                    $currentCnt = current($currentCnt);
+                    $currentCnt = array_pop($currentCnt);
+                } else {
+                    $currentCnt = 0;
+                }
 
                 $tableCnt = $lastPayment['count_ads'];
-
-                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $user['plan_id'] != 1) {
+                if ($tableCnt == -1) {
+                    Session::set('countAds', -1);
+                }
+                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $userPlanId != 1) {
+                    Session::set('countAds', $tableCnt - $currentCnt);
                     return true;
                 } else {
+                    Session::set('countAds', $currentCnt);
                     return 'Limit is exceeded';
                 }
 
 
             } else {
+                Session::set('countAds', 0);
                 return 'You should buy payment plan!';
             }
         } else {
@@ -181,6 +208,7 @@ class Ads extends Model
             $cntAds = current($cntAds);
             $cntAds = array_pop($cntAds);
             $cntAdsTable = $plansInfo['count_ads'];
+            Session::set('countAds', $cntAdsTable - $cntAds);
             if($cntAds >= $cntAdsTable) {
                 return 'Limit is exceeded';
             } else {
@@ -283,16 +311,28 @@ class Ads extends Model
         $cl->SetServer("localhost", 3312);
         $cl->SetConnectTimeout(1);
         $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
-       // $cl->SetMatchMode(SPH_MATCH_ANY);
+      //$cl->SetMatchMode(SPH_MATCH_ANY);
         $result = $cl->Query($string);
         if ( $result !== false ) {
-             if (!empty($result["matches"])){
+             if (!empty($result["matches"])) {
                  $found = array_keys($result['matches']); //id found ads
                  $res = array();
-                for ($j = 0; $j < count($found); $j++) {
-                    $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
-                    $res = array_merge($res, $temp);
-                }
+                 if (!empty($_POST['page'])) {
+                     $userId = Session::get('user_id');
+                     for ($j = 0; $j < count($found); $j++) {
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j] AND user_id = $userId");
+                         if ($temp) {
+                             $res = array_merge($res, $temp);
+                         }
+                     }
+                 } else {
+                     for ($j = 0; $j < count($found); $j++) {
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
+                         if ($temp) {
+                             $res = array_merge($res, $temp);
+                         }
+                     }
+                 }
                  return $res;
             }
         }

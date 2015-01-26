@@ -10,6 +10,7 @@ class Users extends Model
     private $is_authorized = false;
     private $user_id = null;
     private $sid;
+    protected $errorValid = '';
 
     public function __construct()
     {

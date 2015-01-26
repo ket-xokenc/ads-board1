@@ -38,7 +38,7 @@ class Comment extends Model
     public  function addComment()
     {
         $errorLog = array();
-        $data = [];
+        $data = ['body' => $_POST['body']];
         if (($errorLog = $this->validator->validate($data)) !== true) {
             $errorLog['status'] = 'error';
             return $errorLog;
@@ -62,7 +62,7 @@ class Comment extends Model
     {
         $data = $this->db->query("
             SELECT comments.text,comments.id,  DATE_FORMAT(comments.date_create, '%d %M %Y %H:%i') create_comment, comments.pid, users.name user_name FROM comments
-                INNER JOIN users ON users.id = comments.`user_id` WHERE comments.`ad_id` = :adId
+                INNER JOIN users ON users.id = comments.`user_id` WHERE comments.`ad_id` = :adId order by comments.date_create desc
         ", [':adId' => $adId]);
         $newArr = [];
         if (!empty($data)) {
