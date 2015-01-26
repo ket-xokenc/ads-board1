@@ -3,8 +3,6 @@
 use application\classes\Registry;
 use application\core\Model;
 use application\classes\Session;
-use Sphinx\SphinxClient;
-
 class Ads extends Model
 {
 
@@ -158,6 +156,7 @@ class Ads extends Model
         $currentDate = date('Y-m-d H:i:s');
         $plans = new Plans();
         $plansInfo = current($plans->getActivePlans());
+        $userPlanId = $this->db->fetchOne('users', 'plan_id', ['id' => $userId]);
 
         $lastPayment = $this->db->query("
                     Select payments.*, plans.count_ads from payments, plans WHERE payments.user_id = :userId AND plans.id = payments.plan_id ORDER BY payments.end_date DESC LIMIT 1
@@ -175,22 +174,31 @@ class Ads extends Model
 
             if($activePayment) {
                 $currentCnt = $this->db->query("
-                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate
+                    select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate group by users.id
                 ", [':userId' => $userId, ':startDate' => $startDate]);
 
-                $currentCnt = current($currentCnt);
-                $currentCnt = array_pop($currentCnt);
+                if ($currentCnt) {
+                    $currentCnt = current($currentCnt);
+                    $currentCnt = array_pop($currentCnt);
+                } else {
+                    $currentCnt = 0;
+                }
 
                 $tableCnt = $lastPayment['count_ads'];
-
-                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $user['plan_id'] != 1) {
+                if ($tableCnt == -1) {
+                    Session::set('countAds', -1);
+                }
+                if(($currentCnt <= $tableCnt || $tableCnt == -1) && $userPlanId != 1) {
+                    Session::set('countAds', $tableCnt - $currentCnt);
                     return true;
                 } else {
+                    Session::set('countAds', $currentCnt);
                     return 'Limit is exceeded';
                 }
 
 
             } else {
+                Session::set('countAds', 0);
                 return 'You should buy payment plan!';
             }
         } else {
@@ -200,6 +208,7 @@ class Ads extends Model
             $cntAds = current($cntAds);
             $cntAds = array_pop($cntAds);
             $cntAdsTable = $plansInfo['count_ads'];
+            Session::set('countAds', $cntAdsTable - $cntAds);
             if($cntAds >= $cntAdsTable) {
                 return 'Limit is exceeded';
             } else {
@@ -302,16 +311,28 @@ class Ads extends Model
         $cl->SetServer("localhost", 3312);
         $cl->SetConnectTimeout(1);
         $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
-       // $cl->SetMatchMode(SPH_MATCH_ANY);
+      //$cl->SetMatchMode(SPH_MATCH_ANY);
         $result = $cl->Query($string);
         if ( $result !== false ) {
-             if (!empty($result["matches"])){
+             if (!empty($result["matches"])) {
                  $found = array_keys($result['matches']); //id found ads
                  $res = array();
-                for ($j = 0; $j < count($found); $j++) {
-                    $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
-                    $res = array_merge($res, $temp);
-                }
+                 if (!empty($_POST['page'])) {
+                     $userId = Session::get('user_id');
+                     for ($j = 0; $j < count($found); $j++) {
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j] AND user_id = $userId");
+                         if ($temp) {
+                             $res = array_merge($res, $temp);
+                         }
+                     }
+                 } else {
+                     for ($j = 0; $j < count($found); $j++) {
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j]");
+                         if ($temp) {
+                             $res = array_merge($res, $temp);
+                         }
+                     }
+                 }
                  return $res;
             }
         }

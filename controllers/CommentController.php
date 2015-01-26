@@ -13,29 +13,20 @@ class CommentController extends BaseController
         $errors = [];
         $comment = new Comment();
         if ($this->getRequest()->isPost()) {
-            $errors = $comment->addComment();
-            if ($errors and $errors['status'] == 'ok') {
-                echo json_encode(array('status'=>1,'html'=>$this->markup($errors)));
+            $data = $comment->addComment();
+            if ($data and $data['status'] == 'ok') {
+                echo json_encode(array('status'=>1,'html'=>AdsController::commentsToTemplate($data, false)));
             } else {
-                echo '{"status":0,"errors":'.json_encode($errors).'}';
+                echo '{"status":0,"errors":'.json_encode($data).'}';
             }
         }
     }
 
-    public function markup($data)
+    public function markup($comment)
     {
-
-        $str =  '
-			<div class="panel panel-primary ">
-                    <div class="panel-body comment-desc">
-                        <p>Name: '.\application\classes\Session::get("login").'</p>
-                        <p>Date: '.$data['date_create'].'</p>
-                    </div>
-                    <div class="panel-body text-comment">
-                        '.$_POST['body'].'
-                    </div>
-                </div>
-		';
-        return $str;
+        ob_start();
+        include '../views/coment/comment_template.phtml';
+        $html = ob_get_clean();
+        return $html;
     }
 }
