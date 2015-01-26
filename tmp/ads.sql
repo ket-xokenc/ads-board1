@@ -68,16 +68,17 @@ CREATE TABLE `comments` (
   `text` text,
   `date_create` timestamp NULL DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL,
+  `pid` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `ad_id` (`ad_id`),
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`ad_id`) REFERENCES `ads` (`id`)
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`ad_id`) REFERENCES `ads` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*Data for the table `comments` */
 
-insert  into `comments`(`id`,`user_id`,`ad_id`,`text`,`date_create`,`status`) values (1,3,1,'Хороший товар, рэспект','2015-01-18 15:06:34',NULL),(2,3,2,'asdasdasdasdasd','2015-01-18 15:45:30',NULL),(3,2,2,'asdasdasdasdasdas','2015-01-19 17:51:42',NULL),(4,2,2,'asdasdasdadadadsasda','2015-01-19 17:51:47',NULL);
+insert  into `comments`(`id`,`user_id`,`ad_id`,`text`,`date_create`,`status`,`pid`) values (1,3,1,'Хороший товар, рэспект','2015-01-18 15:06:34',NULL,NULL),(2,3,2,'asdasdasdasdasd','2015-01-18 15:45:30',NULL,NULL),(3,2,2,'asdasdasdasdasdas','2015-01-19 17:51:42',NULL,NULL),(4,2,2,'asdasdasdadadadsasda','2015-01-19 17:51:47',NULL,NULL);
 
 /*Table structure for table `images` */
 
@@ -142,7 +143,7 @@ CREATE TABLE `properties` (
   `params` varchar(256) DEFAULT NULL,
   `type` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Data for the table `properties` */
 
@@ -160,7 +161,7 @@ CREATE TABLE `property_ads` (
   PRIMARY KEY (`id`),
   KEY `ads_id` (`ads_id`),
   KEY `property_id` (`property_id`),
-  CONSTRAINT `property_ads_ibfk_1` FOREIGN KEY (`ads_id`) REFERENCES `ads` (`id`),
+  CONSTRAINT `property_ads_ibfk_1` FOREIGN KEY (`ads_id`) REFERENCES `ads` (`id`) ON DELETE CASCADE,
   CONSTRAINT `property_ads_ibfk_2` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -209,7 +210,7 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`login`,`name`,`password`,`status`,`role`,`email`,`phone`,`salt`,`guid`,`date_create`,`plan_id`) values (2,'admin','admin','9cbf72dba5709b3298bbd2bbbf8b1e85','confirmed','admin','admin@ukr.net','+3806347531','54abac7224de2','JxR5SNfio1','2015-01-06 11:35:46',1),(3,'vas','vas','60d137ddc301fe95265528419e33ac27','confirmed','user','vas@vas.com','123','54b5713a425ec','XGoKVwGkVF','2015-01-13 21:25:46',1);
+insert  into `users`(`id`,`login`,`name`,`password`,`status`,`role`,`email`,`phone`,`salt`,`guid`,`date_create`,`plan_id`) values (2,'admin','admin','9cbf72dba5709b3298bbd2bbbf8b1e85','confirmed','admin','admin@ukr.net','+3806347531','54abac7224de2','aJKkIWY73r','2015-01-06 11:35:46',1),(3,'vas','vas','60d137ddc301fe95265528419e33ac27','confirmed','user','vas@vas.com','123','54b5713a425ec','XGoKVwGkVF','2015-01-13 21:25:46',1);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
