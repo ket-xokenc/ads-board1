@@ -4,3 +4,10 @@
 .list-group-item {
    width: inherit;
 }
+
+a {
+    color: inherit;
+}
+h3 {
+    color: #2aabd2 !important
+}

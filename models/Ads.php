@@ -173,6 +173,7 @@ class Ads extends Model
             }
 
             if($activePayment) {
+
                 $currentCnt = $this->db->query("
                     select count(*) from ads, users where ads.user_id = :userId and ads.date_create > :startDate group by users.id
                 ", [':userId' => $userId, ':startDate' => $startDate]);
@@ -192,7 +193,7 @@ class Ads extends Model
                     Session::set('countAds', $tableCnt - $currentCnt);
                     return true;
                 } else {
-                    Session::set('countAds', $currentCnt);
+                    Session::set('countAds', $tableCnt - $currentCnt);
                     return 'Limit is exceeded';
                 }
 
@@ -265,6 +266,21 @@ class Ads extends Model
     {
         $table = Ads::TABLE;
 
+        return $this->db->query("Select users.name as user_name,
+              users.phone as users_phone,
+              ads.date_create as ads_date_create,
+              categories.name as categories_name,
+              categories.id as cat_id,
+              ads.title as ads_title,
+              ads.text as ads_text,
+              ads.id as ads_id
+             from users inner join $table on
+                                    $table.user_id=users.id
+                        inner join categories ON
+                                    categories.id = ads.category_id
+                                    WHERE categories.id = :catId
+                        ORDER BY $table.date_create DESC", [':catId' => $id]);
+
         return $this->db->fetchAll($table, ['*'], ['category_id' => $id]);
     }
 
@@ -284,6 +300,7 @@ class Ads extends Model
               users.phone as users_phone,
               ads.date_create as ads_date_create,
               categories.name as categories_name,
+              categories.id as cat_id,
               ads.title as ads_title,
               ads.text as ads_text,
               ads.id as ads_id

@@ -132,6 +132,7 @@ class UsersController extends BaseController
 
         $category = new Category();
         $ads = new Ads($category);
+        $err = $ads->checkAddAds();
 
         $paginator = new Paginator(['ads' => $ads, 'users' => $users], 2, 3);
 
