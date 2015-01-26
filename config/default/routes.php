@@ -41,5 +41,6 @@ return [
         'payment/success' => 'users/subscribePaymentPlan',
         'payment/cancelled' => 'users/paymentCancelled',
         'show/add-comment' => 'comment/addComment',
+        'category/([0-9]+)' => 'ads/showAdsForCat/$1',
     ]
 ];

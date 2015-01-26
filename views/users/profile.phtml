@@ -7,7 +7,10 @@
 
 <div class="container text-right">
     <div class="col-lg-5 text-left">
-        <h3>Your Ads:</h3>
+        <h3>Your Ads(<?php if(\application\classes\Session::get('countAds') == -1) {
+                echo 'Unlimited';
+            } else
+                echo 'Remains '.\application\classes\Session::get('countAds');?> Ads):</h3>
     </div>
     <div class="col-lg-5">
         <form class="form-inline myform2" action="/profile/search" method="post">
