@@ -35,6 +35,8 @@ return [
         'admin/user-page/([0-9]+)' => 'admin/personal_page/$1',
         'categories' => 'admin/categories/$1',
         'categories/show/([0-9]+)' => 'admin/show/$1',
+        'categories/property/([0-9]+)' => 'admin/cat_property/$1',
+        'categories/property/add' => 'admin/add_property/$1',
         'subsccribe-payment-plane/([a-zA-Z]+)' => 'users/subscribePaymentPlan/$1',
         'payment/success' => 'users/subscribePaymentPlan',
         'payment/cancelled' => 'users/paymentCancelled',

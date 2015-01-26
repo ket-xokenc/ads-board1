@@ -1,0 +1,67 @@
+<?php include_once 'menu.phtml'; ?>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-striped gogos">
+                <thead>
+                <tr>
+                    <th>name</th>
+                    <th>type</th>
+                    <th>remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (isset($property))
+                    foreach ($property as $tt):?>
+                        <tr class="record">
+                            <td><?php echo $tt["name"]; ?></td>
+                            <td><?php echo $tt["type"]; ?></td>
+                            <td>
+                                <a href="" data-del="<?php echo $tt["id"]; ?>" class="delbutton">del</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <form class="form" role="form" action="add" method="post">
+                <div class="form-group input_fields_wrap">
+                    <input type="text" class="form-control" placeholder="Properties" name="property_name">
+                    <input type="hidden" name="id[<?php echo $cat_id; ?>]">
+                    <input type="text" class="form-control" placeholder="Type" name="property_type">
+                    <input type="text" class="form-control" placeholder="Value" name="property_values[]">
+                </div>
+                <button class="btn btn-default add_field_button">Values++</button>
+                <button type="submit" name="add_cat" class="btn btn-default">Save</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+
+            <form action="add" method="post">
+                <table class="table table-striped">
+                    <td>
+                        <input type="submit" name="per_cat" value="Apply selected properties" class="btn btn-default">
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <tbody>
+                    <?php foreach ($property_all as $tt): ?>
+                        <tr>
+                            <td>
+                                <a href="#" data-update="<?php echo $tt["id"]; ?>"
+                                   class="update_prop"><?php echo $tt["name"]; ?></a>
+                            </td>
+                            <td><?php echo $tt["type"]; ?></td>
+                            <td>
+                                <input type="checkbox" name="add[<?php echo $tt["id"]; ?>]"
+                                       value="<?php echo $cat_id; ?>">
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
