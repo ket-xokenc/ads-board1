@@ -1,6 +1,10 @@
 #results {
     margin-top: 20px;
 }
+.list-group {
+    position: absolute;
+    z-index: 1000;
+}
 .list-group-item {
-   width: inherit;
+   width: 266px;
 }
