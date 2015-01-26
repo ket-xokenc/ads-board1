@@ -20,146 +20,100 @@
 </div>
 
     <div class="row ads-gap">
-
-
         <div class="col-lg-6">
 
+            <div class="container">
 
-
-                <div class="container">
-
-                    <!-- The file upload form used as target for the file upload widget -->
-                    <form id="fileupload"  method="POST" enctype="multipart/form-data">
-                        <!-- Redirect browsers with JavaScript disabled to the origin page -->
-                        <noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
-                        <!-- The table listing the files available for upload/download -->
-                        <div class="col-lg-6">
-                            <h3  style="display: inline">Ads Img's:</h3>
-                            <table role="presentation" class="table table-striped ads-gap"><tbody class="files"></tbody></table>
-                        </div>
-                        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-                        <div class="row fileupload-buttonbar">
-                            <div class="col-lg-7">
-                                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button hidden">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Add Img...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                                <!--<button type="submit" class="btn btn-primary start">
-                                    <i class="glyphicon glyphicon-upload"></i>
-                                    <span>Start upload</span>
-                                </button>-->
-                                <!--<button type="reset" class="btn btn-warning cancel">
-                                    <i class="glyphicon glyphicon-ban-circle"></i>
-                                    <span>Cancel upload</span>
-                                </button>-->
-                                <button type="button" class="btn btn-danger delete hidden">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                    <span>Delete All</span>
-                                </button>
-                                <input type="checkbox" hidden="hidden" class="toggle" checked>
-                                <!-- The global file processing state -->
-                                <span class="fileupload-process"></span>
-                            </div>
-                            <!-- The global progress state -->
-                            <div class="col-lg-5 fileupload-progress fade">
-                                <!-- The global progress bar -->
-                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                                </div>
-                                <!-- The extended global progress state -->
-                                <div class="progress-extended">&nbsp;</div>
+                <form id="fileupload" method="POST" enctype="multipart/form-data">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div id="dropzone" class="well well-lg">
+                                <div class="row files"></div>
                             </div>
                         </div>
+                        <span class="btn btn-default fileinput-button hide">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>Add files...</span>
+                            <input type="file" name="files[]" multiple>
+                        </span>
+                    </div>
+                </form>
+            </div>
 
-                    </form>
-                    <br>
+            <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+                <div class="slides"></div>
+                <h3 class="title"></h3>
+                <a class="prev">‹</a>
+                <a class="next">›</a>
+                <a class="close">×</a>
+                <a class="play-pause"></a>
+                <ol class="indicator"></ol>
+            </div>
 
-                </div>
-                <!-- The blueimp Gallery widget -->
-                <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
-                    <div class="slides"></div>
-                    <h3 class="title"></h3>
-                    <a class="prev">‹</a>
-                    <a class="next">›</a>
-                    <a class="close">×</a>
-                    <a class="play-pause"></a>
-                    <ol class="indicator"></ol>
-                </div>
-                <!-- The template to display files available for upload -->
-                <script id="template-upload" type="text/x-tmpl">
+            <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade">
-        <td>
+    <div class="template-upload fade col-lg-4">
+        <div>
             <span class="preview"></span>
-        </td>
-        <td>
-            <p class="name">{%=file.name%}</p>
-            <strong class="error text-danger"></strong>
-        </td>
-        <td>
-            <p class="size">Processing...</p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-        </td>
-        <td>
+        </div>
+        <div>
+
+
             {% if (!i && !o.options.autoUpload) { %}
-                <button class="btn btn-primary start" disabled style="display:none;">
+                <button class="btn btn-primary start" disabled>
                     <i class="glyphicon glyphicon-upload"></i>
                     <span>Start</span>
                 </button>
             {% } %}
             {% if (!i) { %}
-                <button class="btn btn-warning cancel">
+            <div class="progress progress-striped active col-lg-6" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+                <button class="btn btn-ex btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
                 </button>
             {% } %}
-        </td>
-    </tr>
+        </div>
+    </div>
 {% } %}
 </script>
-                <!-- The template to display files available for download -->
-                <script id="template-download" type="text/x-tmpl">
+            <!-- The template to display files available for download -->
+            <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-download fade">
-        <td>
+    <div class="template-download well well-sm fade col-lg-4">
+        <div>
             <span class="preview">
                 {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}" width="150" height="150"></a>
                 {% } %}
             </span>
-        </td>
-        <td>
-            <p class="name">
+        </div>
+        <div class="img-name col-lg-10  text-center">
                 {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-                {% } else { %}
-                    <span>{%=file.name%}</span>
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>
+                        {% if (file.name.length>15) { %}
+                            {%=file.name.slice(0,14)+'...'%}
+                        {% }else{ %}
+                            {%=file.name%}
+                        {% } %}
+                    </a>
                 {% } %}
-            </p>
             {% if (file.error) { %}
                 <div><span class="label label-danger">Error</span> {%=file.error%}</div>
             {% } %}
-        </td>
-        <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td>
+        </div>
+        <div class="delete-button col-lg-2 col-lg-pull-1">
             {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <button class="btn btn-default btn-sm delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                     <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
                 </button>
-                <input type="checkbox" name="delete" value="1" class="toggle" hidden="hidden"  checked>
             {% } else { %}
                 <button class="btn btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>
                     <span>Cancel</span>
                 </button>
             {% } %}
-        </td>
-    </tr>
+        </div>
+
+    </div>
 {% } %}
 </script>
                 <script src="/js/file-upload/vendor/jquery.ui.widget.js"></script>
@@ -204,17 +158,16 @@
 
 
 
-
+        <div class="col-lg-5 col-lg-push-1">
 
 
 
                 <form role="form" class="text-left" action="/profile/ads-edit/<?=$dbinfo[0]['ads_id']?>" method="post">
 
-                    <div class="col-lg-6">
 
 
 
-                        <div class="col-lg-12">
+
                     <div class="form-group <?php echo !empty($errors['title'])?'has-error':''?>">
                         <label for="InputName">Ads Title</label>
                         <input type="text" class="form-control" id="InputName" placeholder="Ads Title" name="title" value="<?=$dbinfo[0]['title']?>">
@@ -230,31 +183,11 @@
                         </div>
                     </div>
 
-                    <!--<div class="form-group <?php /*echo !empty($errors['userName'])?'has-error':''*/?>">
-                        <label class="control-label" for="userName">Your Name</label>
-                        <input type="text" class="form-control" id="userName" placeholder="Your Name" name="userName" value="<?/*=$dbinfo['name']*/?>">
-                        <span class="text-danger"><?php /*echo !empty($errors['userName'])?$errors['userName']:''*/?></span>
-                    </div>
-
-                    <div class="form-group <?php /*echo !empty($errors['userPhone'])?'has-error':''*/?>">
-                        <label class="control-label" for="userPhone">Your Phone</label>
-                        <input type="text" class="form-control" id="userPhone" placeholder="Your Phone" name="userPhone" value="<?/*=$dbinfo['phone']*/?>">
-                        <span class="text-danger"><?php /*echo !empty($errors['userPhone'])?$errors['userPhone']:''*/?></span>
-                    </div>-->
-
-                        </div>
-                    <!--<div class="text-right">
-                        <button type="submit" class="btn btn-default">Save changes</button>
-                    </div>-->
 
                         <div class="col-lg-6 text-left">
                             <button  class="btn btn-default add-img">
                                 <i class="glyphicon glyphicon-plus"></i>
                                 <span>Add Img...</span>
-                            </button>
-                            <button  class="btn btn-default delete-img">
-                                <i class="glyphicon glyphicon-trash"></i>
-                                <span>Delete All</span>
                             </button>
                         </div>
                         <div class="col-lg-6 text-right">
@@ -264,7 +197,7 @@
 
 
 
-                        </div>
+
                 </form>
 
 
@@ -273,10 +206,6 @@
 <script>
     $('.add-img').click(function(){
         $('.fileinput-button input').trigger('click');
-        return false;
-    });
-    $('.delete-img').click(function(){
-        $('.fileupload-buttonbar .delete').trigger('click');
         return false;
     });
 </script>

@@ -36,3 +36,18 @@ table#bdr_w td {
        display: none;
    }
 
+#dropzone {
+    position: relative;
+    width: 660px;
+    height: 660px;
+    line-height: 50px;
+    text-align: center;
+    font-weight: bold;
+    background-color: transparent;
+}
+.template-upload,.template-download{
+    position: relative;
+    height: 200px;
+    width: 200px;
+    padding-top:4px; background-color:white; margin-left:10px
+}

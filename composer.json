@@ -17,6 +17,6 @@
         "application\\classes\\": "framework/classes/",
         "":["controllers/","models/"]
       },
-      "files": ["sphinxapi.php"]
+      "files": ["sphinxapi.php", "ChromePhp.php"]
     }
 }
