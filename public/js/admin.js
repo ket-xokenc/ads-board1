@@ -41,11 +41,11 @@ $(document).ready(function () {
         e.preventDefault();
         if (x < max_fields) {
             x++;
-            $(wrapper).append('<div><input type="text" class="form-control" placeholder="Value" name="property_values[]"/><a href="#" class="remove_field">Remove</a></div>');
+            $(wrapper).append('<div><input type="text" class="form-control" placeholder="Value" name="property_values[]"/><a href="#" class="remove_f1eld">Remove</a></div>');
         }
     });
 
-    $(wrapper).on("click", ".remove_field", function (e) {
+    $(wrapper).on("click", ".remove_f1eld", function (e) {
         e.preventDefault();
         $(this).parent('div').remove();
         x--;

@@ -49,7 +49,8 @@
                     <?php foreach ($property_all as $tt): ?>
                         <tr>
                             <td>
-                                <input type="button" data-update="<?php echo $tt["id"]; ?>" class="update_prop" value="<?php echo $tt["name"]; ?>">
+                                <a href="#" data-update="<?php echo $tt["id"]; ?>"
+                                   class="update_prop"><?php echo $tt["name"]; ?></a>
                             </td>
                             <td><?php echo $tt["type"]; ?></td>
                             <td>

@@ -70,11 +70,6 @@ class Admin extends Model
         return $this->db->fetchAll('categories', ['*'], ['pid' => 0]);
     }
 
-    public function getCategoriesAll()
-    {
-        return $this->db->fetchAll('categories', ['*'], []);
-    }
-
     public function addCategory($name, $description, $pid = 0)
     {
         $this->db->insert('categories', ['name' => $name, 'description' => $description, 'pid' => $pid]);
@@ -132,7 +127,7 @@ class Admin extends Model
 
     public function treeCategory($cats = 0, $parent_id = 0)
     {
-        $test = $this->getCategoriesAll();
+        $test = $this->db->fetchAll('categories', ['*'], []);
         $cats = array();
         foreach ($test as $cat) {
             $cats[$cat['pid']][$cat['id']] = $cat;

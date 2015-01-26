@@ -17,9 +17,9 @@ class AdminController extends BaseController
     public function regiserAction()
     {
         if ($this->getRequest()->isPost()) {
-            $this->admin->register();
+          $reg = $this->admin->register();
         }
-        $this->render('admin/login_adm', ['error' => 'error']);
+        $this->render('admin/login_adm', ['error' => $reg]);
     }
 
     public function panelAction()
@@ -60,7 +60,7 @@ class AdminController extends BaseController
 
     public function categoriesAction()
     {
-        $this->render('admin/categories', ['items' => $this->admin->treeCategory(), 'menu' => $this->admin->menu(), 'categories' => $this->admin->getCategoriesAll()]);
+        $this->render('admin/categories', ['items' => $this->admin->treeCategory(), 'menu' => $this->admin->menu(), 'categories' => $this->admin->getCategoriesPid()]);
     }
 
     public function personal_pageAction()
