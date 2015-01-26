@@ -58,3 +58,20 @@ ul.comment-list:first-child {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+#show-more {
+    display:inline-block ;
+
+    border: 2px solid #D2E8FF;
+    position: relative;
+    border-radius: 5px 5px 5px 5px;
+    left: 210px;
+}
+#show-more a {
+
+    padding: 3px 6px;
+}
+#show-more a:hover {
+    background-color: #AFD5FD;
+    border-radius: 5px 5px 5px 5px;
+    text-decoration: none;
+}
