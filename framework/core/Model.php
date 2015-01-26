@@ -9,7 +9,7 @@ class Model{
     protected $validator;
     protected $db;
 
-    protected function __construct(){
+    public function __construct(){
         $this->validator=new Validator();
         $this->db=Registry::get('database');
     }

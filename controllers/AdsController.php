@@ -13,11 +13,11 @@ class AdsController extends BaseController
         $errors = array();
 
         if ($this->getRequest()->isPost()) {
-            $errors = $ads->checkAddAds();
+            /*$errors = $ads->checkAddAds();
             if ($errors !== true) {
                 $this->render('users/newAds', ['error' => [$errors], 'dbinfo' => $category->getAllCategories(), 'user' => $users->get()]);
                 exit;
-            }
+            }*/
             if (!empty($errors = $ads->create())) {
                 $this->render('users/newAds', ['dbinfo' => $category->getAllCategories(), 'user' => $users->get()], $errors);
             } else {
@@ -143,8 +143,15 @@ class AdsController extends BaseController
     }
 
     public function subCategoryAction(){
-        $category = new Category();
-        //var_dump($_POST['category']);
-        echo json_encode($category->getSubCategories($_POST['category']));
+        if ($this->getRequest()->isPost()) {
+            $category = new Category();
+            echo json_encode($category->getSubCategories($_POST['category']));
+        }
+    }
+
+    public function subCategoryFieldsAction(){
+        $fields = new AdsFields();
+        $this->layout='';
+        $this->render('users/adsFields', ['dbinfo' => $fields->selectAllFields($_POST['subcategory'])]);
     }
 } 

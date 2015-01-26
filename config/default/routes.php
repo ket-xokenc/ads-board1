@@ -22,6 +22,7 @@ return [
         'profile/add-ads' => 'ads/create',
         'profile/add-img' => 'img/add',
         'ads/subcategory' => 'ads/subCategory',
+        'profile/subFields' => 'ads/subCategoryFields',
         'profile/edit-img/([0-9]+)' => 'img/edit/$1',
         'profile/ads-edit/([0-9]+)' => 'ads/edit/$1',
         'profile/ads-delete/([0-9]+)' => 'ads/delete/$1',

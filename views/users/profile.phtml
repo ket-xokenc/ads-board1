@@ -29,7 +29,7 @@
 <div class="container text-left ads">
     <div class="row">
 
-
+<?php if(!empty($dbinfo)):?>
     <?php foreach($dbinfo as $vals):?>
         <div class="col-lg-12">
             <div class="panel panel-primary ">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-lg-4 text-right" style="padding-right:0px">
                                 <a href="/profile/ads-edit/<?=$vals['ads_id']?>" class="btn btn-default btn-xs">Edit</a>
-                                <a href="/profile/ads-delete/<?=$vals['ads_id']?>" class="btn btn-danger btn-xs ads-delete">Delete</a>
+                                <a href="/profile/ads-delete/<?=$vals['ads_id']?>" class="btn btn-danger btn-xs ads-del">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
             </div>
         </div>
     <?php endforeach;?>
-
+<?php endif;?>
     </div>
 
 
@@ -74,10 +74,10 @@
 
 <script>
     $(function() {
-        $(".ads-delete").click(function(e) {
+        $(".ads-del").click(function(e) {
             bootbox.confirm("Are you sure?", function(result) {
                 if(result){
-                    window.location.href = $('.ads-delete').attr('href');
+                    window.location.href = $('.ads-del').attr('href');
                 }
             });
             e.preventDefault();
