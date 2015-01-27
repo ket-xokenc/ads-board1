@@ -1,0 +1,56 @@
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <h2> Login </h2>
+
+    <?php
+//        $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action', $this->url(null, ['controller' => 'Users', 'action' => 'login']));
+    $form->setAttribute('method', 'post');
+    echo $this->form()->openTag($form);
+    ?>
+
+    <div class="col-lg-4 col-lg-offset-4">
+        <?php if ($this->error):?>
+            <p class="error">
+                There were one or more issues with your submission.
+                Please correct them as indicated below.
+            </p>
+        <?php endif;?>
+        <div class="form-group">
+            <label for="InputLogin">
+                <?=$this->formLabel($form->get('login'))?>
+            </label>
+                <?=$this->formElement($form->get('login'));?>
+                <?=$this->formElementErrors($form->get('login'));?>
+        </div>
+        <div class="form-group">
+
+            <label for="InputLogin">
+                <?=$this->formLabel($form->get('password'))?>
+            </label>
+                <?=$this->formElement($form->get('password'));?>
+            <?=$this->formElementErrors($form->get('password'));?>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-lg-height col-bottom">
+                <div class="checkbox-inline">
+                        <label>
+                            <?=$this->formElement($form->get('rememberMe'));?>Remember Me
+                        </label>
+                </div>
+            </div>
+            <div class="col-lg-push-4 text-right col-lg-height col-bottom">
+                <?php
+                    echo $this->formElement($form->get('submit'));
+                    echo $this->formElementErrors($form->get('submit'));
+                ?>
+            </div>
+        </div>
+            <a class="btn btn-link" href="/restore-password">Forgot password?</a>
+        </div>
+    </div>
+    <?php
+        echo $this->form()->closeTag();
+    ?>
+
+</div>
