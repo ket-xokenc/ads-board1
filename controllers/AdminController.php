@@ -14,20 +14,20 @@ class AdminController extends BaseController
         $this->admin = new Admin();
     }
 
-    public function regiserAction()
-    {
-        if ($this->getRequest()->isPost()) {
-          $reg = $this->admin->register();
-        }
-        $this->render('admin/login_adm', ['error' => $reg]);
-    }
+//    public function regiserAction()
+//    {
+//        if ($this->getRequest()->isPost()) {
+//          $reg = $this->admin->register();
+//        }
+//        $this->render('admin/login_adm', ['error' => $reg]);
+//    }
 
     public function panelAction()
     {
-        if ($this->admin->isAdmin()) {
+//        if ($this->admin->isAdmin()) {
             $this->render('admin/panel', ['menu' => $this->admin->menu(), 'row' => $this->admin->panel()]);
-        } else
-            $this->render('admin/login_adm', ['error' => '<strong>Для входа вам нужны права администратора!!!</strong>']);
+//        } else
+//            $this->render('admin/login_adm', ['error' => '<strong>Для входа вам нужны права администратора!!!</strong>']);
     }
 
     public function banAction()
