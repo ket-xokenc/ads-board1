@@ -154,4 +154,15 @@ class AdsController extends BaseController
         $this->layout='';
         $this->render('users/adsFields', ['dbinfo' => $fields->selectAllFields($_POST['subcategory'])]);
     }
+
+    public function showAdsForCatAction()
+    {
+        $catId = current($this->getRequest()->getParams());
+        $ads = new Ads(new Category());
+
+        $dbinfo = $ads->getAdsByCategoryId($catId);
+        $catName = $dbinfo[0]['categories_name'];
+
+        $this->render('site/home', array('title' => $catName, 'user' => $dbinfo, 'dbinfo' => $dbinfo));
+    }
 } 

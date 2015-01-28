@@ -1,4 +1,4 @@
-<div class="container standart-space">
+<div class="container standart-space" xmlns="http://www.w3.org/1999/html">
     <h1><?=$title?></h1>
     <div class="row">
             <div class="col-lg-5">
@@ -20,7 +20,8 @@
             <div class="col-lg-12">
                 <div class="panel panel-primary ">
                     <div class="ads-style panel-heading">
-                        <h2><?=$vals['ads_title']?></h2>
+                        <h2><a href="/show/<?=$vals['ads_id']?>"><?=$vals['ads_title']?></a></h2>
+<!--                        <h2>--><?//=$vals['ads_title']?><!--</h2>-->
                     </div>
                     <div class="panel-body">
                         <?=$vals['ads_text']?>
@@ -29,7 +30,7 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-lg-8" style="padding-left:0px">
-                                    <span class="ads-font">Category: </span><?=$vals['categories_name']?>
+                                    <span class="ads-font">Category: <a style="color: inherit" href="/category/<?=$vals['cat_id']?>"><?=$vals['categories_name']?></a></span>
                                     <span class="ads-font">Name: </span><?=$vals['user_name']?>
                                     <span class="ads-font">Phone: </span><?=$vals['users_phone']?>
                                     <span class="ads-font">Date: </span><?=$vals['ads_date_create']?>

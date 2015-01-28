@@ -8,3 +8,9 @@
 .list-group-item {
    width: 266px;
 }
+a {
+    color: inherit;
+}
+h3 {
+    color: #2aabd2 !important
+}
