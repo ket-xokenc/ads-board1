@@ -55,11 +55,11 @@ class Module implements AutoloaderProviderInterface
                     $adapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Users);
-                    return new TableGateway('user', $adapter, null, $resultSetPrototype);
+                    return new TableGateway('users', $adapter, null, $resultSetPrototype);
                 },
                 'UserAuthService' => function($sm) {
                     $adapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $tableAuthAdapter = new \Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter($adapter, 'user', 'login', 'password');
+                    $tableAuthAdapter = new \Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter($adapter, 'users', 'login', 'password');
                     $authService = new AuthenticationService();
                     $authService->setAdapter($tableAuthAdapter);
                     return $authService;
