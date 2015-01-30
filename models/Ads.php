@@ -328,6 +328,7 @@ class Ads extends Model
         $cl->SetServer("localhost", 3312);
         $cl->SetConnectTimeout(1);
         $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
+        $cl->setLimits(0, 10);
       //$cl->SetMatchMode(SPH_MATCH_ANY);
         $result = $cl->Query($string);
         if ( $result !== false ) {
@@ -337,7 +338,7 @@ class Ads extends Model
                  if (!empty($_POST['page'])) {
                      $userId = Session::get('user_id');
                      for ($j = 0; $j < count($found); $j++) {
-                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = $found[$j] AND user_id = $userId");
+                         $temp = $this->db->query(" SELECT * FROM $table WHERE ads_id = {$found[$j]} AND user_id = $userId");
                          if ($temp) {
                              $res = array_merge($res, $temp);
                          }
