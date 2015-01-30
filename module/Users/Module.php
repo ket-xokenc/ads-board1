@@ -114,6 +114,9 @@ class Module implements AutoloaderProviderInterface
                 $route->getParam('controller'),
                 $route->getParam('action'));
         }
+        if(preg_match('#^ZFTool#',$route->getParam('controller'))){
+            $access=true;
+        }
 //        Debug::dump($access,'Assess:');
 //        Debug::dump($role);
         if(!$access) { exit('Restricted Access!'); }
